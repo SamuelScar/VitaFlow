@@ -25,6 +25,8 @@ src/                 # Aplicacao Laravel, criada depois
 docker compose up -d --build
 ```
 
+O container da aplicacao ja inicia o Apache automaticamente e ajusta as permissoes de escrita do Laravel em `storage/` e `bootstrap/cache/`. Isso evita erro de permissao ao usar o projeto em outra maquina.
+
 ## Criar o Laravel depois
 
 Com `src/` vazia, rode na raiz do projeto:
@@ -49,6 +51,22 @@ Depois:
 
 ```powershell
 docker compose exec app php artisan migrate
+```
+
+## Rodar em outra maquina
+
+Com o Laravel ja criado em `src/`, rode:
+
+```powershell
+docker compose up -d --build
+docker compose exec app php artisan migrate
+```
+
+Use comandos do Laravel e Composer dentro do container:
+
+```powershell
+docker compose exec app php artisan ...
+docker compose exec app composer ...
 ```
 
 Para parar:

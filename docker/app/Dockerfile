@@ -30,9 +30,13 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 COPY local.ini /usr/local/etc/php/conf.d/local.ini
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /var/www/html
 
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]
