@@ -1,11 +1,30 @@
-@import 'tailwindcss';
+@import 'bootstrap/dist/css/bootstrap.min.css';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+:root {
+    color-scheme: light;
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+body {
+    background: #f4f7fb;
+}
+
+.login-card {
+    max-width: 424px;
+    box-shadow: 0 18px 45px rgba(23, 32, 51, 0.08);
+}
+
+.brand {
+    width: 42px;
+    height: 42px;
+    background: #1f7a6d;
+}
+
+.btn-primary {
+    --bs-btn-bg: #1f7a6d;
+    --bs-btn-border-color: #1f7a6d;
+    --bs-btn-hover-bg: #176358;
+    --bs-btn-hover-border-color: #176358;
+    --bs-btn-active-bg: #176358;
+    --bs-btn-active-border-color: #176358;
+    background: #1f7a6d;
 }

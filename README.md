@@ -1,6 +1,6 @@
 # VitaFlow
 
-Ambiente Docker para desenvolvimento de um monolito Laravel com PostgreSQL, Livewire e assets via Node 18/Vite.
+Ambiente Docker para desenvolvimento de um monolito Laravel com PostgreSQL, Livewire e assets via Node 22/Vite.
 
 ## Estrutura
 
@@ -21,11 +21,21 @@ src/                 # Aplicacao Laravel, criada depois
 
 ## Subir o ambiente
 
+As variaveis usadas no projeto ficam no `.env` da raiz, separadas por comentarios entre Docker e Laravel.
+
 ```powershell
 docker compose up -d --build
 ```
 
 O container da aplicacao ja inicia o Apache automaticamente e ajusta as permissoes de escrita do Laravel em `storage/` e `bootstrap/cache/`. Isso evita erro de permissao ao usar o projeto em outra maquina.
+
+Para subir o ambiente com o Vite dev server junto, altere no `.env`:
+
+```env
+RUN_VITE_DEV=true
+```
+
+Com `RUN_VITE_DEV=false`, o Vite nao inicia automaticamente. Nesse caso, gere os assets com `docker compose exec app npm run build` ou rode o dev server manualmente com `docker compose exec app npm run dev -- --host 0.0.0.0`.
 
 ## Criar o Laravel depois
 
@@ -36,7 +46,7 @@ docker compose run --rm app composer create-project laravel/laravel .
 docker compose run --rm app composer require livewire/livewire
 ```
 
-Configure o `src/.env` do Laravel:
+Confira no `.env` da raiz se o Laravel esta usando PostgreSQL:
 
 ```env
 DB_CONNECTION=pgsql
