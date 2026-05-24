@@ -6,9 +6,16 @@ Ambiente Docker para desenvolvimento de um monolito Laravel com PostgreSQL, Live
 
 ```text
 docker/              # Imagem local da aplicacao
+docs/                # Documentacao funcional e tecnica do sistema
 docker-compose.yml   # Servicos app + db
 src/                 # Aplicacao Laravel, criada depois
 ```
+
+## Documentacao
+
+A documentacao do sistema fica em [`docs/sistema.md`](docs/sistema.md).
+
+Ela registra telas, rotas web, fluxos, regras de negocio e decisoes visuais do monolito.
 
 ## Servicos
 

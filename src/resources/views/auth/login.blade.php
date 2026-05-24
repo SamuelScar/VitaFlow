@@ -1,5 +1,5 @@
 <x-layouts.guest title="Login">
-    <section class="card login-card w-100 border-0">
+    <section class="card login-card w-100">
         <div class="card-body p-4 p-sm-5">
             <header class="mb-4">
                 <span class="brand d-inline-flex align-items-center justify-content-center rounded text-white fw-bold mb-3">VF</span>
