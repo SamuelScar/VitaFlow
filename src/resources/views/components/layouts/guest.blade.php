@@ -9,6 +9,24 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
+        @if (session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    window.alertSuccess({
+                        text: @json(session('success')),
+                        redirectUrl: @json(session('alert_redirect')),
+                        timer: @json(session('alert_timer', 3000)),
+                    });
+                });
+            </script>
+        @elseif ($errors->any())
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    window.alertError();
+                });
+            </script>
+        @endif
+
         <main class="min-vh-100 d-flex align-items-center justify-content-center p-3">
             {{ $slot }}
         </main>

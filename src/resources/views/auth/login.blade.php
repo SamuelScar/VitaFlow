@@ -18,6 +18,7 @@
                         name="email"
                         type="email"
                         value="{{ old('email') }}"
+                        placeholder="seu@email.com"
                         autocomplete="email"
                         required
                     >
@@ -33,6 +34,7 @@
                         id="password"
                         name="password"
                         type="password"
+                        placeholder="Sua senha"
                         autocomplete="current-password"
                         required
                     >
@@ -41,20 +43,13 @@
                     @enderror
                 </div>
 
-                <label class="form-check mb-4" for="remember">
-                    <input
-                        class="form-check-input"
-                        id="remember"
-                        name="remember"
-                        type="checkbox"
-                        value="1"
-                        @checked(old('remember'))
-                    >
-                    <span class="form-check-label">Manter conectado</span>
-                </label>
-
                 <button class="btn btn-primary w-100" type="submit">Acessar</button>
             </form>
+
+            <p class="text-secondary small text-center mb-0 mt-4">
+                Ainda nao tem uma conta?
+                <a href="{{ route('register') }}">Criar conta</a>
+            </p>
         </div>
     </section>
 </x-layouts.guest>

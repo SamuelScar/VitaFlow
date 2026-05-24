@@ -28,7 +28,7 @@ Ela registra telas, rotas web, fluxos, regras de negocio e decisoes visuais do m
 
 ## Subir o ambiente
 
-As variaveis usadas no projeto ficam no `.env` da raiz, separadas por comentarios entre Docker e Laravel.
+As variaveis usadas no projeto ficam no `.env` da raiz, separadas por comentarios entre Docker e Laravel. Use o `.env.example` como referencia.
 
 ```powershell
 docker compose up -d --build
