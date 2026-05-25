@@ -19,6 +19,10 @@
                 <div class="d-flex align-items-center gap-2">
                     @auth
                         <a class="btn btn-outline-secondary" href="{{ route('dashboard') }}">Minha area</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button class="btn btn-outline-danger" type="submit">Sair</button>
+                        </form>
                     @else
                         <a class="btn btn-outline-secondary" href="{{ route('login') }}">Entrar</a>
                         <a class="btn btn-primary" href="{{ route('register') }}">Criar conta</a>

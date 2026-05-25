@@ -33,4 +33,14 @@ class LoginController extends Controller
 
         return redirect()->intended(route('dashboard'));
     }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
+    }
 }

@@ -8,7 +8,7 @@ Este documento registra as rotas web do sistema.
 GET /
 ```
 
-Exibe a tela publica inicial com campanhas em destaque.
+Exibe a tela publica inicial com campanhas de doacao de sangue em destaque.
 
 View:
 
@@ -19,8 +19,8 @@ resources/views/home.blade.php
 Comportamento atual:
 
 - Visitantes podem acessar sem login.
-- Exibe informacoes publicas de campanhas.
-- Acoes de doacao direcionam para login ou cadastro.
+- Exibe informacoes publicas de campanhas de sangue.
+- Acoes de agendamento direcionam para login ou cadastro.
 
 ## Login
 
@@ -60,6 +60,31 @@ Comportamento atual:
 - Se as credenciais forem invalidas, retorna erro no campo `email`.
 - Se o login for valido, regenera a sessao.
 - Apos autenticar, redireciona para `/dashboard`.
+
+## Logout
+
+```text
+POST /logout
+```
+
+Encerra a sessao do usuario autenticado.
+
+Controller:
+
+```text
+App\Http\Controllers\Auth\LoginController@destroy
+```
+
+Middlewares:
+
+- `auth`
+
+Comportamento atual:
+
+- Remove o usuario autenticado da sessao.
+- Invalida a sessao atual.
+- Regenera o token CSRF.
+- Redireciona para `/`.
 
 ## Dashboard
 

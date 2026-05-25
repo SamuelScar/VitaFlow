@@ -6,7 +6,7 @@
                     <span class="badge text-bg-light border mb-3">Painel administrativo</span>
                     <h1 class="h2 fw-bold mb-2">Gestao do VitaFlow</h1>
                     <p class="text-secondary mb-0">
-                        Gerencie campanhas, acompanhe doacoes e promova usuarios quando necessario.
+                        Gerencie campanhas de sangue, acompanhe agendamentos e promova usuarios quando necessario.
                     </p>
                 </div>
 
@@ -26,8 +26,8 @@
             <div class="col-md-6 col-xl-3">
                 <article class="card dashboard-card h-100">
                     <div class="card-body p-4">
-                        <h2 class="h5">Campanhas</h2>
-                        <p class="text-secondary mb-4">Criacao e edicao de campanhas ficarao aqui.</p>
+                        <h2 class="h5">Campanhas de sangue</h2>
+                        <p class="text-secondary mb-4">Criacao e edicao de campanhas de doacao ficarao aqui.</p>
                         <button class="btn btn-outline-secondary" type="button" disabled>Em breve</button>
                     </div>
                 </article>
@@ -36,8 +36,8 @@
             <div class="col-md-6 col-xl-3">
                 <article class="card dashboard-card h-100">
                     <div class="card-body p-4">
-                        <h2 class="h5">Doacoes</h2>
-                        <p class="text-secondary mb-4">Acompanhamento das doacoes recebidas pelo sistema.</p>
+                        <h2 class="h5">Agendamentos</h2>
+                        <p class="text-secondary mb-4">Acompanhamento das doacoes de sangue agendadas pelo sistema.</p>
                         <button class="btn btn-outline-secondary" type="button" disabled>Em breve</button>
                     </div>
                 </article>
