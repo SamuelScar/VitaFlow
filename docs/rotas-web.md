@@ -83,6 +83,32 @@ Comportamento atual:
 - Apos criar o usuario, exibe mensagem de sucesso.
 - Apos alguns segundos, redireciona para `/login`.
 
+## Promover usuario para admin
+
+```text
+POST /usuarios/{user}/promover-admin
+```
+
+Promove um usuario existente para administrador.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\UserPromotionController
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Comportamento atual:
+
+- Apenas usuarios autenticados com tipo `admin` podem acessar.
+- Se o usuario autenticado nao for admin, retorna erro `403`.
+- Se o usuario informado existir, altera seu tipo para `admin`.
+- Apos promover, retorna para a pagina anterior com mensagem de sucesso.
+
 ## Health check
 
 ```text

@@ -23,3 +23,10 @@ Este documento registra regras que afetam comportamento do sistema.
 - O campo `password` deve ser confirmado por `password_confirmation`.
 - Se o cadastro for valido, o usuario e criado.
 - Apos cadastro valido, o sistema exibe uma mensagem de sucesso e redireciona para o login.
+
+## Usuarios e permissoes
+
+- Usuarios criados pelo cadastro comum entram como `doador`.
+- O cadastro comum nao permite criar usuario com tipo `admin`.
+- Apenas usuarios com tipo `admin` podem promover outro usuario para admin.
+- A promocao de privilegio altera o tipo do usuario promovido para `admin`.
