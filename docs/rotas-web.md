@@ -2,6 +2,26 @@
 
 Este documento registra as rotas web do sistema.
 
+## Home publica
+
+```text
+GET /
+```
+
+Exibe a tela publica inicial com campanhas em destaque.
+
+View:
+
+```text
+resources/views/home.blade.php
+```
+
+Comportamento atual:
+
+- Visitantes podem acessar sem login.
+- Exibe informacoes publicas de campanhas.
+- Acoes de doacao direcionam para login ou cadastro.
+
 ## Login
 
 ```text
@@ -39,7 +59,67 @@ Comportamento atual:
 
 - Se as credenciais forem invalidas, retorna erro no campo `email`.
 - Se o login for valido, regenera a sessao.
-- Apos autenticar, redireciona para `/health`.
+- Apos autenticar, redireciona para `/dashboard`.
+
+## Dashboard
+
+```text
+GET /dashboard
+```
+
+Redireciona o usuario autenticado para a tela inicial correta conforme o tipo.
+
+Controller:
+
+```text
+App\Http\Controllers\DashboardController
+```
+
+Middlewares:
+
+- `auth`
+
+Comportamento atual:
+
+- Usuarios com tipo `admin` sao redirecionados para `/admin`.
+- Usuarios com tipo `doador` sao redirecionados para `/usuario`.
+
+## Area do doador
+
+```text
+GET /usuario
+```
+
+Exibe a tela inicial do usuario doador.
+
+Middlewares:
+
+- `auth`
+
+View:
+
+```text
+resources/views/usuario/dashboard.blade.php
+```
+
+## Painel admin
+
+```text
+GET /admin
+```
+
+Exibe a tela inicial administrativa.
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/dashboard.blade.php
+```
 
 ## Cadastro
 

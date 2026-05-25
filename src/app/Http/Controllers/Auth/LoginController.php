@@ -31,6 +31,6 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended('/health');
+        return redirect()->intended(route('dashboard'));
     }
 }
