@@ -7,6 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -19,6 +21,16 @@ class User extends Authenticatable
 
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public function carteiraDoacao(): HasOne
+    {
+        return $this->hasOne(CarteiraDoacao::class);
+    }
+
+    public function campanhasCriadas(): HasMany
+    {
+        return $this->hasMany(Campanha::class, 'criada_por_id');
+    }
 
     public function isAdmin(): bool
     {
