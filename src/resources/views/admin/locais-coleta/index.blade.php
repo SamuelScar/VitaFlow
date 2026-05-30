@@ -85,11 +85,21 @@
                         <div class="d-flex flex-column flex-xl-row justify-content-between gap-3">
                             <div>
                                 <h3 class="h6 fw-bold mb-1">{{ $localColeta->nome }}</h3>
-                                <p class="text-secondary mb-2">{{ $localColeta->endereco }}</p>
+                                <p class="text-secondary mb-2">{{ $localColeta->endereco_completo }}</p>
                                 <div class="d-flex flex-wrap gap-2">
                                     <span class="badge text-bg-light border">
                                         <i class="bi bi-building me-1" aria-hidden="true"></i>
-                                        {{ $localColeta->cidade }}
+                                        {{ $localColeta->cidade }}{{ $localColeta->uf ? "/{$localColeta->uf}" : '' }}
+                                    </span>
+                                    @if ($localColeta->bairro)
+                                        <span class="badge text-bg-light border">
+                                            <i class="bi bi-signpost me-1" aria-hidden="true"></i>
+                                            {{ $localColeta->bairro }}
+                                        </span>
+                                    @endif
+                                    <span class="badge text-bg-light border">
+                                        <i class="bi bi-mailbox me-1" aria-hidden="true"></i>
+                                        {{ $localColeta->cep ?? 'CEP nao informado' }}
                                     </span>
                                     <span class="badge text-bg-light border">
                                         <i class="bi bi-calendar2-day me-1" aria-hidden="true"></i>

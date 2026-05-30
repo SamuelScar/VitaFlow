@@ -3,10 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['nome', 'endereco', 'cidade', 'capacidade_diaria'])]
+#[Fillable([
+    'nome',
+    'cep',
+    'logradouro',
+    'numero',
+    'bairro',
+    'cidade',
+    'uf',
+    'complemento',
+    'capacidade_diaria',
+])]
 class LocalColeta extends Model
 {
     protected $table = 'locais_coleta';
@@ -29,5 +40,26 @@ class LocalColeta extends Model
         return [
             'capacidade_diaria' => 'integer',
         ];
+    }
+
+    /**
+     * @return Attribute<string, never>
+     */
+    protected function enderecoCompleto(): Attribute
+    {
+        return Attribute::get(function (): string {
+            $logradouro = trim(implode(', ', array_filter([
+                $this->logradouro,
+                $this->numero,
+            ])));
+
+            $cidade = $this->uf ? "{$this->cidade}/{$this->uf}" : $this->cidade;
+
+            return trim(implode(', ', array_filter([
+                trim(implode(' - ', array_filter([$logradouro, $this->bairro, $this->complemento]))),
+                $cidade,
+                $this->cep ? "CEP {$this->cep}" : null,
+            ])));
+        });
     }
 }

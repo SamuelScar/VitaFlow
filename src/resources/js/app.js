@@ -3,6 +3,242 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import Swal from 'sweetalert2';
 
 const confirmButtonColor = '#c62828';
+const themeStorageKey = 'vitaflow-theme';
+const themeOptions = ['system', 'light', 'dark'];
+const themeLabels = {
+    system: 'Sistema',
+    light: 'Claro',
+    dark: 'Escuro',
+};
+const themeIcons = {
+    system: 'bi-circle-half',
+    light: 'bi-sun',
+    dark: 'bi-moon-stars',
+};
+const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+const isValidTheme = (theme) => themeOptions.includes(theme);
+
+const getStoredTheme = () => {
+    try {
+        const storedTheme = localStorage.getItem(themeStorageKey);
+
+        return isValidTheme(storedTheme) ? storedTheme : 'system';
+    } catch {
+        return 'system';
+    }
+};
+
+const storeTheme = (theme) => {
+    try {
+        localStorage.setItem(themeStorageKey, theme);
+    } catch {
+        // localStorage can be unavailable in restrictive browser settings.
+    }
+};
+
+const resolveTheme = (theme) => {
+    if (theme === 'system') {
+        return systemThemeQuery.matches ? 'dark' : 'light';
+    }
+
+    return theme;
+};
+
+const updateThemeControls = (theme) => {
+    document.querySelectorAll('[data-theme-value]').forEach((button) => {
+        const active = button.dataset.themeValue === theme;
+
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+        button.querySelector('[data-theme-check]')?.classList.toggle('d-none', !active);
+    });
+
+    document.querySelectorAll('[data-theme-toggle-label]').forEach((label) => {
+        label.textContent = themeLabels[theme] || themeLabels.system;
+    });
+
+    document.querySelectorAll('[data-theme-toggle-icon]').forEach((icon) => {
+        icon.className = `bi ${themeIcons[theme] || themeIcons.system}`;
+    });
+
+    document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+        const label = `Tema: ${themeLabels[theme] || themeLabels.system}`;
+
+        button.setAttribute('aria-label', label);
+        button.setAttribute('title', label);
+    });
+};
+
+const applyTheme = (theme, persist = false) => {
+    const preference = isValidTheme(theme) ? theme : 'system';
+    const resolvedTheme = resolveTheme(preference);
+
+    document.documentElement.dataset.themePreference = preference;
+    document.documentElement.dataset.bsTheme = resolvedTheme;
+    document.documentElement.style.colorScheme = resolvedTheme;
+
+    if (persist) {
+        storeTheme(preference);
+    }
+
+    updateThemeControls(preference);
+};
+
+applyTheme(getStoredTheme());
+
+document.querySelectorAll('[data-theme-value]').forEach((button) => {
+    button.addEventListener('click', () => {
+        applyTheme(button.dataset.themeValue, true);
+    });
+});
+
+const refreshSystemTheme = () => {
+    if (document.documentElement.dataset.themePreference === 'system') {
+        applyTheme('system');
+    }
+};
+
+if (systemThemeQuery.addEventListener) {
+    systemThemeQuery.addEventListener('change', refreshSystemTheme);
+} else {
+    systemThemeQuery.addListener(refreshSystemTheme);
+}
+
+const onlyDigits = (value) => value.replace(/\D/g, '');
+
+const formatCep = (value) => {
+    const digits = onlyDigits(value).slice(0, 8);
+
+    if (digits.length <= 5) {
+        return digits;
+    }
+
+    return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+};
+
+const fetchViaCep = async (cep) => {
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+
+    if (!response.ok) {
+        return null;
+    }
+
+    const data = await response.json();
+
+    if (data.erro) {
+        return null;
+    }
+
+    return {
+        logradouro: data.logradouro || '',
+        bairro: data.bairro || '',
+        cidade: data.localidade || '',
+        uf: data.uf || '',
+    };
+};
+
+const fetchBrasilApiCep = async (cep) => {
+    const response = await fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`);
+
+    if (!response.ok) {
+        return null;
+    }
+
+    const data = await response.json();
+
+    return {
+        logradouro: data.street || '',
+        bairro: data.neighborhood || '',
+        cidade: data.city || '',
+        uf: data.state || '',
+    };
+};
+
+const fetchAddressByCep = async (cep) => {
+    try {
+        const viaCepAddress = await fetchViaCep(cep);
+
+        if (viaCepAddress) {
+            return viaCepAddress;
+        }
+    } catch {
+        // BrasilAPI is used as a fallback when ViaCEP is unavailable.
+    }
+
+    try {
+        return await fetchBrasilApiCep(cep);
+    } catch {
+        return null;
+    }
+};
+
+document.querySelectorAll('[data-cep-lookup]').forEach((form) => {
+    const cepField = form.querySelector('[data-cep-field="cep"]');
+
+    if (!(cepField instanceof HTMLInputElement)) {
+        return;
+    }
+
+    const fields = {
+        logradouro: form.querySelector('[data-cep-field="logradouro"]'),
+        bairro: form.querySelector('[data-cep-field="bairro"]'),
+        cidade: form.querySelector('[data-cep-field="cidade"]'),
+        uf: form.querySelector('[data-cep-field="uf"]'),
+        numero: form.querySelector('[data-cep-field="numero"]'),
+    };
+    let lastResolvedCep = null;
+
+    const fillField = (field, value) => {
+        if (!(field instanceof HTMLInputElement) || !value) {
+            return;
+        }
+
+        field.value = value;
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
+    const lookupCep = async () => {
+        const cep = onlyDigits(cepField.value);
+        cepField.value = formatCep(cepField.value);
+        cepField.setCustomValidity('');
+
+        if (cep.length !== 8 || cep === lastResolvedCep) {
+            return;
+        }
+
+        const address = await fetchAddressByCep(cep);
+
+        if (!address) {
+            cepField.setCustomValidity('CEP nao encontrado.');
+            lastResolvedCep = null;
+            return;
+        }
+
+        lastResolvedCep = cep;
+
+        fillField(fields.logradouro, address.logradouro);
+        fillField(fields.bairro, address.bairro);
+        fillField(fields.cidade, address.cidade);
+        fillField(fields.uf, address.uf.toUpperCase());
+
+        if (fields.numero instanceof HTMLInputElement && !fields.numero.value) {
+            fields.numero.focus();
+        }
+    };
+
+    cepField.addEventListener('input', () => {
+        cepField.value = formatCep(cepField.value);
+        cepField.setCustomValidity('');
+
+        if (onlyDigits(cepField.value).length === 8) {
+            lookupCep();
+        }
+    });
+    cepField.addEventListener('blur', lookupCep);
+    cepField.addEventListener('change', lookupCep);
+});
+
 const pauseToastOnHover = (toast) => {
     toast.onmouseenter = Swal.stopTimer;
     toast.onmouseleave = Swal.resumeTimer;

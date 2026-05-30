@@ -19,6 +19,8 @@ class LocalColetaController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->normalizeAddress($request);
+
         LocalColeta::create($request->validateWithBag('storeLocalColeta', $this->rules()));
 
         return back()->with('success', 'Local de coleta cadastrado com sucesso.');
@@ -26,6 +28,8 @@ class LocalColetaController extends Controller
 
     public function update(Request $request, LocalColeta $localColeta): RedirectResponse
     {
+        $this->normalizeAddress($request);
+
         $localColeta->update($request->validateWithBag('updateLocalColeta', $this->rules()));
 
         return back()->with('success', 'Local de coleta atualizado com sucesso.');
@@ -51,9 +55,24 @@ class LocalColetaController extends Controller
     {
         return [
             'nome' => ['required', 'string', 'max:255'],
-            'endereco' => ['required', 'string', 'max:255'],
+            'cep' => ['required', 'string', 'regex:/^\d{5}-\d{3}$/'],
+            'logradouro' => ['required', 'string', 'max:255'],
+            'numero' => ['required', 'string', 'max:30'],
+            'bairro' => ['required', 'string', 'max:255'],
             'cidade' => ['required', 'string', 'max:255'],
+            'uf' => ['required', 'string', 'size:2'],
+            'complemento' => ['nullable', 'string', 'max:255'],
             'capacidade_diaria' => ['required', 'integer', 'min:1', 'max:10000'],
         ];
+    }
+
+    private function normalizeAddress(Request $request): void
+    {
+        $cep = preg_replace('/\D/', '', (string) $request->input('cep', ''));
+
+        $request->merge([
+            'cep' => strlen($cep) === 8 ? substr($cep, 0, 5) . '-' . substr($cep, 5) : $cep,
+            'uf' => strtoupper((string) $request->input('uf', '')),
+        ]);
     }
 }

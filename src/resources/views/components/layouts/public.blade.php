@@ -1,11 +1,31 @@
 @props(['title' => config('app.name')])
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light" data-theme-preference="system">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ $title }} - {{ config('app.name') }}</title>
+        <script>
+            (() => {
+                const storageKey = 'vitaflow-theme';
+                const allowedThemes = ['light', 'dark', 'system'];
+                let storedTheme = null;
+
+                try {
+                    storedTheme = localStorage.getItem(storageKey);
+                } catch {
+                    storedTheme = null;
+                }
+
+                const preference = allowedThemes.includes(storedTheme) ? storedTheme : 'system';
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                const resolvedTheme = preference === 'system' ? systemTheme : preference;
+
+                document.documentElement.dataset.themePreference = preference;
+                document.documentElement.dataset.bsTheme = resolvedTheme;
+            })();
+        </script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
@@ -21,7 +41,7 @@
             </script>
         @endif
 
-        <nav class="navbar navbar-expand-lg bg-white border-bottom">
+        <nav class="navbar navbar-expand-lg bg-body border-bottom">
             <div class="container py-2">
                 <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="{{ route('home') }}">
                     <span class="brand d-inline-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold">VF</span>
@@ -75,6 +95,43 @@
                             Criar conta
                         </a>
                     @endauth
+
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-link theme-toggle-button d-inline-flex align-items-center justify-content-center"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Selecionar tema"
+                            title="Selecionar tema"
+                            data-theme-toggle
+                        >
+                            <i class="bi bi-circle-half" aria-hidden="true" data-theme-toggle-icon></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center gap-2" type="button" data-theme-value="system">
+                                    <i class="bi bi-circle-half" aria-hidden="true"></i>
+                                    Sistema
+                                    <i class="bi bi-check-lg ms-auto d-none" aria-hidden="true" data-theme-check></i>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center gap-2" type="button" data-theme-value="light">
+                                    <i class="bi bi-sun" aria-hidden="true"></i>
+                                    Claro
+                                    <i class="bi bi-check-lg ms-auto d-none" aria-hidden="true" data-theme-check></i>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center gap-2" type="button" data-theme-value="dark">
+                                    <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                                    Escuro
+                                    <i class="bi bi-check-lg ms-auto d-none" aria-hidden="true" data-theme-check></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
