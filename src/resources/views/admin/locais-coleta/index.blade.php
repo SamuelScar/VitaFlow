@@ -7,14 +7,20 @@
         <div class="container py-5">
             <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
                 <div>
-                    <span class="badge text-bg-light border mb-3">Administracao</span>
+                    <span class="badge text-bg-light border mb-3">
+                        <i class="bi bi-shield-check me-1" aria-hidden="true"></i>
+                        Administracao
+                    </span>
                     <h1 class="h2 fw-bold mb-2">Locais de coleta</h1>
                     <p class="text-secondary mb-0">
                         Cadastre e mantenha os pontos onde as doacoes de sangue acontecem.
                     </p>
                 </div>
 
-                <a class="btn btn-outline-secondary" href="{{ route('admin.dashboard') }}">Voltar</a>
+                <a class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" href="{{ route('admin.dashboard') }}">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    Voltar
+                </a>
             </div>
         </div>
     </section>
@@ -30,6 +36,7 @@
 
                     <div class="d-flex flex-wrap align-items-start gap-2">
                         <span class="badge text-bg-light border">
+                            <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>
                             {{ $locaisColeta->count() }} {{ $locaisColeta->count() === 1 ? 'local' : 'locais' }}
                         </span>
                         <button
@@ -40,6 +47,7 @@
                             aria-expanded="{{ $criando ? 'true' : 'false' }}"
                             aria-controls="novo-local-coleta"
                         >
+                            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>
                             Novo local
                         </button>
                     </div>
@@ -79,8 +87,12 @@
                                 <h3 class="h6 fw-bold mb-1">{{ $localColeta->nome }}</h3>
                                 <p class="text-secondary mb-2">{{ $localColeta->endereco }}</p>
                                 <div class="d-flex flex-wrap gap-2">
-                                    <span class="badge text-bg-light border">{{ $localColeta->cidade }}</span>
                                     <span class="badge text-bg-light border">
+                                        <i class="bi bi-building me-1" aria-hidden="true"></i>
+                                        {{ $localColeta->cidade }}
+                                    </span>
+                                    <span class="badge text-bg-light border">
+                                        <i class="bi bi-calendar2-day me-1" aria-hidden="true"></i>
                                         {{ $localColeta->capacidade_diaria }} doacoes/dia
                                     </span>
                                 </div>
@@ -95,6 +107,7 @@
                                     aria-expanded="{{ $editando ? 'true' : 'false' }}"
                                     aria-controls="editar-local-{{ $localColeta->id }}"
                                 >
+                                    <i class="bi bi-pencil me-1" aria-hidden="true"></i>
                                     Editar
                                 </button>
 
@@ -105,7 +118,10 @@
                                 >
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-outline-danger" type="submit">Excluir</button>
+                                    <button class="btn btn-outline-danger" type="submit">
+                                        <i class="bi bi-trash me-1" aria-hidden="true"></i>
+                                        Excluir
+                                    </button>
                                 </form>
                             </div>
                         </div>

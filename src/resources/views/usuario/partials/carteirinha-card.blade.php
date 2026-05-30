@@ -15,16 +15,21 @@
 
     <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
         <div>
-            <span class="badge text-bg-light border mb-3">Carteirinha ativa</span>
+            <span class="badge text-bg-light border mb-3">
+                <i class="bi bi-person-vcard me-1" aria-hidden="true"></i>
+                Carteirinha ativa
+            </span>
             <h2 class="h4 fw-bold mb-1">{{ $usuario->name }}</h2>
             <p class="text-secondary mb-0">Doador cadastrado no VitaFlow</p>
         </div>
 
         <div class="d-flex flex-wrap justify-content-lg-end align-items-start gap-2">
             <button class="btn btn-outline-primary" type="button" data-edit-pass-button>
+                <i class="bi bi-pencil me-1" aria-hidden="true"></i>
                 Editar dados
             </button>
             <button class="btn btn-primary {{ $editando ? '' : 'd-none' }}" type="submit" data-save-pass-button>
+                <i class="bi bi-check-lg me-1" aria-hidden="true"></i>
                 Salvar alteracoes
             </button>
         </div>
@@ -157,7 +162,10 @@
     <div class="border-top d-flex flex-wrap gap-4 mt-4 pt-4">
         <div>
             <span class="small text-secondary text-uppercase d-block">Status</span>
-            <span class="badge text-bg-success text-uppercase">{{ $carteira->status }}</span>
+            <span class="badge text-bg-success text-uppercase">
+                <i class="bi bi-check-circle me-1" aria-hidden="true"></i>
+                {{ $carteira->status }}
+            </span>
         </div>
         <div>
             <span class="small text-secondary text-uppercase d-block">Emitida em</span>

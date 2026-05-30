@@ -112,6 +112,9 @@
     </div>
 
     <div class="col-12 d-flex justify-content-end">
-        <button class="btn btn-primary" type="submit">{{ $submitLabel }}</button>
+        <button class="btn btn-primary d-inline-flex align-items-center gap-2" type="submit">
+            <i class="bi bi-check-lg" aria-hidden="true"></i>
+            {{ $submitLabel }}
+        </button>
     </div>
 </form>

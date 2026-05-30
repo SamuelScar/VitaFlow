@@ -84,7 +84,10 @@
 
     <div class="col-md-6">
         <fieldset>
-            <legend class="form-label fs-6 mb-2">Tipos alvo</legend>
+            <legend class="form-label fs-6 mb-2">
+                <i class="bi bi-droplet-half me-1" aria-hidden="true"></i>
+                Tipos alvo
+            </legend>
             <div class="d-flex flex-wrap gap-2">
                 @foreach ($tiposSanguineos as $tipoSanguineo)
                     <input
@@ -195,7 +198,8 @@
     @endif
 
     <div class="col-12 d-flex justify-content-end">
-        <button class="btn btn-primary" type="submit" @disabled($locaisColeta->isEmpty())>
+        <button class="btn btn-primary d-inline-flex align-items-center gap-2" type="submit" @disabled($locaisColeta->isEmpty())>
+            <i class="bi bi-check-lg" aria-hidden="true"></i>
             {{ $submitLabel }}
         </button>
     </div>

@@ -3,7 +3,10 @@
         <div class="card-body p-4 p-sm-5">
             <header class="mb-4">
                 <span class="brand d-inline-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold mb-3">VF</span>
-                <h1 class="h3 mb-2">Entrar</h1>
+                <h1 class="h3 mb-2">
+                    <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>
+                    Entrar
+                </h1>
                 <p class="text-secondary mb-0">Acesse sua conta {{ config('app.name') }}.</p>
             </header>
 
@@ -43,7 +46,10 @@
                     @enderror
                 </div>
 
-                <button class="btn btn-primary w-100" type="submit">Acessar</button>
+                <button class="btn btn-primary w-100 d-inline-flex align-items-center justify-content-center gap-2" type="submit">
+                    <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+                    Acessar
+                </button>
             </form>
 
             <p class="text-secondary small text-center mb-0 mt-4">

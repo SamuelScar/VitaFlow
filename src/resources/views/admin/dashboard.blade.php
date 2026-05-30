@@ -3,7 +3,10 @@
         <div class="container py-5">
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
-                    <span class="badge text-bg-light border mb-3">Painel administrativo</span>
+                    <span class="badge text-bg-light border mb-3">
+                        <i class="bi bi-grid-1x2 me-1" aria-hidden="true"></i>
+                        Painel administrativo
+                    </span>
                     <h1 class="h2 fw-bold mb-2">Gestao do VitaFlow</h1>
                     <p class="text-secondary mb-0">
                         Gerencie campanhas de sangue, acompanhe agendamentos e promova usuarios quando necessario.
@@ -12,7 +15,10 @@
 
                 <div class="col-lg-4">
                     <div class="bg-white border rounded-3 shadow-sm p-4">
-                        <p class="text-secondary small fw-semibold text-uppercase mb-2">Acesso atual</p>
+                        <p class="text-secondary small fw-semibold text-uppercase mb-2">
+                            <i class="bi bi-shield-check me-1" aria-hidden="true"></i>
+                            Acesso atual
+                        </p>
                         <strong class="fs-4 d-block">Administrador</strong>
                         <span class="text-secondary">{{ auth()->user()->email }}</span>
                     </div>
@@ -29,6 +35,7 @@
                     description="Cadastre e atualize locais onde as doacoes de sangue acontecem."
                     :href="route('admin.locais-coleta.index')"
                     button-label="Gerenciar locais"
+                    icon="bi-geo-alt"
                 />
             </div>
 
@@ -38,6 +45,7 @@
                     description="Crie, atualize e encerre campanhas de doacao de sangue."
                     :href="route('admin.campanhas.index')"
                     button-label="Gerenciar campanhas"
+                    icon="bi-megaphone"
                 />
             </div>
 
@@ -45,6 +53,7 @@
                 <x-dashboard-card
                     title="Agendamentos"
                     description="Acompanhamento das doacoes de sangue agendadas pelo sistema."
+                    icon="bi-calendar-check"
                 />
             </div>
 
@@ -52,6 +61,7 @@
                 <x-dashboard-card
                     title="Usuarios"
                     description="Promocao de doadores para administradores."
+                    icon="bi-people"
                 />
             </div>
 
@@ -61,6 +71,7 @@
                     description="Visualize a pagina que visitantes acessam."
                     :href="route('home')"
                     button-label="Abrir home"
+                    icon="bi-house"
                 />
             </div>
         </div>

@@ -3,7 +3,10 @@
         <div class="card-body p-4 p-sm-5">
             <header class="mb-4">
                 <span class="brand d-inline-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold mb-3">VF</span>
-                <h1 class="h3 mb-2">Criar conta</h1>
+                <h1 class="h3 mb-2">
+                    <i class="bi bi-person-plus me-2" aria-hidden="true"></i>
+                    Criar conta
+                </h1>
                 <p class="text-secondary mb-0">Cadastre-se para acessar o {{ config('app.name') }}.</p>
             </header>
 
@@ -76,7 +79,10 @@
                     >
                 </div>
 
-                <button class="btn btn-primary w-100" type="submit">Cadastrar</button>
+                <button class="btn btn-primary w-100 d-inline-flex align-items-center justify-content-center gap-2" type="submit">
+                    <i class="bi bi-person-check" aria-hidden="true"></i>
+                    Cadastrar
+                </button>
             </form>
 
             <p class="text-secondary small text-center mb-0 mt-4">

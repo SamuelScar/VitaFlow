@@ -9,7 +9,10 @@
         <div class="container py-5">
             <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
                 <div>
-                    <span class="badge text-bg-light border mb-3">Carteirinha de doador</span>
+                    <span class="badge text-bg-light border mb-3">
+                        <i class="bi bi-person-vcard me-1" aria-hidden="true"></i>
+                        Carteirinha de doador
+                    </span>
                     <h1 class="h2 fw-bold mb-2">
                         {{ $carteira ? 'Sua carteirinha' : 'Emitir carteirinha' }}
                     </h1>
@@ -18,7 +21,10 @@
                     </p>
                 </div>
 
-                <a class="btn btn-outline-secondary" href="{{ route('usuario.dashboard') }}">Voltar</a>
+                <a class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" href="{{ route('usuario.dashboard') }}">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    Voltar
+                </a>
             </div>
         </div>
     </section>

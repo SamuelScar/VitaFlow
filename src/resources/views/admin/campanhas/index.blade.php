@@ -17,14 +17,20 @@
         <div class="container py-5">
             <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
                 <div>
-                    <span class="badge text-bg-light border mb-3">Administracao</span>
+                    <span class="badge text-bg-light border mb-3">
+                        <i class="bi bi-shield-check me-1" aria-hidden="true"></i>
+                        Administracao
+                    </span>
                     <h1 class="h2 fw-bold mb-2">Campanhas de sangue</h1>
                     <p class="text-secondary mb-0">
                         Cadastre e mantenha campanhas vinculadas aos locais de coleta.
                     </p>
                 </div>
 
-                <a class="btn btn-outline-secondary" href="{{ route('admin.dashboard') }}">Voltar</a>
+                <a class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" href="{{ route('admin.dashboard') }}">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    Voltar
+                </a>
             </div>
         </div>
     </section>
@@ -40,6 +46,7 @@
 
                     <div class="d-flex flex-wrap align-items-start gap-2">
                         <span class="badge text-bg-light border">
+                            <i class="bi bi-megaphone me-1" aria-hidden="true"></i>
                             {{ $campanhas->count() }} {{ $campanhas->count() === 1 ? 'campanha' : 'campanhas' }}
                         </span>
                         <button
@@ -50,6 +57,7 @@
                             aria-expanded="{{ $criando ? 'true' : 'false' }}"
                             aria-controls="nova-campanha"
                         >
+                            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>
                             Nova campanha
                         </button>
                     </div>
@@ -101,6 +109,7 @@
                                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                                     <h3 class="h6 fw-bold mb-0">{{ $campanha->titulo }}</h3>
                                     <span class="badge {{ $statusClasses[$campanha->status] ?? 'text-bg-light' }}">
+                                        <i class="bi bi-circle-fill me-1" aria-hidden="true"></i>
                                         {{ $statusLabels[$campanha->status] ?? $campanha->status }}
                                     </span>
                                 </div>
@@ -109,11 +118,19 @@
 
                                 <div class="d-flex flex-wrap gap-2">
                                     <span class="badge text-bg-light border">
+                                        <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>
                                         {{ $campanha->localColeta?->nome ?? 'Local removido' }}
                                     </span>
-                                    <span class="badge text-bg-light border">Tipos alvo: {{ $tiposAlvo }}</span>
-                                    <span class="badge text-bg-light border">{{ $campanha->meta_bolsas }} bolsas</span>
                                     <span class="badge text-bg-light border">
+                                        <i class="bi bi-droplet-half me-1" aria-hidden="true"></i>
+                                        Tipos alvo: {{ $tiposAlvo }}
+                                    </span>
+                                    <span class="badge text-bg-light border">
+                                        <i class="bi bi-bullseye me-1" aria-hidden="true"></i>
+                                        {{ $campanha->meta_bolsas }} bolsas
+                                    </span>
+                                    <span class="badge text-bg-light border">
+                                        <i class="bi bi-calendar-event me-1" aria-hidden="true"></i>
                                         {{ $campanha->data_inicio->format('d/m/Y') }} ate {{ $campanha->data_fim->format('d/m/Y') }}
                                     </span>
                                 </div>
@@ -128,6 +145,7 @@
                                     aria-expanded="{{ $editando ? 'true' : 'false' }}"
                                     aria-controls="editar-campanha-{{ $campanha->id }}"
                                 >
+                                    <i class="bi bi-pencil me-1" aria-hidden="true"></i>
                                     Editar
                                 </button>
 
@@ -138,7 +156,10 @@
                                 >
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-outline-danger" type="submit">Excluir</button>
+                                    <button class="btn btn-outline-danger" type="submit">
+                                        <i class="bi bi-trash me-1" aria-hidden="true"></i>
+                                        Excluir
+                                    </button>
                                 </form>
                             </div>
                         </div>

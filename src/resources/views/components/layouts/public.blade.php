@@ -37,27 +37,43 @@
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
+                                <i class="bi bi-person-circle me-1" aria-hidden="true"></i>
                                 {{ auth()->user()->name }}
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('dashboard') }}">Minha area</a>
+                                    <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                        <i class="bi bi-grid me-2" aria-hidden="true"></i>
+                                        Minha area
+                                    </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('conta.edit') }}">Dados da conta</a>
+                                    <a class="dropdown-item" href="{{ route('conta.edit') }}">
+                                        <i class="bi bi-person-gear me-2" aria-hidden="true"></i>
+                                        Dados da conta
+                                    </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button class="dropdown-item text-danger" type="submit">Sair</button>
+                                        <button class="dropdown-item text-danger" type="submit">
+                                            <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>
+                                            Sair
+                                        </button>
                                     </form>
                                 </li>
                             </ul>
                         </div>
                     @else
-                        <a class="btn btn-outline-secondary" href="{{ route('login') }}">Entrar</a>
-                        <a class="btn btn-primary" href="{{ route('register') }}">Criar conta</a>
+                        <a class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" href="{{ route('login') }}">
+                            <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+                            Entrar
+                        </a>
+                        <a class="btn btn-primary d-inline-flex align-items-center gap-2" href="{{ route('register') }}">
+                            <i class="bi bi-person-plus" aria-hidden="true"></i>
+                            Criar conta
+                        </a>
                     @endauth
                 </div>
             </div>
