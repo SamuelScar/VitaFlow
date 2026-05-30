@@ -38,6 +38,7 @@ Este documento registra regras que afetam comportamento do sistema.
 - O campo `email` e obrigatorio, deve ser valido, deve ter no maximo 255 caracteres e deve ser unico.
 - Na atualizacao, o e-mail atual do proprio usuario nao conta como duplicado.
 - A senha e opcional na atualizacao da conta.
+- Se uma nova senha for informada, a senha atual deve ser confirmada por `current_password`.
 - Se uma nova senha for informada, ela deve ter no minimo 8 caracteres e ser confirmada por `password_confirmation`.
 - A atualizacao da conta nao altera o tipo do usuario.
 - Apenas usuarios autenticados podem excluir a propria conta.
@@ -48,11 +49,34 @@ Este documento registra regras que afetam comportamento do sistema.
 
 - Apenas usuarios autenticados com tipo `admin` podem cadastrar, atualizar ou excluir locais de coleta.
 - O campo `nome` e obrigatorio e deve ter no maximo 255 caracteres.
-- O campo `endereco` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `cep` e obrigatorio e deve seguir o formato `00000-000`.
+- O campo `logradouro` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `numero` e obrigatorio e deve ter no maximo 30 caracteres.
+- O campo `bairro` e obrigatorio e deve ter no maximo 255 caracteres.
 - O campo `cidade` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `uf` e obrigatorio e deve ter 2 caracteres.
+- O campo `complemento` e opcional e deve ter no maximo 255 caracteres.
 - O campo `capacidade_diaria` e obrigatorio, deve ser inteiro e deve ficar entre 1 e 10000.
+- O CEP informado pode preencher automaticamente logradouro, bairro, cidade e UF no formulario.
+- A consulta de CEP e uma ajuda de preenchimento; o backend continua validando os campos enviados.
 - Locais de coleta com campanhas vinculadas nao podem ser excluidos.
 - Locais de coleta com estoque de sangue vinculado nao podem ser excluidos.
+
+## Campanhas
+
+- Apenas usuarios autenticados com tipo `admin` podem cadastrar, atualizar ou excluir campanhas.
+- O campo `local_coleta_id` e obrigatorio e deve apontar para um local de coleta existente.
+- O campo `titulo` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `descricao` e obrigatorio e deve ter no maximo 5000 caracteres.
+- O campo `tipos_sanguineos_alvo` e opcional e deve ser uma lista de tipos sanguineos aceitos pelo sistema.
+- Se nenhum tipo sanguineo alvo for informado, a campanha considera todos os tipos sanguineos como alvo.
+- O campo `meta_bolsas` e obrigatorio, deve ser inteiro e deve ficar entre 1 e 100000.
+- O campo `data_inicio` e obrigatorio.
+- Ao cadastrar uma campanha, `data_inicio` nao pode ser anterior ao dia atual.
+- O campo `data_fim` e obrigatorio e deve ser posterior ou igual a `data_inicio`.
+- Campanhas novas entram com status `ativa`.
+- Na atualizacao, o status deve ser `ativa`, `encerrada` ou `cancelada`.
+- Campanhas com agendamentos vinculados nao podem ser excluidas.
 
 ## Carteirinha de doador
 
@@ -69,3 +93,17 @@ Este documento registra regras que afetam comportamento do sistema.
 - A data de emissao e preenchida automaticamente pelo sistema.
 - O doador pode atualizar os dados da propria carteirinha.
 - A atualizacao da carteirinha nao altera `status` nem `emitida_em`.
+
+## Validacao e feedback visual
+
+- Formularios com `data-validate-form` fazem uma validacao inicial no navegador antes de enviar para o backend.
+- Quando ha erro no formulario, o sistema exibe um alerta lateral discreto e rola ate o primeiro campo invalido.
+- Mensagens de sucesso tambem usam alerta lateral.
+- Alertas laterais pausam o temporizador quando o usuario passa o mouse.
+- A validacao no navegador nao substitui a validacao do backend.
+
+## Tema visual
+
+- O sistema oferece tema `Sistema`, `Claro` e `Escuro`.
+- A opcao padrao e `Sistema`, seguindo `prefers-color-scheme` do navegador.
+- A preferencia do usuario fica salva em `localStorage`.

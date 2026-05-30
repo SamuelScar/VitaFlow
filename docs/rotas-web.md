@@ -113,7 +113,8 @@ resources/views/conta/edit.blade.php
 Comportamento atual:
 
 - Exibe formulario para atualizar nome, e-mail e senha opcional.
-- Exibe area separada para excluir a propria conta.
+- Exibe a exclusao da conta como uma zona de risco discreta.
+- A exclusao da conta usa um fluxo central de confirmacao por alerta.
 - A navegacao para essa tela fica no dropdown do usuario autenticado.
 
 ## Atualizar dados da conta
@@ -138,6 +139,7 @@ Campos:
 
 - `name`: obrigatorio, texto e maximo de 255 caracteres.
 - `email`: obrigatorio, e-mail valido, maximo de 255 caracteres e unico.
+- `current_password`: obrigatorio quando `password` for informado e deve ser a senha atual.
 - `password`: opcional, minimo de 8 caracteres e precisa ser confirmado quando informado.
 - `password_confirmation`: obrigatorio quando `password` for informado.
 
@@ -146,6 +148,7 @@ Comportamento atual:
 - Atualiza apenas a conta do usuario autenticado.
 - A validacao de e-mail unico ignora o proprio usuario.
 - Se a senha nao for informada, a senha atual e mantida.
+- Se uma nova senha for informada, a senha atual precisa conferir.
 - A atualizacao da conta nao permite alterar o tipo do usuario.
 - Apos atualizar, retorna para a pagina anterior com mensagem de sucesso.
 
@@ -173,6 +176,8 @@ Campos:
 
 Comportamento atual:
 
+- A tela solicita confirmacao em alerta central antes de enviar a exclusao.
+- A senha atual e solicitada dentro do fluxo de confirmacao.
 - Exclui apenas a conta do usuario autenticado.
 - Se a senha atual estiver incorreta, retorna erro de validacao.
 - Apos excluir, encerra a autenticacao.
@@ -375,6 +380,7 @@ resources/views/admin/locais-coleta/index.blade.php
 Comportamento atual:
 
 - Lista os locais de coleta cadastrados.
+- Exibe o endereco formatado a partir de CEP, logradouro, numero, bairro, cidade e UF.
 - Exibe formulario para cadastrar novo local.
 - Permite abrir o formulario de edicao de cada local.
 - Permite solicitar exclusao de locais sem campanhas ou estoque vinculado.
@@ -401,13 +407,21 @@ Middlewares:
 Campos:
 
 - `nome`: obrigatorio, texto e maximo de 255 caracteres.
-- `endereco`: obrigatorio, texto e maximo de 255 caracteres.
+- `cep`: obrigatorio e deve seguir o formato `00000-000`.
+- `logradouro`: obrigatorio, texto e maximo de 255 caracteres.
+- `numero`: obrigatorio, texto e maximo de 30 caracteres.
+- `bairro`: obrigatorio, texto e maximo de 255 caracteres.
 - `cidade`: obrigatorio, texto e maximo de 255 caracteres.
+- `uf`: obrigatorio, texto e tamanho de 2 caracteres.
+- `complemento`: opcional, texto e maximo de 255 caracteres.
 - `capacidade_diaria`: obrigatorio, inteiro, minimo de 1 e maximo de 10000.
 
 Comportamento atual:
 
 - Apenas usuarios com tipo `admin` podem cadastrar locais de coleta.
+- O CEP pode preencher logradouro, bairro, cidade e UF no formulario.
+- A consulta de CEP usa ViaCEP e fallback na BrasilAPI pelo JavaScript.
+- O backend normaliza CEP e UF antes de validar.
 - Se os dados forem validos, cria o local de coleta.
 - Apos cadastrar, retorna para a pagina anterior com mensagem de sucesso.
 
@@ -433,13 +447,21 @@ Middlewares:
 Campos:
 
 - `nome`: obrigatorio, texto e maximo de 255 caracteres.
-- `endereco`: obrigatorio, texto e maximo de 255 caracteres.
+- `cep`: obrigatorio e deve seguir o formato `00000-000`.
+- `logradouro`: obrigatorio, texto e maximo de 255 caracteres.
+- `numero`: obrigatorio, texto e maximo de 30 caracteres.
+- `bairro`: obrigatorio, texto e maximo de 255 caracteres.
 - `cidade`: obrigatorio, texto e maximo de 255 caracteres.
+- `uf`: obrigatorio, texto e tamanho de 2 caracteres.
+- `complemento`: opcional, texto e maximo de 255 caracteres.
 - `capacidade_diaria`: obrigatorio, inteiro, minimo de 1 e maximo de 10000.
 
 Comportamento atual:
 
 - Apenas usuarios com tipo `admin` podem atualizar locais de coleta.
+- O CEP pode preencher logradouro, bairro, cidade e UF no formulario.
+- A consulta de CEP usa ViaCEP e fallback na BrasilAPI pelo JavaScript.
+- O backend normaliza CEP e UF antes de validar.
 - Se o local existir e os dados forem validos, atualiza o registro.
 - Apos atualizar, retorna para a pagina anterior com mensagem de sucesso.
 
@@ -467,6 +489,141 @@ Comportamento atual:
 - Apenas usuarios com tipo `admin` podem excluir locais de coleta.
 - Se o local tiver campanhas ou estoque de sangue vinculado, a exclusao e bloqueada.
 - Se o local nao tiver vinculos, exclui o registro.
+- Apos excluir, retorna para a pagina anterior com mensagem de sucesso.
+
+## Tela de campanhas
+
+```text
+GET /admin/campanhas
+```
+
+Exibe a tela administrativa de campanhas.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\CampanhaController@index
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/campanhas/index.blade.php
+```
+
+Comportamento atual:
+
+- Lista as campanhas cadastradas.
+- Exibe formulario para cadastrar nova campanha.
+- Permite abrir o formulario de edicao de cada campanha.
+- Permite solicitar exclusao de campanhas sem agendamentos vinculados.
+- Exibe tipos sanguineos alvo como lista; ausencia de tipos indica todos.
+
+## Cadastrar campanha
+
+```text
+POST /admin/campanhas
+```
+
+Cadastra uma campanha de doacao de sangue.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\CampanhaController@store
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Campos:
+
+- `local_coleta_id`: obrigatorio, inteiro e deve existir em `locais_coleta`.
+- `titulo`: obrigatorio, texto e maximo de 255 caracteres.
+- `descricao`: obrigatorio, texto e maximo de 5000 caracteres.
+- `tipos_sanguineos_alvo`: opcional e deve ser uma lista.
+- `tipos_sanguineos_alvo.*`: deve ser um tipo sanguineo aceito e nao pode repetir.
+- `meta_bolsas`: obrigatorio, inteiro, minimo de 1 e maximo de 100000.
+- `data_inicio`: obrigatorio, data e posterior ou igual ao dia atual.
+- `data_fim`: obrigatorio, data e posterior ou igual a `data_inicio`.
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `admin` podem cadastrar campanhas.
+- A campanha e criada pelo admin autenticado.
+- Se nenhum tipo sanguineo alvo for marcado, a campanha considera todos os tipos.
+- Campanhas novas entram com status `ativa`.
+- Apos cadastrar, retorna para a pagina anterior com mensagem de sucesso.
+
+## Atualizar campanha
+
+```text
+PUT /admin/campanhas/{campanha}
+```
+
+Atualiza os dados de uma campanha.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\CampanhaController@update
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Campos:
+
+- `local_coleta_id`: obrigatorio, inteiro e deve existir em `locais_coleta`.
+- `titulo`: obrigatorio, texto e maximo de 255 caracteres.
+- `descricao`: obrigatorio, texto e maximo de 5000 caracteres.
+- `tipos_sanguineos_alvo`: opcional e deve ser uma lista.
+- `tipos_sanguineos_alvo.*`: deve ser um tipo sanguineo aceito e nao pode repetir.
+- `meta_bolsas`: obrigatorio, inteiro, minimo de 1 e maximo de 100000.
+- `data_inicio`: obrigatorio e deve ser uma data.
+- `data_fim`: obrigatorio, data e posterior ou igual a `data_inicio`.
+- `status`: obrigatorio e deve ser `ativa`, `encerrada` ou `cancelada`.
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `admin` podem atualizar campanhas.
+- Se nenhum tipo sanguineo alvo for marcado, a campanha considera todos os tipos.
+- Se a campanha existir e os dados forem validos, atualiza o registro.
+- Apos atualizar, retorna para a pagina anterior com mensagem de sucesso.
+
+## Excluir campanha
+
+```text
+DELETE /admin/campanhas/{campanha}
+```
+
+Exclui uma campanha.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\CampanhaController@destroy
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `admin` podem excluir campanhas.
+- Se a campanha tiver agendamentos vinculados, a exclusao e bloqueada.
+- Se a campanha nao tiver vinculos, exclui o registro.
 - Apos excluir, retorna para a pagina anterior com mensagem de sucesso.
 
 ## Cadastro

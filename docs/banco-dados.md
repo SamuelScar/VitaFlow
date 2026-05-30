@@ -69,14 +69,25 @@ Representa os locais onde campanhas e coletas acontecem.
 Campos principais:
 
 - `nome`
-- `endereco`
+- `cep`
+- `logradouro`
+- `numero`
+- `bairro`
 - `cidade`
+- `uf`
+- `complemento`
 - `capacidade_diaria`
 
 Relacionamentos:
 
 - Pode ter muitas campanhas.
 - Pode ter muitos registros de estoque de sangue.
+
+Observacoes:
+
+- `endereco` foi substituido por campos estruturados.
+- O model `LocalColeta` expoe `endereco_completo` para exibicao formatada.
+- O formulario administrativo pode preencher logradouro, bairro, cidade e UF a partir do CEP.
 
 ### `campanhas`
 
@@ -88,7 +99,7 @@ Campos principais:
 - `local_coleta_id`
 - `titulo`
 - `descricao`
-- `tipo_sanguineo_alvo`
+- `tipos_sanguineos_alvo`
 - `meta_bolsas`
 - `data_inicio`
 - `data_fim`
@@ -105,6 +116,11 @@ Relacionamentos:
 - Pertence a um usuario criador.
 - Pertence a um local de coleta.
 - Pode ter muitos agendamentos.
+
+Observacoes:
+
+- `tipos_sanguineos_alvo` e um campo JSON.
+- Valor `null` em `tipos_sanguineos_alvo` significa que a campanha aceita todos os tipos sanguineos.
 
 ### `estoques_sangue`
 

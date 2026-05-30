@@ -43,21 +43,26 @@ Este documento registra os fluxos existentes no sistema.
 3. Usuario envia `PUT /conta`.
 4. Sistema valida nome, e-mail e senha opcional.
 5. Sistema garante que o e-mail informado nao pertence a outro usuario.
-6. Se uma nova senha for enviada, sistema valida a confirmacao da senha.
-7. Sistema atualiza apenas os dados da propria conta.
-8. Sistema retorna para a pagina anterior com mensagem de sucesso.
+6. Se uma nova senha for enviada, sistema valida a senha atual.
+7. Se uma nova senha for enviada, sistema valida a confirmacao da senha.
+8. Sistema atualiza apenas os dados da propria conta.
+9. Sistema retorna para a pagina anterior com mensagem de sucesso.
 
 ## Exclusao da conta
 
 1. Usuario autenticado acessa `GET /conta`.
-2. Sistema exibe a area de exclusao da conta.
-3. Usuario informa a senha atual e envia `DELETE /conta`.
-4. Sistema valida a senha atual do usuario.
-5. Se a senha for valida, sistema encerra a autenticacao.
-6. Sistema exclui a conta do usuario.
-7. Sessao atual e invalidada.
-8. Token CSRF e regenerado.
-9. Usuario e redirecionado para `/` com mensagem de sucesso.
+2. Sistema exibe a acao de exclusao como uma zona de risco discreta.
+3. Usuario aciona a exclusao.
+4. Sistema abre um alerta central de confirmacao e bloqueia a continuidade por alguns segundos.
+5. Usuario confirma que deseja continuar.
+6. Sistema solicita a senha atual dentro do alerta.
+7. Usuario informa a senha e o formulario oculto envia `DELETE /conta`.
+8. Sistema valida a senha atual do usuario.
+9. Se a senha for valida, sistema encerra a autenticacao.
+10. Sistema exclui a conta do usuario.
+11. Sessao atual e invalidada.
+12. Token CSRF e regenerado.
+13. Usuario e redirecionado para `/` com mensagem de sucesso.
 
 ## Emissao da carteirinha de doador
 
@@ -90,21 +95,24 @@ Este documento registra os fluxos existentes no sistema.
 
 1. Admin autenticado acessa `GET /admin/locais-coleta`.
 2. Sistema exibe a tela de locais de coleta.
-3. Admin preenche o formulario de cadastro.
-4. Admin envia `POST /admin/locais-coleta`.
-5. Sistema valida nome, endereco, cidade e capacidade diaria.
-6. Se os dados forem validos, sistema cria o local de coleta.
-7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+3. Admin informa o CEP.
+4. Sistema tenta buscar o endereco pelo CEP e preencher logradouro, bairro, cidade e UF.
+5. Admin completa numero, complemento quando houver, nome e capacidade diaria.
+6. Admin envia `POST /admin/locais-coleta`.
+7. Sistema valida nome, CEP, logradouro, numero, bairro, cidade, UF, complemento e capacidade diaria.
+8. Se os dados forem validos, sistema cria o local de coleta.
+9. Sistema retorna para a pagina anterior com mensagem de sucesso.
 
 ## Atualizacao de local de coleta
 
 1. Admin autenticado acessa `GET /admin/locais-coleta`.
 2. Sistema exibe a lista de locais cadastrados.
 3. Admin aciona a opcao de editar um local.
-4. Admin envia `PUT /admin/locais-coleta/{localColeta}`.
-5. Sistema valida nome, endereco, cidade e capacidade diaria.
-6. Se os dados forem validos, sistema atualiza o local de coleta informado.
-7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+4. Admin pode alterar o CEP para preencher novamente parte do endereco.
+5. Admin envia `PUT /admin/locais-coleta/{localColeta}`.
+6. Sistema valida nome, CEP, logradouro, numero, bairro, cidade, UF, complemento e capacidade diaria.
+7. Se os dados forem validos, sistema atualiza o local de coleta informado.
+8. Sistema retorna para a pagina anterior com mensagem de sucesso.
 
 ## Exclusao de local de coleta
 
@@ -115,6 +123,48 @@ Este documento registra os fluxos existentes no sistema.
 5. Se houver vinculo, sistema bloqueia a exclusao e retorna erro de validacao.
 6. Se nao houver vinculo, sistema exclui o local de coleta.
 7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Cadastro de campanha
+
+1. Admin autenticado acessa `GET /admin/campanhas`.
+2. Sistema exibe a tela de campanhas.
+3. Admin abre o formulario de nova campanha.
+4. Admin informa local de coleta, titulo, descricao, tipos sanguineos alvo, meta e datas.
+5. Admin envia `POST /admin/campanhas`.
+6. Sistema valida os dados informados.
+7. Se nenhum tipo sanguineo alvo for marcado, sistema considera a campanha para todos os tipos.
+8. Sistema cria a campanha com status `ativa` e registra o admin como criador.
+9. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Atualizacao de campanha
+
+1. Admin autenticado acessa `GET /admin/campanhas`.
+2. Sistema exibe a lista de campanhas cadastradas.
+3. Admin aciona a opcao de editar uma campanha.
+4. Admin altera dados, tipos sanguineos alvo e status.
+5. Admin envia `PUT /admin/campanhas/{campanha}`.
+6. Sistema valida os dados informados.
+7. Se os dados forem validos, sistema atualiza a campanha.
+8. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Exclusao de campanha
+
+1. Admin autenticado acessa `GET /admin/campanhas`.
+2. Sistema exibe a lista de campanhas cadastradas.
+3. Admin envia `DELETE /admin/campanhas/{campanha}`.
+4. Sistema verifica se a campanha possui agendamentos vinculados.
+5. Se houver vinculo, sistema bloqueia a exclusao e retorna erro de validacao.
+6. Se nao houver vinculo, sistema exclui a campanha.
+7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Alteracao de tema
+
+1. Usuario acessa qualquer tela com o layout principal.
+2. Sistema aplica a preferencia salva em `localStorage`.
+3. Se nao houver preferencia salva, sistema usa a opcao `Sistema`.
+4. Na opcao `Sistema`, o tema segue a configuracao do navegador ou sistema operacional.
+5. Usuario pode abrir o seletor discreto na navbar e escolher `Sistema`, `Claro` ou `Escuro`.
+6. Sistema salva a preferencia e atualiza o tema da pagina.
 
 ## Promocao de usuario para admin
 

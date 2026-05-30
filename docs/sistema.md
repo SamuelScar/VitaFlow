@@ -12,9 +12,23 @@ Exemplos:
 
 - `Auth\LoginController`: fluxo de login.
 - `Auth\RegisterController`: fluxo de cadastro.
+- `ContaController`: fluxo de edicao e exclusao da propria conta.
 - `Admin\UserPromotionController`: fluxo administrativo de promocao de usuario.
+- `Admin\LocalColetaController`: fluxo administrativo de locais de coleta.
+- `Admin\CampanhaController`: fluxo administrativo de campanhas.
 
 Essa decisao evita controllers grandes demais e deixa cada entrada HTTP com uma responsabilidade clara.
+
+## Frontend
+
+O frontend usa Blade, Bootstrap, Bootstrap Icons, SweetAlert2 e JavaScript em `resources/js/app.js`.
+
+Comportamentos globais importantes:
+
+- `data-validate-form`: ativa validacao client-side, alerta lateral e rolagem ate o primeiro campo invalido.
+- `data-cep-lookup`: ativa consulta de CEP para preencher campos de endereco.
+- `data-theme-value`: controla a selecao de tema `system`, `light` ou `dark`.
+- Alertas de sucesso e erro devem usar os helpers globais do SweetAlert2.
 
 ## Indice
 
