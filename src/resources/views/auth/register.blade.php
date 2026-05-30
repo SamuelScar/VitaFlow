@@ -7,7 +7,7 @@
                 <p class="text-secondary mb-0">Cadastre-se para acessar o {{ config('app.name') }}.</p>
             </header>
 
-            <form method="POST" action="{{ route('register.store') }}">
+            <form method="POST" action="{{ route('register.store') }}" data-validate-form>
                 @csrf
 
                 <div class="mb-3">
@@ -53,6 +53,7 @@
                         type="password"
                         placeholder="Minimo de 8 caracteres"
                         autocomplete="new-password"
+                        minlength="8"
                         required
                     >
                     @error('password')
@@ -69,6 +70,8 @@
                         type="password"
                         placeholder="Repita sua senha"
                         autocomplete="new-password"
+                        data-matches-field="[name='password']"
+                        data-matches-message="A confirmacao deve ser igual a senha."
                         required
                     >
                 </div>

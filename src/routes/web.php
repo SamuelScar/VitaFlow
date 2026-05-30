@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CampanhaController;
 use App\Http\Controllers\Admin\LocalColetaController;
 use App\Http\Controllers\Admin\UserPromotionController;
 use App\Http\Controllers\Auth\LoginController;
@@ -13,7 +14,6 @@ Route::view('/', 'home')->name('home');
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
-
 Route::get('/cadastro', [RegisterController::class, 'create'])->name('register');
 Route::post('/cadastro', [RegisterController::class, 'store'])->name('register.store');
 
@@ -41,6 +41,14 @@ Route::middleware('auth')->group(function (): void {
             ->name('admin.locais-coleta.update');
         Route::delete('/admin/locais-coleta/{localColeta}', [LocalColetaController::class, 'destroy'])
             ->name('admin.locais-coleta.destroy');
+        Route::get('/admin/campanhas', [CampanhaController::class, 'index'])
+            ->name('admin.campanhas.index');
+        Route::post('/admin/campanhas', [CampanhaController::class, 'store'])
+            ->name('admin.campanhas.store');
+        Route::put('/admin/campanhas/{campanha}', [CampanhaController::class, 'update'])
+            ->name('admin.campanhas.update');
+        Route::delete('/admin/campanhas/{campanha}', [CampanhaController::class, 'destroy'])
+            ->name('admin.campanhas.destroy');
         Route::post('/usuarios/{user}/promover-admin', UserPromotionController::class)
             ->name('users.promote-admin');
     });

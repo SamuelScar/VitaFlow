@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'local_coleta_id',
     'titulo',
     'descricao',
-    'tipo_sanguineo_alvo',
+    'tipos_sanguineos_alvo',
     'meta_bolsas',
     'data_inicio',
     'data_fim',
@@ -40,6 +40,7 @@ class Campanha extends Model
     protected function casts(): array
     {
         return [
+            'tipos_sanguineos_alvo' => 'array',
             'meta_bolsas' => 'integer',
             'data_inicio' => 'date',
             'data_fim' => 'date',

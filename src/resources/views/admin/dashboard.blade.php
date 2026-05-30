@@ -35,7 +35,9 @@
             <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
                     title="Campanhas de sangue"
-                    description="Criacao e edicao de campanhas de doacao ficarao aqui."
+                    description="Crie, atualize e encerre campanhas de doacao de sangue."
+                    :href="route('admin.campanhas.index')"
+                    button-label="Gerenciar campanhas"
                 />
             </div>
 

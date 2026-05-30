@@ -7,7 +7,7 @@
                 <p class="text-secondary mb-0">Acesse sua conta {{ config('app.name') }}.</p>
             </header>
 
-            <form method="POST" action="{{ route('login.store') }}">
+            <form method="POST" action="{{ route('login.store') }}" data-validate-form>
                 @csrf
 
                 <div class="mb-3">

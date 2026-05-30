@@ -22,7 +22,7 @@
     <section class="container py-5">
         <div class="row g-4 align-items-start">
             <div class="col-lg-8">
-                <form method="POST" action="{{ route('conta.update') }}" class="card shadow-sm rounded-3">
+                <form method="POST" action="{{ route('conta.update') }}" class="card shadow-sm rounded-3" data-validate-form>
                     @csrf
                     @method('PUT')
 
@@ -77,6 +77,7 @@
                                     name="password"
                                     type="password"
                                     autocomplete="new-password"
+                                    minlength="8"
                                 >
                                 @error('password', 'updateConta')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -91,6 +92,8 @@
                                     name="password_confirmation"
                                     type="password"
                                     autocomplete="new-password"
+                                    data-matches-field="[name='password']"
+                                    data-matches-message="A confirmacao deve ser igual a nova senha."
                                 >
                             </div>
                         </div>
@@ -103,7 +106,7 @@
             </div>
 
             <div class="col-lg-4">
-                <form method="POST" action="{{ route('conta.destroy') }}" class="card border-danger shadow-sm rounded-3">
+                <form method="POST" action="{{ route('conta.destroy') }}" class="card border-danger shadow-sm rounded-3" data-validate-form>
                     @csrf
                     @method('DELETE')
 

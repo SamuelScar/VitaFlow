@@ -8,6 +8,7 @@
     class="card border rounded-3 shadow-sm p-4 donor-pass-edit-form donor-pass-card {{ $editando ? 'is-editing' : '' }}"
     data-editable-pass
     data-editing="{{ $editando ? 'true' : 'false' }}"
+    data-validate-form
 >
     @csrf
     @method('PUT')

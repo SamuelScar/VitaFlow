@@ -3,7 +3,7 @@
     $fieldValue = fn (string $field, mixed $default = '') => $useOldValues ? old($field, $default) : $default;
 @endphp
 
-<form method="POST" action="{{ $action }}" class="row g-3">
+<form method="POST" action="{{ $action }}" class="row g-3" data-validate-form>
     @csrf
 
     @isset($method)
