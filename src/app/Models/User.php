@@ -37,6 +37,11 @@ class User extends Authenticatable
         return $this->tipo === self::TIPO_ADMIN;
     }
 
+    public function isDoador(): bool
+    {
+        return $this->tipo === self::TIPO_DOADOR;
+    }
+
     public function promoteToAdmin(): void
     {
         if ($this->isAdmin()) {

@@ -9,6 +9,18 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
+        @if (session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    window.alertSuccess({
+                        text: @json(session('success')),
+                        redirectUrl: @json(session('alert_redirect')),
+                        timer: @json(session('alert_timer', 3000)),
+                    });
+                });
+            </script>
+        @endif
+
         <nav class="navbar navbar-expand-lg bg-white border-bottom">
             <div class="container py-2">
                 <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="{{ route('home') }}">

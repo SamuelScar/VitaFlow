@@ -127,6 +127,77 @@ View:
 resources/views/usuario/dashboard.blade.php
 ```
 
+Comportamento atual:
+
+- Exibe atalhos para campanhas abertas, historico de doacoes e carteirinha.
+- A acao da carteirinha leva para a tela propria de emissao ou visualizacao.
+
+## Tela da carteirinha de doador
+
+```text
+GET /usuario/carteirinha
+```
+
+Exibe a tela de carteirinha do doador autenticado.
+
+Controller:
+
+```text
+App\Http\Controllers\Doador\CarteiraDoacaoController@create
+```
+
+Middlewares:
+
+- `auth`
+
+View:
+
+```text
+resources/views/usuario/carteirinha.blade.php
+```
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `doador` podem acessar.
+- Se o doador ainda nao tiver carteirinha, exibe o formulario de emissao.
+- Se o doador ja tiver carteirinha, exibe o resumo dos dados cadastrados.
+
+## Emitir carteirinha de doador
+
+```text
+POST /usuario/carteirinha
+```
+
+Cria a carteirinha de doador para o usuario autenticado.
+
+Controller:
+
+```text
+App\Http\Controllers\Doador\CarteiraDoacaoController@store
+```
+
+Middlewares:
+
+- `auth`
+
+Campos:
+
+- `cpf`: obrigatorio, deve ter 11 digitos e ser unico.
+- `telefone`: obrigatorio, texto e maximo de 20 caracteres.
+- `data_nascimento`: obrigatorio, data e nao pode ser futura.
+- `tipo_sanguineo`: obrigatorio e deve ser um tipo sanguineo aceito pelo sistema.
+- `peso`: obrigatorio, numerico e deve caber no formato do banco.
+- `cidade`: obrigatorio, texto e maximo de 255 caracteres.
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `doador` podem emitir carteirinha.
+- Se o usuario autenticado for `admin`, retorna erro `403`.
+- Se o usuario ja tiver carteirinha, retorna erro de validacao.
+- O CPF e salvo apenas com digitos.
+- Se os dados forem validos, cria uma carteira com status `ativa`.
+- A data de emissao e preenchida automaticamente.
+
 ## Painel admin
 
 ```text

@@ -30,3 +30,17 @@ Este documento registra regras que afetam comportamento do sistema.
 - O cadastro comum nao permite criar usuario com tipo `admin`.
 - Apenas usuarios com tipo `admin` podem promover outro usuario para admin.
 - A promocao de privilegio altera o tipo do usuario promovido para `admin`.
+
+## Carteirinha de doador
+
+- Apenas usuarios autenticados com tipo `doador` podem emitir carteirinha.
+- Cada usuario doador pode ter apenas uma carteirinha.
+- O `cpf` e obrigatorio, deve ter 11 digitos e deve ser unico.
+- O `cpf` e salvo apenas com digitos.
+- O `telefone` e obrigatorio.
+- A `data_nascimento` e obrigatoria e nao pode ser futura.
+- O `tipo_sanguineo` e obrigatorio e deve estar na lista de tipos aceitos pelo sistema.
+- O `peso` e obrigatorio.
+- A `cidade` e obrigatoria.
+- Carteirinhas emitidas pelo fluxo comum entram com status `ativa`.
+- A data de emissao e preenchida automaticamente pelo sistema.

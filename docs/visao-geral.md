@@ -1,12 +1,17 @@
 # Visao geral
 
-O VitaFlow/DoeVida e um sistema para apoiar fluxos relacionados a doacao de sangue, como campanhas, agendamentos, doadores e acompanhamento de status.
+O VitaFlow e um sistema web para organizar campanhas de doacao de sangue, aproximando administradores, doadores e visitantes em um unico fluxo.
 
-Por enquanto, o projeto esta na base inicial do monolito:
+O sistema permite que administradores gerenciem campanhas, locais de coleta, horarios, vagas, participacao de doadores, doacoes e relatorios. Doadores podem consultar campanhas, criar conta, agendar participacoes e acompanhar seu historico. Visitantes podem visualizar informacoes publicas e precisam se cadastrar para agendar.
+
+Estado atual do monolito:
 
 - Laravel com PostgreSQL.
-- Views Blade.
-- Livewire disponivel para telas interativas.
+- Views Blade renderizadas no servidor.
+- Autenticacao web por sessao.
+- Perfis `admin` e `doador` no model `User`.
+- Home publica, login, cadastro, logout e dashboards por perfil.
+- Modelagem inicial do dominio de doacao de sangue.
 - Bootstrap para componentes visuais.
 - Vite para assets em desenvolvimento.
 
@@ -15,5 +20,5 @@ Por enquanto, o projeto esta na base inicial do monolito:
 Fluxo principal do monolito:
 
 ```text
-rota web -> controller/livewire -> regra de negocio -> view blade
+rota web -> controller -> regra de negocio -> view blade
 ```

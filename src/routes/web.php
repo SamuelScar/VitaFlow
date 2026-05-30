@@ -4,34 +4,32 @@ use App\Http\Controllers\Admin\UserPromotionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Doador\CarteiraDoacaoController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
-Route::post('/logout', [LoginController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
 
 Route::get('/cadastro', [RegisterController::class, 'create'])->name('register');
 Route::post('/cadastro', [RegisterController::class, 'store'])->name('register.store');
 
-Route::get('/dashboard', DashboardController::class)
-    ->middleware('auth')
-    ->name('dashboard');
+Route::middleware('auth')->group(function (): void {
+    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::view('/usuario', 'usuario.dashboard')->name('usuario.dashboard');
+    Route::get('/usuario/carteirinha', [CarteiraDoacaoController::class, 'create'])
+        ->name('usuario.carteirinha');
+    Route::post('/usuario/carteirinha', [CarteiraDoacaoController::class, 'store'])
+        ->name('usuario.carteirinha.store');
 
-Route::view('/usuario', 'usuario.dashboard')
-    ->middleware('auth')
-    ->name('usuario.dashboard');
-
-Route::view('/admin', 'admin.dashboard')
-    ->middleware(['auth', 'admin'])
-    ->name('admin.dashboard');
-
-Route::post('/usuarios/{user}/promover-admin', UserPromotionController::class)
-    ->middleware(['auth', 'admin'])
-    ->name('users.promote-admin');
+    Route::middleware('admin')->group(function (): void {
+        Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+        Route::post('/usuarios/{user}/promover-admin', UserPromotionController::class)
+            ->name('users.promote-admin');
+    });
+});
 
 Route::get('/health', function () {
     return response()->json([

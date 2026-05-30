@@ -1,6 +1,6 @@
 # Documentacao do sistema
 
-Documentacao funcional e tecnica do VitaFlow/DoeVida.
+Documentacao funcional e tecnica do VitaFlow.
 
 O sistema segue como um monolito Laravel com paginas renderizadas no servidor. A documentacao fica separada por assunto para facilitar manutencao.
 
@@ -30,7 +30,7 @@ Essa decisao evita controllers grandes demais e deixa cada entrada HTTP com uma 
 Ao criar ou alterar uma tela importante, atualizar os arquivos relacionados com o que existe no sistema:
 
 - rota web;
-- controller ou componente Livewire responsavel;
+- controller responsavel;
 - view principal;
 - regras de validacao;
 - comportamento atual;

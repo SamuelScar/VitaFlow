@@ -9,7 +9,22 @@ Este documento registra os fluxos existentes no sistema.
 3. Usuario informa e-mail e senha.
 4. Sistema valida as credenciais em `POST /login`.
 5. Se as credenciais forem validas, a sessao e regenerada.
-6. Usuario e redirecionado para `/health`.
+6. Usuario e redirecionado para `/dashboard`.
+
+## Dashboard
+
+1. Usuario autenticado acessa `GET /dashboard`.
+2. Sistema verifica o tipo do usuario logado.
+3. Se o usuario for `admin`, redireciona para `/admin`.
+4. Se o usuario for `doador`, redireciona para `/usuario`.
+
+## Logout
+
+1. Usuario autenticado envia `POST /logout`.
+2. Sistema encerra a autenticacao.
+3. Sessao atual e invalidada.
+4. Token CSRF e regenerado.
+5. Usuario e redirecionado para `/`.
 
 ## Cadastro
 
@@ -20,6 +35,27 @@ Este documento registra os fluxos existentes no sistema.
 5. Se os dados forem validos, o usuario e criado.
 6. Sistema exibe mensagem de sucesso.
 7. Usuario e redirecionado para `/login` apos alguns segundos.
+
+## Emissao da carteirinha de doador
+
+1. Doador autenticado acessa `GET /usuario`.
+2. Sistema exibe o atalho da carteirinha no dashboard do doador.
+3. Doador acessa `GET /usuario/carteirinha`.
+4. Se ainda nao tiver carteirinha, sistema exibe o formulario de emissao.
+5. Doador envia `POST /usuario/carteirinha`.
+6. Sistema valida se o usuario logado tem tipo `doador`.
+7. Sistema verifica se o doador ainda nao possui carteirinha.
+8. Sistema valida os dados informados.
+9. Se os dados forem validos, cria a carteirinha com status `ativa`.
+10. Sistema registra a data de emissao automaticamente.
+11. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
+
+## Promocao de usuario para admin
+
+1. Admin autenticado envia `POST /usuarios/{user}/promover-admin`.
+2. Sistema valida o acesso pelo middleware `admin`.
+3. Usuario informado tem seu tipo alterado para `admin`.
+4. Sistema retorna para a pagina anterior com mensagem de sucesso.
 
 ## Health check
 
