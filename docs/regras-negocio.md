@@ -31,6 +31,19 @@ Este documento registra regras que afetam comportamento do sistema.
 - Apenas usuarios com tipo `admin` podem promover outro usuario para admin.
 - A promocao de privilegio altera o tipo do usuario promovido para `admin`.
 
+## Conta do usuario
+
+- Apenas usuarios autenticados podem atualizar os dados da propria conta.
+- O campo `name` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `email` e obrigatorio, deve ser valido, deve ter no maximo 255 caracteres e deve ser unico.
+- Na atualizacao, o e-mail atual do proprio usuario nao conta como duplicado.
+- A senha e opcional na atualizacao da conta.
+- Se uma nova senha for informada, ela deve ter no minimo 8 caracteres e ser confirmada por `password_confirmation`.
+- A atualizacao da conta nao altera o tipo do usuario.
+- Apenas usuarios autenticados podem excluir a propria conta.
+- Para excluir a conta, a senha atual deve ser confirmada.
+- Ao excluir a conta, a sessao atual e encerrada.
+
 ## Carteirinha de doador
 
 - Apenas usuarios autenticados com tipo `doador` podem emitir carteirinha.

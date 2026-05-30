@@ -86,6 +86,99 @@ Comportamento atual:
 - Regenera o token CSRF.
 - Redireciona para `/`.
 
+## Tela de dados da conta
+
+```text
+GET /conta
+```
+
+Exibe a tela para editar dados da conta e solicitar exclusao da propria conta.
+
+Controller:
+
+```text
+App\Http\Controllers\ContaController@edit
+```
+
+Middlewares:
+
+- `auth`
+
+View:
+
+```text
+resources/views/conta/edit.blade.php
+```
+
+Comportamento atual:
+
+- Exibe formulario para atualizar nome, e-mail e senha opcional.
+- Exibe area separada para excluir a propria conta.
+- A navegacao para essa tela fica no dropdown do usuario autenticado.
+
+## Atualizar dados da conta
+
+```text
+PUT /conta
+```
+
+Atualiza os dados da conta do usuario autenticado.
+
+Controller:
+
+```text
+App\Http\Controllers\ContaController@update
+```
+
+Middlewares:
+
+- `auth`
+
+Campos:
+
+- `name`: obrigatorio, texto e maximo de 255 caracteres.
+- `email`: obrigatorio, e-mail valido, maximo de 255 caracteres e unico.
+- `password`: opcional, minimo de 8 caracteres e precisa ser confirmado quando informado.
+- `password_confirmation`: obrigatorio quando `password` for informado.
+
+Comportamento atual:
+
+- Atualiza apenas a conta do usuario autenticado.
+- A validacao de e-mail unico ignora o proprio usuario.
+- Se a senha nao for informada, a senha atual e mantida.
+- A atualizacao da conta nao permite alterar o tipo do usuario.
+- Apos atualizar, retorna para a pagina anterior com mensagem de sucesso.
+
+## Excluir conta
+
+```text
+DELETE /conta
+```
+
+Exclui a conta do usuario autenticado.
+
+Controller:
+
+```text
+App\Http\Controllers\ContaController@destroy
+```
+
+Middlewares:
+
+- `auth`
+
+Campos:
+
+- `password`: obrigatorio e deve ser a senha atual do usuario.
+
+Comportamento atual:
+
+- Exclui apenas a conta do usuario autenticado.
+- Se a senha atual estiver incorreta, retorna erro de validacao.
+- Apos excluir, encerra a autenticacao.
+- Invalida a sessao atual e regenera o token CSRF.
+- Redireciona para `/` com mensagem de sucesso.
+
 ## Dashboard
 
 ```text

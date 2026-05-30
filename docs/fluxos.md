@@ -36,6 +36,29 @@ Este documento registra os fluxos existentes no sistema.
 6. Sistema exibe mensagem de sucesso.
 7. Usuario e redirecionado para `/login` apos alguns segundos.
 
+## Atualizacao dos dados da conta
+
+1. Usuario autenticado acessa `GET /conta`.
+2. Sistema exibe a tela de dados da conta.
+3. Usuario envia `PUT /conta`.
+4. Sistema valida nome, e-mail e senha opcional.
+5. Sistema garante que o e-mail informado nao pertence a outro usuario.
+6. Se uma nova senha for enviada, sistema valida a confirmacao da senha.
+7. Sistema atualiza apenas os dados da propria conta.
+8. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Exclusao da conta
+
+1. Usuario autenticado acessa `GET /conta`.
+2. Sistema exibe a area de exclusao da conta.
+3. Usuario informa a senha atual e envia `DELETE /conta`.
+4. Sistema valida a senha atual do usuario.
+5. Se a senha for valida, sistema encerra a autenticacao.
+6. Sistema exclui a conta do usuario.
+7. Sessao atual e invalidada.
+8. Token CSRF e regenerado.
+9. Usuario e redirecionado para `/` com mensagem de sucesso.
+
 ## Emissao da carteirinha de doador
 
 1. Doador autenticado acessa `GET /usuario`.

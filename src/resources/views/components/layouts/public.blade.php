@@ -30,11 +30,31 @@
 
                 <div class="d-flex align-items-center gap-2">
                     @auth
-                        <a class="btn btn-outline-secondary" href="{{ route('dashboard') }}">Minha area</a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="btn btn-outline-danger" type="submit">Sair</button>
-                        </form>
+                        <div class="dropdown">
+                            <button
+                                class="btn btn-outline-secondary dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                {{ auth()->user()->name }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('dashboard') }}">Minha area</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('conta.edit') }}">Dados da conta</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button class="dropdown-item text-danger" type="submit">Sair</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     @else
                         <a class="btn btn-outline-secondary" href="{{ route('login') }}">Entrar</a>
                         <a class="btn btn-primary" href="{{ route('register') }}">Criar conta</a>

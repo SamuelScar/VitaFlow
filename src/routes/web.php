@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\UserPromotionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ContaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Doador\CarteiraDoacaoController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,9 @@ Route::post('/cadastro', [RegisterController::class, 'store'])->name('register.s
 
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+    Route::get('/conta', [ContaController::class, 'edit'])->name('conta.edit');
+    Route::put('/conta', [ContaController::class, 'update'])->name('conta.update');
+    Route::delete('/conta', [ContaController::class, 'destroy'])->name('conta.destroy');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::view('/usuario', 'usuario.dashboard')->name('usuario.dashboard');
     Route::get('/usuario/carteirinha', [CarteiraDoacaoController::class, 'create'])
