@@ -1,0 +1,134 @@
+<x-layouts.public title="Locais de coleta">
+    @php
+        $criando = $errors->storeLocalColeta->any();
+    @endphp
+
+    <section class="bg-white border-bottom">
+        <div class="container py-5">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div>
+                    <span class="badge text-bg-light border mb-3">Administracao</span>
+                    <h1 class="h2 fw-bold mb-2">Locais de coleta</h1>
+                    <p class="text-secondary mb-0">
+                        Cadastre e mantenha os pontos onde as doacoes de sangue acontecem.
+                    </p>
+                </div>
+
+                <a class="btn btn-outline-secondary" href="{{ route('admin.dashboard') }}">Voltar</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5">
+        <article class="card shadow-sm rounded-3">
+            <div class="card-body p-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+                    <div>
+                        <h2 class="h5 fw-bold mb-1">Locais cadastrados</h2>
+                        <p class="text-secondary mb-0">Gerencie os locais disponiveis para campanhas.</p>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-start gap-2">
+                        <span class="badge text-bg-light border">
+                            {{ $locaisColeta->count() }} {{ $locaisColeta->count() === 1 ? 'local' : 'locais' }}
+                        </span>
+                        <button
+                            class="btn btn-primary"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#novo-local-coleta"
+                            aria-expanded="{{ $criando ? 'true' : 'false' }}"
+                            aria-controls="novo-local-coleta"
+                        >
+                            Novo local
+                        </button>
+                    </div>
+                </div>
+
+                <div class="collapse {{ $criando ? 'show' : '' }} mb-4" id="novo-local-coleta">
+                    <div class="border rounded-3 p-3">
+                        <h3 class="h6 fw-bold mb-1">Cadastrar local</h3>
+                        <p class="text-secondary mb-3">Informe os dados do novo ponto de coleta.</p>
+
+                        @include('admin.locais-coleta.partials.form', [
+                            'action' => route('admin.locais-coleta.store'),
+                            'submitLabel' => 'Cadastrar local',
+                            'idPrefix' => 'criar_local_coleta',
+                            'localColeta' => null,
+                            'errorBag' => 'storeLocalColeta',
+                            'useOldValues' => $criando,
+                        ])
+                    </div>
+                </div>
+
+                @if ($errors->has('local_coleta'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ $errors->first('local_coleta') }}
+                    </div>
+                @endif
+
+                @forelse ($locaisColeta as $localColeta)
+                    @php
+                        $editando = $errors->updateLocalColeta->any()
+                            && (int) old('local_coleta_id') === $localColeta->id;
+                    @endphp
+
+                    <div class="border rounded-3 p-3 mb-3">
+                        <div class="d-flex flex-column flex-xl-row justify-content-between gap-3">
+                            <div>
+                                <h3 class="h6 fw-bold mb-1">{{ $localColeta->nome }}</h3>
+                                <p class="text-secondary mb-2">{{ $localColeta->endereco }}</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge text-bg-light border">{{ $localColeta->cidade }}</span>
+                                    <span class="badge text-bg-light border">
+                                        {{ $localColeta->capacidade_diaria }} doacoes/dia
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap align-items-start gap-2">
+                                <button
+                                    class="btn btn-outline-secondary"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#editar-local-{{ $localColeta->id }}"
+                                    aria-expanded="{{ $editando ? 'true' : 'false' }}"
+                                    aria-controls="editar-local-{{ $localColeta->id }}"
+                                >
+                                    Editar
+                                </button>
+
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.locais-coleta.destroy', $localColeta) }}"
+                                    onsubmit="return confirm('Excluir este local de coleta?')"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-outline-danger" type="submit">Excluir</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="collapse {{ $editando ? 'show' : '' }} mt-4" id="editar-local-{{ $localColeta->id }}">
+                            @include('admin.locais-coleta.partials.form', [
+                                'action' => route('admin.locais-coleta.update', $localColeta),
+                                'method' => 'PUT',
+                                'submitLabel' => 'Salvar alteracoes',
+                                'idPrefix' => "editar_local_coleta_{$localColeta->id}",
+                                'localColeta' => $localColeta,
+                                'errorBag' => 'updateLocalColeta',
+                                'useOldValues' => $editando,
+                            ])
+                        </div>
+                    </div>
+                @empty
+                    <div class="border rounded-3 p-4 text-center">
+                        <h3 class="h6 fw-bold mb-1">Nenhum local cadastrado</h3>
+                        <p class="text-secondary mb-0">Cadastre o primeiro local para usar nas campanhas.</p>
+                    </div>
+                @endforelse
+            </div>
+        </article>
+    </section>
+</x-layouts.public>

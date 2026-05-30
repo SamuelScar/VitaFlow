@@ -44,6 +44,16 @@ Este documento registra regras que afetam comportamento do sistema.
 - Para excluir a conta, a senha atual deve ser confirmada.
 - Ao excluir a conta, a sessao atual e encerrada.
 
+## Locais de coleta
+
+- Apenas usuarios autenticados com tipo `admin` podem cadastrar, atualizar ou excluir locais de coleta.
+- O campo `nome` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `endereco` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `cidade` e obrigatorio e deve ter no maximo 255 caracteres.
+- O campo `capacidade_diaria` e obrigatorio, deve ser inteiro e deve ficar entre 1 e 10000.
+- Locais de coleta com campanhas vinculadas nao podem ser excluidos.
+- Locais de coleta com estoque de sangue vinculado nao podem ser excluidos.
+
 ## Carteirinha de doador
 
 - Apenas usuarios autenticados com tipo `doador` podem emitir carteirinha.

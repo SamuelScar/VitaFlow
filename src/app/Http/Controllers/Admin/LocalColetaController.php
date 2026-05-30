@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\LocalColeta;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class LocalColetaController extends Controller
+{
+    public function index(): View
+    {
+        return view('admin.locais-coleta.index', [
+            'locaisColeta' => LocalColeta::orderBy('nome')->get(),
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        LocalColeta::create($request->validateWithBag('storeLocalColeta', $this->rules()));
+
+        return back()->with('success', 'Local de coleta cadastrado com sucesso.');
+    }
+
+    public function update(Request $request, LocalColeta $localColeta): RedirectResponse
+    {
+        $localColeta->update($request->validateWithBag('updateLocalColeta', $this->rules()));
+
+        return back()->with('success', 'Local de coleta atualizado com sucesso.');
+    }
+
+    public function destroy(LocalColeta $localColeta): RedirectResponse
+    {
+        if ($localColeta->campanhas()->exists() || $localColeta->estoquesSangue()->exists()) {
+            return back()->withErrors([
+                'local_coleta' => 'Nao e possivel excluir um local de coleta com campanhas ou estoque vinculado.',
+            ]);
+        }
+
+        $localColeta->delete();
+
+        return back()->with('success', 'Local de coleta excluido com sucesso.');
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function rules(): array
+    {
+        return [
+            'nome' => ['required', 'string', 'max:255'],
+            'endereco' => ['required', 'string', 'max:255'],
+            'cidade' => ['required', 'string', 'max:255'],
+            'capacidade_diaria' => ['required', 'integer', 'min:1', 'max:10000'],
+        ];
+    }
+}

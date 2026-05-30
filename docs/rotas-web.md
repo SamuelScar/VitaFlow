@@ -347,6 +347,128 @@ View:
 resources/views/admin/dashboard.blade.php
 ```
 
+## Tela de locais de coleta
+
+```text
+GET /admin/locais-coleta
+```
+
+Exibe a tela administrativa de locais de coleta.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\LocalColetaController@index
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/locais-coleta/index.blade.php
+```
+
+Comportamento atual:
+
+- Lista os locais de coleta cadastrados.
+- Exibe formulario para cadastrar novo local.
+- Permite abrir o formulario de edicao de cada local.
+- Permite solicitar exclusao de locais sem campanhas ou estoque vinculado.
+
+## Cadastrar local de coleta
+
+```text
+POST /admin/locais-coleta
+```
+
+Cadastra um local de coleta.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\LocalColetaController@store
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Campos:
+
+- `nome`: obrigatorio, texto e maximo de 255 caracteres.
+- `endereco`: obrigatorio, texto e maximo de 255 caracteres.
+- `cidade`: obrigatorio, texto e maximo de 255 caracteres.
+- `capacidade_diaria`: obrigatorio, inteiro, minimo de 1 e maximo de 10000.
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `admin` podem cadastrar locais de coleta.
+- Se os dados forem validos, cria o local de coleta.
+- Apos cadastrar, retorna para a pagina anterior com mensagem de sucesso.
+
+## Atualizar local de coleta
+
+```text
+PUT /admin/locais-coleta/{localColeta}
+```
+
+Atualiza os dados de um local de coleta.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\LocalColetaController@update
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Campos:
+
+- `nome`: obrigatorio, texto e maximo de 255 caracteres.
+- `endereco`: obrigatorio, texto e maximo de 255 caracteres.
+- `cidade`: obrigatorio, texto e maximo de 255 caracteres.
+- `capacidade_diaria`: obrigatorio, inteiro, minimo de 1 e maximo de 10000.
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `admin` podem atualizar locais de coleta.
+- Se o local existir e os dados forem validos, atualiza o registro.
+- Apos atualizar, retorna para a pagina anterior com mensagem de sucesso.
+
+## Excluir local de coleta
+
+```text
+DELETE /admin/locais-coleta/{localColeta}
+```
+
+Exclui um local de coleta.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\LocalColetaController@destroy
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `admin` podem excluir locais de coleta.
+- Se o local tiver campanhas ou estoque de sangue vinculado, a exclusao e bloqueada.
+- Se o local nao tiver vinculos, exclui o registro.
+- Apos excluir, retorna para a pagina anterior com mensagem de sucesso.
+
 ## Cadastro
 
 ```text

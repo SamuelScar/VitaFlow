@@ -86,6 +86,36 @@ Este documento registra os fluxos existentes no sistema.
 9. Sistema mantem o status e a data de emissao originais.
 10. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
 
+## Cadastro de local de coleta
+
+1. Admin autenticado acessa `GET /admin/locais-coleta`.
+2. Sistema exibe a tela de locais de coleta.
+3. Admin preenche o formulario de cadastro.
+4. Admin envia `POST /admin/locais-coleta`.
+5. Sistema valida nome, endereco, cidade e capacidade diaria.
+6. Se os dados forem validos, sistema cria o local de coleta.
+7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Atualizacao de local de coleta
+
+1. Admin autenticado acessa `GET /admin/locais-coleta`.
+2. Sistema exibe a lista de locais cadastrados.
+3. Admin aciona a opcao de editar um local.
+4. Admin envia `PUT /admin/locais-coleta/{localColeta}`.
+5. Sistema valida nome, endereco, cidade e capacidade diaria.
+6. Se os dados forem validos, sistema atualiza o local de coleta informado.
+7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Exclusao de local de coleta
+
+1. Admin autenticado acessa `GET /admin/locais-coleta`.
+2. Sistema exibe a lista de locais cadastrados.
+3. Admin envia `DELETE /admin/locais-coleta/{localColeta}`.
+4. Sistema verifica se o local possui campanhas ou estoque vinculado.
+5. Se houver vinculo, sistema bloqueia a exclusao e retorna erro de validacao.
+6. Se nao houver vinculo, sistema exclui o local de coleta.
+7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
 ## Promocao de usuario para admin
 
 1. Admin autenticado envia `POST /usuarios/{user}/promover-admin`.

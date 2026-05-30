@@ -25,6 +25,15 @@
         <div class="row g-4">
             <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
+                    title="Locais de coleta"
+                    description="Cadastre e atualize locais onde as doacoes de sangue acontecem."
+                    :href="route('admin.locais-coleta.index')"
+                    button-label="Gerenciar locais"
+                />
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <x-dashboard-card
                     title="Campanhas de sangue"
                     description="Criacao e edicao de campanhas de doacao ficarao aqui."
                 />

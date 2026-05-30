@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\LocalColetaController;
 use App\Http\Controllers\Admin\UserPromotionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -32,6 +33,14 @@ Route::middleware('auth')->group(function (): void {
 
     Route::middleware('admin')->group(function (): void {
         Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+        Route::get('/admin/locais-coleta', [LocalColetaController::class, 'index'])
+            ->name('admin.locais-coleta.index');
+        Route::post('/admin/locais-coleta', [LocalColetaController::class, 'store'])
+            ->name('admin.locais-coleta.store');
+        Route::put('/admin/locais-coleta/{localColeta}', [LocalColetaController::class, 'update'])
+            ->name('admin.locais-coleta.update');
+        Route::delete('/admin/locais-coleta/{localColeta}', [LocalColetaController::class, 'destroy'])
+            ->name('admin.locais-coleta.destroy');
         Route::post('/usuarios/{user}/promover-admin', UserPromotionController::class)
             ->name('users.promote-admin');
     });
