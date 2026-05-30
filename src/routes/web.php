@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function (): void {
         ->name('usuario.carteirinha');
     Route::post('/usuario/carteirinha', [CarteiraDoacaoController::class, 'store'])
         ->name('usuario.carteirinha.store');
+    Route::put('/usuario/carteirinha', [CarteiraDoacaoController::class, 'update'])
+        ->name('usuario.carteirinha.update');
 
     Route::middleware('admin')->group(function (): void {
         Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');

@@ -1,8 +1,8 @@
 <x-layouts.guest title="Login">
-    <section class="card login-card w-100">
+    <section class="card login-card w-100 shadow-sm">
         <div class="card-body p-4 p-sm-5">
             <header class="mb-4">
-                <span class="brand d-inline-flex align-items-center justify-content-center rounded text-white fw-bold mb-3">VF</span>
+                <span class="brand d-inline-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold mb-3">VF</span>
                 <h1 class="h3 mb-2">Entrar</h1>
                 <p class="text-secondary mb-0">Acesse sua conta {{ config('app.name') }}.</p>
             </header>

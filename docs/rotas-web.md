@@ -161,6 +161,7 @@ Comportamento atual:
 - Apenas usuarios com tipo `doador` podem acessar.
 - Se o doador ainda nao tiver carteirinha, exibe o formulario de emissao.
 - Se o doador ja tiver carteirinha, exibe o resumo dos dados cadastrados.
+- Se o doador ja tiver carteirinha, permite editar os dados na propria tela.
 
 ## Emitir carteirinha de doador
 
@@ -197,6 +198,42 @@ Comportamento atual:
 - O CPF e salvo apenas com digitos.
 - Se os dados forem validos, cria uma carteira com status `ativa`.
 - A data de emissao e preenchida automaticamente.
+
+## Atualizar carteirinha de doador
+
+```text
+PUT /usuario/carteirinha
+```
+
+Atualiza os dados da carteirinha do doador autenticado.
+
+Controller:
+
+```text
+App\Http\Controllers\Doador\CarteiraDoacaoController@update
+```
+
+Middlewares:
+
+- `auth`
+
+Campos:
+
+- `cpf`: obrigatorio, deve ter 11 digitos e ser unico.
+- `telefone`: obrigatorio, texto e maximo de 20 caracteres.
+- `data_nascimento`: obrigatorio, data e nao pode ser futura.
+- `tipo_sanguineo`: obrigatorio e deve ser um tipo sanguineo aceito pelo sistema.
+- `peso`: obrigatorio, numerico e deve caber no formato do banco.
+- `cidade`: obrigatorio, texto e maximo de 255 caracteres.
+
+Comportamento atual:
+
+- Apenas usuarios com tipo `doador` podem atualizar a propria carteirinha.
+- Se o usuario autenticado for `admin`, retorna erro `403`.
+- Se o doador ainda nao tiver carteirinha, retorna erro de validacao.
+- O CPF e salvo apenas com digitos.
+- A validacao de CPF unico ignora a propria carteirinha do doador.
+- `status` e `emitida_em` nao sao alterados por esse fluxo.
 
 ## Painel admin
 

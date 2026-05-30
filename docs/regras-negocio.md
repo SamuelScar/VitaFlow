@@ -44,3 +44,5 @@ Este documento registra regras que afetam comportamento do sistema.
 - A `cidade` e obrigatoria.
 - Carteirinhas emitidas pelo fluxo comum entram com status `ativa`.
 - A data de emissao e preenchida automaticamente pelo sistema.
+- O doador pode atualizar os dados da propria carteirinha.
+- A atualizacao da carteirinha nao altera `status` nem `emitida_em`.

@@ -50,6 +50,19 @@ Este documento registra os fluxos existentes no sistema.
 10. Sistema registra a data de emissao automaticamente.
 11. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
 
+## Atualizacao da carteirinha de doador
+
+1. Doador autenticado acessa `GET /usuario/carteirinha`.
+2. Sistema exibe a carteirinha ja emitida.
+3. Doador aciona a opcao de editar dados na propria tela.
+4. Sistema libera os campos da propria carteirinha para edicao.
+5. Doador envia `PUT /usuario/carteirinha`.
+6. Sistema valida se o usuario logado tem tipo `doador`.
+7. Sistema valida os dados informados.
+8. Se os dados forem validos, atualiza a carteirinha.
+9. Sistema mantem o status e a data de emissao originais.
+10. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
+
 ## Promocao de usuario para admin
 
 1. Admin autenticado envia `POST /usuarios/{user}/promover-admin`.

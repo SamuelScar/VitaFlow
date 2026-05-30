@@ -33,3 +33,27 @@ window.alertError = ({
         confirmButtonColor,
     });
 };
+
+document.querySelectorAll('[data-editable-pass]').forEach((form) => {
+    const editButton = form.querySelector('[data-edit-pass-button]');
+    const saveButton = form.querySelector('[data-save-pass-button]');
+    const fields = form.querySelectorAll('[data-pass-field]');
+
+    const enableEditing = () => {
+        fields.forEach((field) => {
+            field.removeAttribute('readonly');
+            field.removeAttribute('disabled');
+        });
+
+        form.classList.add('is-editing');
+        editButton?.classList.add('d-none');
+        saveButton?.classList.remove('d-none');
+        fields[0]?.focus();
+    };
+
+    if (form.dataset.editing === 'true') {
+        enableEditing();
+    }
+
+    editButton?.addEventListener('click', enableEditing);
+});

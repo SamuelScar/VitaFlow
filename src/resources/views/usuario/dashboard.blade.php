@@ -4,7 +4,7 @@
         $carteira = $usuario->carteiraDoacao;
     @endphp
 
-    <section class="dashboard-header border-bottom">
+    <section class="bg-white border-bottom">
         <div class="container py-5">
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="col-lg-4">
-                    <div class="dashboard-summary p-4">
+                    <div class="bg-white border rounded-3 shadow-sm p-4">
                         <p class="text-secondary small fw-semibold text-uppercase mb-2">Seu perfil</p>
                         <strong class="fs-4 d-block">Doador</strong>
                         <span class="text-secondary">
@@ -31,37 +31,28 @@
     <section class="container py-5">
         <div class="row g-4">
             <div class="col-md-6 col-xl-4">
-                <article class="card dashboard-card h-100">
-                    <div class="card-body p-4">
-                        <h2 class="h5">Campanhas abertas</h2>
-                        <p class="text-secondary mb-4">Veja campanhas disponiveis e escolha onde deseja doar sangue.</p>
-                        <a class="btn btn-primary" href="{{ route('home') }}">Ver campanhas</a>
-                    </div>
-                </article>
+                <x-dashboard-card
+                    title="Campanhas abertas"
+                    description="Veja campanhas disponiveis e escolha onde deseja doar sangue."
+                    :href="route('home')"
+                    button-label="Ver campanhas"
+                />
             </div>
 
             <div class="col-md-6 col-xl-4">
-                <article class="card dashboard-card h-100">
-                    <div class="card-body p-4">
-                        <h2 class="h5">Minhas doacoes de sangue</h2>
-                        <p class="text-secondary mb-4">Historico de doacoes e agendamentos ficara disponivel quando o fluxo for criado.</p>
-                        <button class="btn btn-outline-secondary" type="button" disabled>Em breve</button>
-                    </div>
-                </article>
+                <x-dashboard-card
+                    title="Minhas doacoes de sangue"
+                    description="Historico de doacoes e agendamentos ficara disponivel quando o fluxo for criado."
+                />
             </div>
 
             <div class="col-md-6 col-xl-4">
-                <article class="card dashboard-card h-100">
-                    <div class="card-body p-4">
-                        <h2 class="h5">Carteirinha de doador</h2>
-                        <p class="text-secondary mb-4">
-                            {{ $carteira ? 'Consulte seus dados de doador de sangue.' : 'Informe seus dados para emitir sua carteirinha.' }}
-                        </p>
-                        <a class="btn btn-primary" href="{{ route('usuario.carteirinha') }}">
-                            {{ $carteira ? 'Ver carteirinha' : 'Emitir carteirinha' }}
-                        </a>
-                    </div>
-                </article>
+                <x-dashboard-card
+                    title="Carteirinha de doador"
+                    :description="$carteira ? 'Consulte seus dados de doador de sangue.' : 'Informe seus dados para emitir sua carteirinha.'"
+                    :href="route('usuario.carteirinha')"
+                    :button-label="$carteira ? 'Ver carteirinha' : 'Emitir carteirinha'"
+                />
             </div>
         </div>
     </section>

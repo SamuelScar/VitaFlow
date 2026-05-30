@@ -28,7 +28,7 @@
         ];
     @endphp
 
-    <section class="home-hero border-bottom">
+    <section class="bg-white border-bottom">
         <div class="container py-5">
             <div class="row align-items-center g-4">
                 <div class="col-lg-7">
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="col-lg-5">
-                    <div class="home-impact-panel p-4">
+                    <div class="bg-white border rounded-3 shadow-sm p-4">
                         <p class="text-secondary small fw-semibold text-uppercase mb-2">Resumo publico</p>
                         <div class="d-grid gap-3">
                             <div>

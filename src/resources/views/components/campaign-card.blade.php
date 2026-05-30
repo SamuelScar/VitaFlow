@@ -1,10 +1,10 @@
 @props(['campanha'])
 
-<article class="card campaign-card h-100">
+<article class="card h-100 shadow-sm rounded-3">
     <div class="card-body p-4 d-flex flex-column">
         <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
             <h3 class="h5 mb-0">{{ $campanha['titulo'] }}</h3>
-            <span class="badge status-confirmado">{{ $campanha['status'] }}</span>
+            <span class="badge text-bg-success">{{ $campanha['status'] }}</span>
         </div>
 
         <p class="text-secondary">{{ $campanha['descricao'] }}</p>
@@ -23,7 +23,7 @@
                 aria-valuemin="0"
                 aria-valuemax="100"
             >
-                <div class="progress-bar" style="width: {{ $campanha['progresso'] }}%"></div>
+                <div class="progress-bar bg-primary" style="width: {{ $campanha['progresso'] }}%"></div>
             </div>
 
             <a class="btn btn-outline-primary w-100" href="{{ route('login') }}">Entrar para agendar</a>

@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-lg bg-white border-bottom">
             <div class="container py-2">
                 <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="{{ route('home') }}">
-                    <span class="brand d-inline-flex align-items-center justify-content-center rounded text-white fw-bold">VF</span>
+                    <span class="brand d-inline-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold">VF</span>
                     {{ config('app.name') }}
                 </a>
 
