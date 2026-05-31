@@ -83,7 +83,7 @@
 
                     <div class="border rounded-3 p-3 mb-3">
                         <div class="d-flex flex-column flex-xl-row justify-content-between gap-3">
-                            <div>
+                            <div class="flex-grow-1">
                                 <h3 class="h6 fw-bold mb-1">{{ $localColeta->nome }}</h3>
                                 <p class="text-secondary mb-2">{{ $localColeta->endereco_completo }}</p>
                                 <div class="d-flex flex-wrap gap-2">
@@ -108,28 +108,29 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex flex-wrap align-items-start gap-2">
+                            <div class="d-grid d-sm-flex flex-sm-nowrap flex-shrink-0 align-items-start justify-content-sm-end gap-2">
                                 <button
-                                    class="btn btn-outline-secondary"
+                                    class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center gap-2"
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#editar-local-{{ $localColeta->id }}"
                                     aria-expanded="{{ $editando ? 'true' : 'false' }}"
                                     aria-controls="editar-local-{{ $localColeta->id }}"
                                 >
-                                    <i class="bi bi-pencil me-1" aria-hidden="true"></i>
+                                    <i class="bi bi-pencil" aria-hidden="true"></i>
                                     Editar
                                 </button>
 
                                 <form
+                                    class="d-grid m-0"
                                     method="POST"
                                     action="{{ route('admin.locais-coleta.destroy', $localColeta) }}"
                                     onsubmit="return confirm('Excluir este local de coleta?')"
                                 >
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-outline-danger" type="submit">
-                                        <i class="bi bi-trash me-1" aria-hidden="true"></i>
+                                    <button class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center gap-2" type="submit">
+                                        <i class="bi bi-trash" aria-hidden="true"></i>
                                         Excluir
                                     </button>
                                 </form>

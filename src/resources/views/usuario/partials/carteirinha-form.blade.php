@@ -15,7 +15,8 @@
             value="{{ old('cpf', $carteira?->cpf) }}"
             inputmode="numeric"
             maxlength="14"
-            placeholder="00000000000"
+            placeholder="000.000.000-00"
+            x-mask="999.999.999-99"
             required
         >
         @error('cpf')
@@ -31,8 +32,10 @@
             name="telefone"
             type="text"
             value="{{ old('telefone', $carteira?->telefone) }}"
+            inputmode="tel"
             maxlength="20"
             placeholder="(11) 99999-9999"
+            x-mask:dynamic="$input.replace(/\D/g, '').length &gt; 10 ? '(99) 99999-9999' : '(99) 9999-9999'"
             required
         >
         @error('telefone')

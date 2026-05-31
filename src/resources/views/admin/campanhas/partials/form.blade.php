@@ -10,7 +10,24 @@
     $fieldErrors = $errors->getBag($errorBag);
 @endphp
 
-<form method="POST" action="{{ $action }}" class="row g-3" data-validate-form>
+<form
+    method="POST"
+    action="{{ $action }}"
+    class="row g-3"
+    data-validate-form
+    x-data='{
+        dataInicio: @json((string) $fieldValue('data_inicio', $campanha?->data_inicio?->format('Y-m-d'))),
+        dataFim: @json((string) $fieldValue('data_fim', $campanha?->data_fim?->format('Y-m-d'))),
+        validarDataFim() {
+            this.$refs.dataFim?.setCustomValidity(
+                this.dataInicio && this.dataFim && this.dataFim < this.dataInicio
+                    ? "A data fim deve ser posterior ou igual a data inicio."
+                    : ""
+            );
+        },
+    }'
+    x-init="validarDataFim()"
+>
     @csrf
     <input type="hidden" name="tipos_sanguineos_alvo_preenchido" value="1">
 
@@ -145,6 +162,10 @@
             name="data_inicio"
             type="date"
             value="{{ $fieldValue('data_inicio', $campanha?->data_inicio?->format('Y-m-d')) }}"
+            x-model="dataInicio"
+            x-ref="dataInicio"
+            x-on:input="validarDataFim()"
+            x-on:change="validarDataFim()"
             @unless ($campanha?->exists)
                 min="{{ now()->toDateString() }}"
             @endunless
@@ -165,8 +186,11 @@
             name="data_fim"
             type="date"
             value="{{ $fieldValue('data_fim', $campanha?->data_fim?->format('Y-m-d')) }}"
-            data-after-or-equal-to="[name='data_inicio']"
-            data-after-or-equal-message="A data fim deve ser posterior ou igual a data inicio."
+            x-model="dataFim"
+            x-ref="dataFim"
+            x-bind:min="dataInicio || null"
+            x-on:input="validarDataFim()"
+            x-on:change="validarDataFim()"
             required
         >
         @error('data_fim', $errorBag)

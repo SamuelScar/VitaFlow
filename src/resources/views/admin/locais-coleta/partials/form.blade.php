@@ -60,6 +60,7 @@
             maxlength="9"
             pattern="\d{5}-?\d{3}"
             data-cep-field="cep"
+            x-mask="99999-999"
             required
         >
         @error('cep', $errorBag)

@@ -1,6 +1,7 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+/* Theme tokens */
 :root {
     color-scheme: light;
     --color-primary: #c62828;
@@ -64,6 +65,11 @@
     --bs-primary-text-emphasis: #ffb4b1;
 }
 
+/* Base */
+[x-cloak] {
+    display: none !important;
+}
+
 body {
     background: var(--color-background);
     color: var(--color-text);
@@ -74,26 +80,7 @@ body {
     border-color: var(--color-border);
 }
 
-.donor-pass-card {
-    border-left: 6px solid var(--color-primary) !important;
-}
-
-.donor-pass-edit-form:not(.is-editing) [data-pass-field][readonly],
-.donor-pass-edit-form:not(.is-editing) [data-pass-field]:disabled {
-    background-color: transparent;
-    border-color: transparent;
-    box-shadow: none;
-    color: var(--color-text);
-    opacity: 1;
-    padding-left: 0;
-    pointer-events: none;
-}
-
-.donor-pass-edit-form:not(.is-editing) select[data-pass-field]:disabled {
-    background-image: none;
-    padding-right: 0;
-}
-
+/* Components */
 .login-card {
     max-width: 424px;
 }
@@ -125,6 +112,28 @@ body {
     line-height: 1;
 }
 
+/* Donor pass */
+.donor-pass-card {
+    border-left: 6px solid var(--color-primary) !important;
+}
+
+.donor-pass-edit-form:not(.is-editing) .donor-pass-field[readonly],
+.donor-pass-edit-form:not(.is-editing) .donor-pass-field:disabled {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: var(--color-text);
+    opacity: 1;
+    padding-left: 0;
+    pointer-events: none;
+}
+
+.donor-pass-edit-form:not(.is-editing) select.donor-pass-field:disabled {
+    background-image: none;
+    padding-right: 0;
+}
+
+/* Dark theme fixes */
 [data-bs-theme='dark'] .bg-white {
     background-color: var(--color-surface) !important;
 }
@@ -185,6 +194,7 @@ body {
     color: var(--color-text);
 }
 
+/* Bootstrap overrides */
 .btn-primary {
     --bs-btn-bg: var(--color-primary);
     --bs-btn-border-color: var(--color-primary);
@@ -209,6 +219,7 @@ body {
     height: 0.65rem;
 }
 
+/* Forms */
 .form-control:focus,
 .form-select:focus,
 .form-check-input:focus {

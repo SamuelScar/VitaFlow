@@ -10,7 +10,22 @@
                 <p class="text-secondary mb-0">Cadastre-se para acessar o {{ config('app.name') }}.</p>
             </header>
 
-            <form method="POST" action="{{ route('register.store') }}" data-validate-form>
+            <form
+                method="POST"
+                action="{{ route('register.store') }}"
+                data-validate-form
+                x-data="{
+                    password: '',
+                    passwordConfirmation: '',
+                    validatePasswordConfirmation() {
+                        this.$refs.passwordConfirmation?.setCustomValidity(
+                            (this.password || this.passwordConfirmation) && this.passwordConfirmation !== this.password
+                                ? 'A confirmacao deve ser igual a senha.'
+                                : ''
+                        );
+                    },
+                }"
+            >
                 @csrf
 
                 <div class="mb-3">
@@ -57,6 +72,8 @@
                         placeholder="Minimo de 8 caracteres"
                         autocomplete="new-password"
                         minlength="8"
+                        x-model="password"
+                        x-on:input="validatePasswordConfirmation()"
                         required
                     >
                     @error('password')
@@ -73,8 +90,10 @@
                         type="password"
                         placeholder="Repita sua senha"
                         autocomplete="new-password"
-                        data-matches-field="[name='password']"
-                        data-matches-message="A confirmacao deve ser igual a senha."
+                        x-model="passwordConfirmation"
+                        x-ref="passwordConfirmation"
+                        x-on:input="validatePasswordConfirmation()"
+                        x-on:change="validatePasswordConfirmation()"
                         required
                     >
                 </div>

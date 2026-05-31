@@ -1,4 +1,14 @@
 <x-layouts.public title="Painel admin">
+    @php
+        $email = auth()->user()->email;
+        [$emailName, $emailDomain] = array_pad(explode('@', $email, 2), 2, '');
+        $maskedEmail = mb_substr($emailName, 0, min(2, mb_strlen($emailName))) . '***';
+
+        if ($emailDomain !== '') {
+            $maskedEmail .= '@' . $emailDomain;
+        }
+    @endphp
+
     <section class="bg-white border-bottom">
         <div class="container py-5">
             <div class="row align-items-center g-4">
@@ -20,7 +30,7 @@
                             Acesso atual
                         </p>
                         <strong class="fs-4 d-block">Administrador</strong>
-                        <span class="text-secondary">{{ auth()->user()->email }}</span>
+                        <span class="text-secondary">{{ $maskedEmail }}</span>
                     </div>
                 </div>
             </div>
