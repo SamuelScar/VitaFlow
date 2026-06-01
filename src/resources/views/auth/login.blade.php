@@ -31,7 +31,10 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold" for="password">Senha</label>
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <label class="form-label fw-semibold" for="password">Senha</label>
+                        <a class="small" href="{{ route('password.request') }}">Esqueci minha senha</a>
+                    </div>
                     <input
                         class="form-control"
                         id="password"

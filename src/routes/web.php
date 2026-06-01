@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\CampanhaController;
 use App\Http\Controllers\Admin\LocalColetaController;
 use App\Http\Controllers\Admin\UserPromotionController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\DashboardController;
@@ -16,6 +18,18 @@ Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::get('/cadastro', [RegisterController::class, 'create'])->name('register');
 Route::post('/cadastro', [RegisterController::class, 'store'])->name('register.store');
+Route::get('/esqueci-senha', [PasswordResetLinkController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.request');
+Route::post('/esqueci-senha', [PasswordResetLinkController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.email');
+Route::get('/redefinir-senha/{token}', [NewPasswordController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.reset');
+Route::post('/redefinir-senha', [NewPasswordController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.update');
 
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');

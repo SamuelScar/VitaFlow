@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\DifferentFromCurrentPassword;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,12 @@ class ContaController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'current_password' => ['required_with:password', 'current_password'],
-            'password' => ['nullable', 'confirmed', Password::min(8)],
+            'password' => [
+                'nullable',
+                'confirmed',
+                Password::min(8),
+                new DifferentFromCurrentPassword($user->password),
+            ],
         ]);
 
         $user->update([

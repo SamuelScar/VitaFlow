@@ -36,6 +36,21 @@ Este documento registra os fluxos existentes no sistema.
 6. Sistema exibe mensagem de sucesso.
 7. Usuario e redirecionado para `/login` apos alguns segundos.
 
+## Recuperacao de senha
+
+1. Visitante acessa `GET /esqueci-senha`.
+2. Sistema exibe o formulario de solicitacao do link.
+3. Visitante informa o e-mail cadastrado.
+4. Sistema valida o e-mail em `POST /esqueci-senha`.
+5. Se o e-mail existir e nao estiver limitado por throttle, sistema envia o link pelo mailer configurado.
+6. Visitante abre o link recebido por e-mail.
+7. Sistema exibe `GET /redefinir-senha/{token}` com token e e-mail preenchidos.
+8. Visitante informa e confirma a nova senha.
+9. Sistema valida os dados em `POST /redefinir-senha`.
+10. Sistema bloqueia a redefinicao se a nova senha for igual a senha atual.
+11. Se o token for valido, sistema atualiza a senha e renova o token de "lembrar-me".
+12. Sistema redireciona para `/login` com mensagem de sucesso.
+
 ## Atualizacao dos dados da conta
 
 1. Usuario autenticado acessa `GET /conta`.
@@ -45,8 +60,9 @@ Este documento registra os fluxos existentes no sistema.
 5. Sistema garante que o e-mail informado nao pertence a outro usuario.
 6. Se uma nova senha for enviada, sistema valida a senha atual.
 7. Se uma nova senha for enviada, sistema valida a confirmacao da senha.
-8. Sistema atualiza apenas os dados da propria conta.
-9. Sistema retorna para a pagina anterior com mensagem de sucesso.
+8. Se uma nova senha for enviada, sistema bloqueia o uso da mesma senha atual.
+9. Sistema atualiza apenas os dados da propria conta.
+10. Sistema retorna para a pagina anterior com mensagem de sucesso.
 
 ## Exclusao da conta
 

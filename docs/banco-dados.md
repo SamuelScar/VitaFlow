@@ -40,6 +40,21 @@ Relacionamentos:
 - Um usuario pode ter uma carteira de doacao.
 - Um usuario admin pode criar muitas campanhas.
 
+### `password_reset_tokens`
+
+Representa tokens temporarios usados na recuperacao de senha.
+
+Campos principais:
+
+- `email`
+- `token`
+- `created_at`
+
+Observacoes:
+
+- O token e gerenciado pelo broker de senhas do Laravel.
+- A expiracao atual e de 60 minutos.
+
 ### `carteiras_doacao`
 
 Representa os dados complementares do doador.

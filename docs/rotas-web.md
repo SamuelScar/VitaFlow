@@ -62,6 +62,115 @@ Comportamento atual:
 - Se o login for valido, regenera a sessao.
 - Apos autenticar, redireciona para `/dashboard`.
 
+## Solicitar recuperacao de senha
+
+```text
+GET /esqueci-senha
+```
+
+Exibe a tela para solicitar o link de redefinicao de senha.
+
+Controller:
+
+```text
+App\Http\Controllers\Auth\PasswordResetLinkController@create
+```
+
+Middlewares:
+
+- `guest`
+
+View:
+
+```text
+resources/views/auth/forgot-password.blade.php
+```
+
+## Enviar link de recuperacao de senha
+
+```text
+POST /esqueci-senha
+```
+
+Valida o e-mail informado e solicita ao broker do Laravel o envio do link de redefinicao.
+
+Controller:
+
+```text
+App\Http\Controllers\Auth\PasswordResetLinkController@store
+```
+
+Middlewares:
+
+- `guest`
+
+Campos:
+
+- `email`: obrigatorio e deve ser um e-mail valido.
+
+Comportamento atual:
+
+- Usa o mailer configurado no Laravel para enviar o link.
+- Se o envio for aceito pelo broker, retorna para a tela anterior com mensagem de sucesso.
+- Se o e-mail nao existir ou estiver limitado por throttle, retorna erro de validacao.
+
+## Tela de redefinicao de senha
+
+```text
+GET /redefinir-senha/{token}
+```
+
+Exibe a tela para criar uma nova senha a partir do token recebido por e-mail.
+
+Controller:
+
+```text
+App\Http\Controllers\Auth\NewPasswordController@create
+```
+
+Middlewares:
+
+- `guest`
+
+View:
+
+```text
+resources/views/auth/reset-password.blade.php
+```
+
+## Redefinir senha
+
+```text
+POST /redefinir-senha
+```
+
+Valida o token e atualiza a senha do usuario.
+
+Controller:
+
+```text
+App\Http\Controllers\Auth\NewPasswordController@store
+```
+
+Middlewares:
+
+- `guest`
+
+Campos:
+
+- `token`: obrigatorio.
+- `email`: obrigatorio e deve ser um e-mail valido.
+- `password`: obrigatorio, minimo de 8 caracteres e precisa ser confirmado.
+- `password_confirmation`: obrigatorio para confirmar a senha.
+
+Comportamento atual:
+
+- Usa o broker de senhas configurado em `config/auth.php`.
+- Bloqueia a redefinicao se a nova senha for igual a senha atual.
+- Se o token for valido, atualiza a senha e renova o token de "lembrar-me".
+- Apos redefinir, redireciona para `/login` com mensagem de sucesso.
+- Se o token ou e-mail forem invalidos, retorna erro de validacao.
+
 ## Logout
 
 ```text
@@ -150,6 +259,7 @@ Comportamento atual:
 - A validacao de e-mail unico ignora o proprio usuario.
 - Se a senha nao for informada, a senha atual e mantida.
 - Se uma nova senha for informada, a senha atual precisa conferir.
+- Se uma nova senha for informada, ela precisa ser diferente da senha atual.
 - A atualizacao da conta nao permite alterar o tipo do usuario.
 - Apos atualizar, retorna para a pagina anterior com mensagem de sucesso.
 
@@ -231,7 +341,7 @@ Comportamento atual:
 - Exibe atalhos para campanhas abertas, historico de doacoes e carteirinha.
 - A acao da carteirinha leva para a tela propria de emissao ou visualizacao.
 - O atalho de campanhas abertas leva para a home publica.
-- O historico de doacoes ainda aparece como funcionalidade futura, sem rota propria.
+- O historico de doacoes aparece como card informativo, sem rota propria.
 
 ## Tela da carteirinha de doador
 

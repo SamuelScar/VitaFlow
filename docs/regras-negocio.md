@@ -24,6 +24,19 @@ Este documento registra regras que afetam comportamento do sistema.
 - Se o cadastro for valido, o usuario e criado.
 - Apos cadastro valido, o sistema exibe uma mensagem de sucesso e redireciona para o login.
 
+## Recuperacao de senha
+
+- Visitantes podem solicitar um link de redefinicao de senha pelo e-mail cadastrado.
+- O campo `email` e obrigatorio e deve ser um e-mail valido.
+- Se o e-mail existir, o sistema envia o link usando o mailer configurado no Laravel.
+- O link de redefinicao usa token armazenado em `password_reset_tokens`.
+- O token expira em 60 minutos.
+- O sistema limita novas solicitacoes para o mesmo e-mail por 60 segundos.
+- Para redefinir a senha, o formulario exige token, e-mail, senha e confirmacao.
+- A nova senha deve ter no minimo 8 caracteres e ser confirmada por `password_confirmation`.
+- A nova senha nao pode ser igual a senha atual do usuario.
+- Se o token for valido, a senha do usuario e atualizada e o token de "lembrar-me" e renovado.
+
 ## Usuarios e permissoes
 
 - Usuarios criados pelo cadastro comum entram como `doador`.
@@ -40,6 +53,7 @@ Este documento registra regras que afetam comportamento do sistema.
 - A senha e opcional na atualizacao da conta.
 - Se uma nova senha for informada, a senha atual deve ser confirmada por `current_password`.
 - Se uma nova senha for informada, ela deve ter no minimo 8 caracteres e ser confirmada por `password_confirmation`.
+- Se uma nova senha for informada, ela nao pode ser igual a senha atual.
 - A atualizacao da conta nao altera o tipo do usuario.
 - Apenas usuarios autenticados podem excluir a propria conta.
 - Para excluir a conta, a senha atual deve ser confirmada.
