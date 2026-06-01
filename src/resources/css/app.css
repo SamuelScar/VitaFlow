@@ -85,9 +85,11 @@ body {
     max-width: 424px;
 }
 
-.brand {
-    width: 42px;
+.brand-logo {
+    display: block;
     height: 42px;
+    object-fit: contain;
+    width: auto;
 }
 
 .dashboard-icon {

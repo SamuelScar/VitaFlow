@@ -6,6 +6,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ $title }} - {{ config('app.name') }}</title>
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
         <script>
             (() => {
                 const storageKey = 'vitaflow-theme';
@@ -44,8 +45,8 @@
         <nav class="navbar navbar-expand-lg bg-body border-bottom">
             <div class="container py-2">
                 <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="{{ route('home') }}">
-                    <span class="brand d-inline-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold">VF</span>
-                    {{ config('app.name') }}
+                    <img class="brand-logo" src="{{ asset('assets/images/logo-vitaflow-drop.png') }}" alt="" aria-hidden="true">
+                    <span>{{ config('app.name') }}</span>
                 </a>
 
                 <div class="d-flex align-items-center gap-2">

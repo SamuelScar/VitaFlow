@@ -2,7 +2,7 @@
     <section class="card login-card w-100 shadow-sm">
         <div class="card-body p-4 p-sm-5">
             <header class="mb-4">
-                <span class="brand d-inline-flex align-items-center justify-content-center rounded bg-primary text-white fw-bold mb-3">VF</span>
+                <img class="brand-logo mb-3" src="{{ asset('assets/images/logo-vitaflow-drop.png') }}" alt="{{ config('app.name') }}">
                 <h1 class="h3 mb-2">
                     <i class="bi bi-key me-2" aria-hidden="true"></i>
                     Recuperar senha
