@@ -8,7 +8,7 @@ Ambiente Docker para desenvolvimento de um monolito Laravel com PostgreSQL, Live
 docker/              # Imagem local da aplicacao
 docs/                # Documentacao funcional e tecnica do sistema
 docker-compose.yml   # Servicos app + db
-src/                 # Aplicacao Laravel, criada depois
+src/                 # Aplicacao Laravel
 ```
 
 ## Documentacao
@@ -44,16 +44,16 @@ RUN_VITE_DEV=true
 
 Com `RUN_VITE_DEV=false`, o Vite nao inicia automaticamente. Nesse caso, gere os assets com `docker compose exec app npm run build` ou rode o dev server manualmente com `docker compose exec app npm run dev -- --host 0.0.0.0`.
 
-## Criar o Laravel depois
+## Recriar a base Laravel do zero
 
-Com `src/` vazia, rode na raiz do projeto:
+Esta etapa so e necessaria se a pasta `src/` estiver vazia e o projeto precisar ser recriado do zero:
 
 ```powershell
 docker compose run --rm app composer create-project laravel/laravel .
 docker compose run --rm app composer require livewire/livewire
 ```
 
-Confira no `.env` da raiz se o Laravel esta usando PostgreSQL:
+Depois de criar a base, confira no `.env` da raiz se o Laravel esta usando PostgreSQL:
 
 ```env
 DB_CONNECTION=pgsql

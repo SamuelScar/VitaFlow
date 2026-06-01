@@ -19,8 +19,9 @@ resources/views/home.blade.php
 Comportamento atual:
 
 - Visitantes podem acessar sem login.
-- Exibe informacoes publicas de campanhas de sangue.
-- Acoes de agendamento direcionam para login ou cadastro.
+- Exibe cards estaticos de campanhas de sangue em destaque.
+- A tela ainda nao consulta campanhas cadastradas no banco.
+- A acao de agendamento direciona para login.
 
 ## Login
 
@@ -229,6 +230,8 @@ Comportamento atual:
 
 - Exibe atalhos para campanhas abertas, historico de doacoes e carteirinha.
 - A acao da carteirinha leva para a tela propria de emissao ou visualizacao.
+- O atalho de campanhas abertas leva para a home publica.
+- O historico de doacoes ainda aparece como funcionalidade futura, sem rota propria.
 
 ## Tela da carteirinha de doador
 
@@ -351,6 +354,12 @@ View:
 ```text
 resources/views/admin/dashboard.blade.php
 ```
+
+Comportamento atual:
+
+- Exibe atalhos para locais de coleta, campanhas de sangue e home publica.
+- Exibe cards informativos de agendamentos e usuarios.
+- Os cards de agendamentos e usuarios ainda nao possuem rota propria de gestao.
 
 ## Tela de locais de coleta
 

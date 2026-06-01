@@ -21,14 +21,15 @@ Essa decisao evita controllers grandes demais e deixa cada entrada HTTP com uma 
 
 ## Frontend
 
-O frontend usa Blade, Bootstrap, Bootstrap Icons, SweetAlert2 e JavaScript em `resources/js/app.js`.
+O frontend usa Blade, Bootstrap, Bootstrap Icons, SweetAlert2, Alpine.js, Alpine Mask e JavaScript iniciado em `resources/js/app.js`.
 
 Comportamentos globais importantes:
 
 - `data-validate-form`: ativa validacao client-side, alerta lateral e rolagem ate o primeiro campo invalido.
 - `data-cep-lookup`: ativa consulta de CEP para preencher campos de endereco.
 - `data-theme-value`: controla a selecao de tema `system`, `light` ou `dark`.
-- Alertas de sucesso e erro devem usar os helpers globais do SweetAlert2.
+- `x-mask`: aplica mascaras simples nos campos de CPF, telefone e CEP.
+- Alertas de sucesso, erro e aviso devem usar os helpers globais do SweetAlert2.
 
 ## Indice
 

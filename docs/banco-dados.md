@@ -56,6 +56,12 @@ Campos principais:
 - `status`
 - `emitida_em`
 
+Status atuais:
+
+- `ativa`
+- `bloqueada`
+- `inativa`
+
 Relacionamentos:
 
 - Pertence a um usuario.

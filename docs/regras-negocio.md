@@ -84,11 +84,12 @@ Este documento registra regras que afetam comportamento do sistema.
 - Cada usuario doador pode ter apenas uma carteirinha.
 - O `cpf` e obrigatorio, deve ter 11 digitos e deve ser unico.
 - O `cpf` e salvo apenas com digitos.
-- O `telefone` e obrigatorio.
+- Na atualizacao, a validacao de CPF unico ignora a propria carteirinha do doador.
+- O `telefone` e obrigatorio e deve ter no maximo 20 caracteres.
 - A `data_nascimento` e obrigatoria e nao pode ser futura.
 - O `tipo_sanguineo` e obrigatorio e deve estar na lista de tipos aceitos pelo sistema.
-- O `peso` e obrigatorio.
-- A `cidade` e obrigatoria.
+- O `peso` e obrigatorio, deve ser numerico e deve ficar entre 0.01 e 999.99.
+- A `cidade` e obrigatoria e deve ter no maximo 255 caracteres.
 - Carteirinhas emitidas pelo fluxo comum entram com status `ativa`.
 - A data de emissao e preenchida automaticamente pelo sistema.
 - O doador pode atualizar os dados da propria carteirinha.
