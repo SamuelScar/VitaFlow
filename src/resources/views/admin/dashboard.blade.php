@@ -71,6 +71,8 @@
                 <x-dashboard-card
                     title="Usuarios"
                     description="Promocao de doadores para administradores."
+                    :href="route('admin.usuarios.index')"
+                    button-label="Gerenciar usuarios"
                     icon="bi-people"
                 />
             </div>

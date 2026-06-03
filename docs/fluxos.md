@@ -2,6 +2,16 @@
 
 Este documento registra os fluxos existentes no sistema.
 
+## Home publica
+
+1. Visitante ou usuario autenticado acessa `GET /`.
+2. Sistema consulta campanhas com status `ativa` dentro do periodo vigente.
+3. Sistema exibe o resumo publico com total de campanhas abertas, meta de bolsas e locais participantes.
+4. Sistema lista as campanhas encontradas com local de coleta, tipos sanguineos alvo, meta e data final.
+5. Se nao houver campanha aberta, sistema exibe uma mensagem informativa.
+6. Visitante pode acessar o login pela acao de participacao.
+7. Usuario autenticado pode acessar o dashboard pela acao de participacao.
+
 ## Login
 
 1. Usuario acessa `GET /login`.
@@ -184,10 +194,16 @@ Este documento registra os fluxos existentes no sistema.
 
 ## Promocao de usuario para admin
 
-1. Admin autenticado envia `POST /usuarios/{user}/promover-admin`.
-2. Sistema valida o acesso pelo middleware `admin`.
-3. Usuario informado tem seu tipo alterado para `admin`.
-4. Sistema retorna para a pagina anterior com mensagem de sucesso.
+1. Admin autenticado acessa `GET /admin/usuarios`.
+2. Sistema lista usuarios cadastrados com nome, e-mail e tipo atual.
+3. Admin pode buscar usuarios por nome ou e-mail sem recarregar a pagina.
+4. Sistema sincroniza a busca com o parametro `busca` da URL.
+5. Sistema mantem a busca aplicada ao navegar entre paginas da listagem.
+6. Admin aciona a promocao de um usuario doador.
+7. Sistema envia `POST /admin/usuarios/{user}/promover-admin`.
+8. Sistema valida o acesso pelo middleware `admin`.
+9. Usuario informado tem seu tipo alterado para `admin`.
+10. Sistema retorna para a pagina anterior com mensagem de sucesso.
 
 ## Health check
 

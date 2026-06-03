@@ -1,31 +1,8 @@
 <x-layouts.public title="Campanhas">
     @php
-        $campanhas = [
-            [
-                'titulo' => 'Mutirao de sangue O negativo',
-                'descricao' => 'Campanha para reforcar o estoque de um tipo sanguineo essencial em emergencias.',
-                'meta' => '80 bolsas',
-                'resultado' => '49 bolsas',
-                'progresso' => 61,
-                'status' => 'Ativa',
-            ],
-            [
-                'titulo' => 'Doacao de sangue no sabado',
-                'descricao' => 'Atendimento especial para doadores que nao conseguem comparecer durante a semana.',
-                'meta' => '50 vagas',
-                'resultado' => '21 agendadas',
-                'progresso' => 42,
-                'status' => 'Ativa',
-            ],
-            [
-                'titulo' => 'Reposicao do estoque pediatrico',
-                'descricao' => 'Mobilizacao para manter o atendimento de criancas que dependem de transfusao.',
-                'meta' => '65 bolsas',
-                'resultado' => '57 bolsas',
-                'progresso' => 88,
-                'status' => 'Reta final',
-            ],
-        ];
+        $totalCampanhas = $campanhas->count();
+        $totalMetaBolsas = $campanhas->sum('meta_bolsas');
+        $totalLocais = $campanhas->pluck('local_coleta_id')->filter()->unique()->count();
     @endphp
 
     <section class="bg-white border-bottom">
@@ -35,7 +12,7 @@
                     <span class="badge text-bg-light border mb-3">Campanhas abertas</span>
                     <h1 class="display-5 fw-bold mb-3">Doe sangue para campanhas que precisam de apoio agora</h1>
                     <p class="lead text-secondary mb-4">
-                        Acompanhe campanhas ativas, veja o progresso dos estoques e entre para agendar sua doacao quando quiser participar.
+                        Acompanhe campanhas ativas, veja locais de coleta e entre para participar quando quiser doar.
                     </p>
                 </div>
 
@@ -44,16 +21,16 @@
                         <p class="text-secondary small fw-semibold text-uppercase mb-2">Resumo publico</p>
                         <div class="d-grid gap-3">
                             <div>
-                                <strong class="fs-2 d-block">3</strong>
-                                <span class="text-secondary">campanhas em destaque</span>
+                                <strong class="fs-2 d-block">{{ $totalCampanhas }}</strong>
+                                <span class="text-secondary">{{ $totalCampanhas === 1 ? 'campanha aberta' : 'campanhas abertas' }}</span>
                             </div>
                             <div>
-                                <strong class="fs-2 d-block">127</strong>
-                                <span class="text-secondary">doacoes registradas nas campanhas exibidas</span>
+                                <strong class="fs-2 d-block">{{ $totalMetaBolsas }}</strong>
+                                <span class="text-secondary">{{ $totalMetaBolsas === 1 ? 'bolsa como meta' : 'bolsas como meta' }}</span>
                             </div>
                             <div>
-                                <strong class="fs-2 d-block">64%</strong>
-                                <span class="text-secondary">progresso medio dos estoques</span>
+                                <strong class="fs-2 d-block">{{ $totalLocais }}</strong>
+                                <span class="text-secondary">{{ $totalLocais === 1 ? 'local participante' : 'locais participantes' }}</span>
                             </div>
                         </div>
                     </div>
@@ -71,11 +48,18 @@
         </div>
 
         <div class="row g-4">
-            @foreach ($campanhas as $campanha)
+            @forelse ($campanhas as $campanha)
                 <div class="col-md-6 col-xl-4">
                     <x-campaign-card :campanha="$campanha" />
                 </div>
-            @endforeach
+            @empty
+                <div class="col-12">
+                    <div class="border rounded-3 p-4 text-center">
+                        <h3 class="h5 fw-bold mb-2">Nenhuma campanha aberta no momento</h3>
+                        <p class="text-secondary mb-0">Novas campanhas de doacao de sangue serao exibidas aqui quando forem cadastradas.</p>
+                    </div>
+                </div>
+            @endforelse
         </div>
     </section>
 </x-layouts.public>

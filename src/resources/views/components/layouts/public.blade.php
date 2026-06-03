@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ $title }} - {{ config('app.name') }}</title>
         <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        @livewireScriptConfig
         <script>
             (() => {
                 const storageKey = 'vitaflow-theme';

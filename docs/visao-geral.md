@@ -2,7 +2,7 @@
 
 O VitaFlow e um sistema web para organizar campanhas de doacao de sangue, aproximando administradores, doadores e visitantes em um unico fluxo.
 
-No estado atual, administradores gerenciam locais de coleta e campanhas. Doadores podem criar conta, emitir e editar a carteirinha e consultar a home publica de campanhas. Visitantes podem visualizar informacoes publicas e acessar login, cadastro ou recuperacao de senha.
+No estado atual, administradores gerenciam locais de coleta, campanhas e usuarios. Doadores podem criar conta, emitir e editar a carteirinha e consultar a home publica de campanhas. Visitantes podem visualizar informacoes publicas e acessar login, cadastro ou recuperacao de senha.
 
 Estado atual do monolito:
 
@@ -10,7 +10,7 @@ Estado atual do monolito:
 - Views Blade renderizadas no servidor.
 - Autenticacao web por sessao.
 - Perfis `admin` e `doador` no model `User`.
-- Home publica com campanhas estaticas de destaque, login, cadastro, recuperacao de senha, logout e dashboards por perfil.
+- Home publica com campanhas ativas cadastradas no banco, login, cadastro, recuperacao de senha, logout e dashboards por perfil.
 - Modelagem inicial do dominio de doacao de sangue.
 - Bootstrap e Bootstrap Icons para componentes visuais.
 - Tema claro, escuro e automatico conforme o sistema.
@@ -26,7 +26,9 @@ Funcionalidades ja cobertas:
 - Emissao e edicao da carteirinha de doador.
 - Cadastro, edicao e exclusao de locais de coleta.
 - Cadastro, edicao e exclusao de campanhas.
+- Listagem de usuarios e promocao de doadores para administradores.
 - Campanhas com multiplos tipos sanguineos alvo.
+- Exibicao publica de campanhas ativas dentro do periodo vigente.
 
 ## Arquitetura
 

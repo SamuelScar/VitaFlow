@@ -2,6 +2,15 @@
 
 Este documento registra regras que afetam comportamento do sistema.
 
+## Home publica
+
+- Visitantes e usuarios autenticados podem acessar a home publica.
+- A home publica exibe apenas campanhas com status `ativa`.
+- A home publica exibe apenas campanhas dentro do periodo vigente.
+- Campanhas com `data_inicio` futura nao aparecem como abertas.
+- Campanhas com `data_fim` anterior ao dia atual nao aparecem como abertas.
+- A ausencia de tipos sanguineos alvo indica que a campanha aceita todos os tipos.
+
 ## Login
 
 - O campo `email` e obrigatorio.
@@ -41,8 +50,12 @@ Este documento registra regras que afetam comportamento do sistema.
 
 - Usuarios criados pelo cadastro comum entram como `doador`.
 - O cadastro comum nao permite criar usuario com tipo `admin`.
+- Apenas usuarios com tipo `admin` podem acessar a listagem administrativa de usuarios.
+- A listagem administrativa de usuarios pode ser filtrada por nome ou e-mail sem recarregar a pagina.
+- A listagem administrativa de usuarios e paginada pelo componente Livewire.
 - Apenas usuarios com tipo `admin` podem promover outro usuario para admin.
 - A promocao de privilegio altera o tipo do usuario promovido para `admin`.
+- A promocao nao altera nome, e-mail, senha ou dados de doador.
 
 ## Conta do usuario
 

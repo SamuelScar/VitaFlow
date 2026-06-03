@@ -33,6 +33,7 @@ A identidade usa Bootstrap como base, com variaveis CSS proprias para manter con
 
 - Acoes principais: vermelho principal.
 - Acoes secundarias: azul.
+- Marca: gota vermelha do VitaFlow no cabecalho, telas de autenticacao e favicon.
 - Cards: fundo branco, borda cinza clara e texto grafite.
 - Status confirmado/compareceu: verde.
 - Status pendente: ambar com texto escuro.
@@ -65,6 +66,13 @@ Uso esperado:
 - dashboards e cards usam icones para facilitar leitura rapida;
 - badges podem usar icones pequenos para indicar contexto;
 - icones devem ser decorativos com `aria-hidden="true"` quando o texto ja explica a acao.
+
+## Logo
+
+- O logo principal fica em `src/public/assets/images/logo-vitaflow-drop.png`.
+- O favicon fica em `src/public/favicon.ico`.
+- No cabecalho, o logo aparece ao lado do texto `VitaFlow`.
+- A classe `.brand-logo` mantem a altura em 42px e preserva a proporcao da imagem.
 
 ## Alertas
 

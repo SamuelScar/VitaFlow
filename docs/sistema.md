@@ -13,6 +13,7 @@ Exemplos:
 - `Auth\LoginController`: fluxo de login.
 - `Auth\RegisterController`: fluxo de cadastro.
 - `ContaController`: fluxo de edicao e exclusao da propria conta.
+- `Admin\UserController`: listagem administrativa de usuarios.
 - `Admin\UserPromotionController`: fluxo administrativo de promocao de usuario.
 - `Admin\LocalColetaController`: fluxo administrativo de locais de coleta.
 - `Admin\CampanhaController`: fluxo administrativo de campanhas.
@@ -30,6 +31,9 @@ Comportamentos globais importantes:
 - `data-theme-value`: controla a selecao de tema `system`, `light` ou `dark`.
 - `x-mask`: aplica mascaras simples nos campos de CPF, telefone e CEP.
 - Alertas de sucesso, erro e aviso devem usar os helpers globais do SweetAlert2.
+- Livewire e usado em interfaces administrativas que precisam de interacao dinamica sem recarregar a pagina.
+- Livewire e Alpine sao iniciados juntos em `resources/js/app.js` a partir do bundle ESM do Livewire.
+- A paginacao padrao do Laravel usa a renderizacao Bootstrap 5 configurada no `AppServiceProvider`.
 
 ## Indice
 

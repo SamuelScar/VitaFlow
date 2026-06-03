@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CampanhaController;
 use App\Http\Controllers\Admin\LocalColetaController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserPromotionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -10,9 +11,10 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Doador\CarteiraDoacaoController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
@@ -63,7 +65,9 @@ Route::middleware('auth')->group(function (): void {
             ->name('admin.campanhas.update');
         Route::delete('/admin/campanhas/{campanha}', [CampanhaController::class, 'destroy'])
             ->name('admin.campanhas.destroy');
-        Route::post('/usuarios/{user}/promover-admin', UserPromotionController::class)
+        Route::get('/admin/usuarios', [UserController::class, 'index'])
+            ->name('admin.usuarios.index');
+        Route::post('/admin/usuarios/{user}/promover-admin', UserPromotionController::class)
             ->name('users.promote-admin');
     });
 });

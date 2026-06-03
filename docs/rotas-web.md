@@ -10,6 +10,18 @@ GET /
 
 Exibe a tela publica inicial com campanhas de doacao de sangue em destaque.
 
+Consulta:
+
+```text
+App\Models\Campanha
+```
+
+Controller:
+
+```text
+App\Http\Controllers\HomeController
+```
+
 View:
 
 ```text
@@ -19,9 +31,12 @@ resources/views/home.blade.php
 Comportamento atual:
 
 - Visitantes podem acessar sem login.
-- Exibe cards estaticos de campanhas de sangue em destaque.
-- A tela ainda nao consulta campanhas cadastradas no banco.
-- A acao de agendamento direciona para login.
+- Exibe campanhas cadastradas com status `ativa`.
+- Exibe apenas campanhas dentro do periodo vigente, com `data_inicio` menor ou igual ao dia atual e `data_fim` maior ou igual ao dia atual.
+- Ordena as campanhas pela data final e depois pelo titulo.
+- Exibe resumo publico com total de campanhas abertas, meta total de bolsas e locais participantes.
+- Se nao houver campanha aberta, exibe uma mensagem informativa.
+- A acao de participacao direciona visitantes para login e usuarios autenticados para o dashboard.
 
 ## Login
 
@@ -467,9 +482,9 @@ resources/views/admin/dashboard.blade.php
 
 Comportamento atual:
 
-- Exibe atalhos para locais de coleta, campanhas de sangue e home publica.
-- Exibe cards informativos de agendamentos e usuarios.
-- Os cards de agendamentos e usuarios ainda nao possuem rota propria de gestao.
+- Exibe atalhos para locais de coleta, campanhas de sangue, usuarios e home publica.
+- Exibe card informativo de agendamentos.
+- O card de agendamentos ainda nao possui rota propria de gestao.
 
 ## Tela de locais de coleta
 
@@ -787,10 +802,46 @@ Comportamento atual:
 - Apos criar o usuario, exibe mensagem de sucesso.
 - Apos alguns segundos, redireciona para `/login`.
 
+## Tela de usuarios
+
+```text
+GET /admin/usuarios
+```
+
+Exibe a tela administrativa de usuarios.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\UserController@index
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/usuarios/index.blade.php
+```
+
+Comportamento atual:
+
+- Lista usuarios cadastrados com nome, e-mail e tipo.
+- Usa componente Livewire para buscar usuarios por nome ou e-mail sem recarregar a pagina.
+- Mantem a busca no parametro `busca` da URL.
+- Pagina a listagem sem recarregar a pagina.
+- Exibe resumo com total de usuarios, administradores e doadores.
+- Quando ha busca, exibe tambem o total de resultados encontrados.
+- Usuarios doadores podem ser promovidos para administradores.
+- Usuarios administradores aparecem com acao desabilitada.
+
 ## Promover usuario para admin
 
 ```text
-POST /usuarios/{user}/promover-admin
+POST /admin/usuarios/{user}/promover-admin
 ```
 
 Promove um usuario existente para administrador.
