@@ -8,6 +8,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+/**
+ * Gerencia o CRUD de locais de coleta. O endereço é normalizado (CEP formatado, UF em maiúsculas) antes da validação.
+ */
 class LocalColetaController extends Controller
 {
     public function index(): View
@@ -66,6 +69,9 @@ class LocalColetaController extends Controller
         ];
     }
 
+    /**
+     * Normaliza o CEP para o formato NNNNN-NNN e converte a UF para maiúsculas diretamente no request antes da validação.
+     */
     private function normalizeAddress(Request $request): void
     {
         $cep = preg_replace('/\D/', '', (string) $request->input('cep', ''));

@@ -13,6 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\View\View;
 
+/**
+ * Gerencia a redefinição de senha via token enviado por e-mail.
+ */
 class NewPasswordController extends Controller
 {
     public function create(Request $request, string $token): View
@@ -23,6 +26,9 @@ class NewPasswordController extends Controller
         ]);
     }
 
+    /**
+     * Valida o token, o e-mail e a nova senha (que deve ser diferente da atual). Em caso de sucesso, salva a nova senha, gera novo remember_token e dispara o evento PasswordReset.
+     */
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([

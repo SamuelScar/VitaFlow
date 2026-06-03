@@ -2,7 +2,7 @@
     @php
         $usuario = auth()->user();
         $carteira = $usuario->carteiraDoacao;
-        $tiposSanguineos = App\Support\TiposSanguineos::TODOS;
+        $tiposSanguineos = App\Support\TipoSanguineo::values();
     @endphp
 
     <section class="bg-white border-bottom">

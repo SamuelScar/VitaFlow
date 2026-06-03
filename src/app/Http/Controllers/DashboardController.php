@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Redireciona o usuário autenticado para o dashboard correto de acordo com seu perfil (admin ou doador).
+ */
 class DashboardController extends Controller
 {
     public function __invoke(Request $request): RedirectResponse

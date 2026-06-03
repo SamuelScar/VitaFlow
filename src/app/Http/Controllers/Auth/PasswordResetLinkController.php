@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 
+/**
+ * Gerencia o envio do link de redefinição de senha por e-mail.
+ */
 class PasswordResetLinkController extends Controller
 {
     public function create(): View
@@ -15,6 +18,9 @@ class PasswordResetLinkController extends Controller
         return view('auth.forgot-password');
     }
 
+    /**
+     * Envia o link de redefinição para o e-mail informado. Retorna a mesma resposta independentemente de o e-mail existir no banco, evitando enumeração de usuários.
+     */
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([

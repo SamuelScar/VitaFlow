@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Garante que apenas usuários com perfil `admin` acessem a rota. Usuários não-admin recebem resposta 403.
+ * Garante que apenas usuários com perfil `doador` acessem a rota. Usuários não-doador (ex: admins) recebem resposta 403.
  */
-class EnsureUserIsAdmin
+class EnsureUserIsDoador
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user()?->isAdmin()) {
+        if (! $request->user()?->isDoador()) {
             abort(403);
         }
 

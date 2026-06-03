@@ -13,10 +13,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'bolsas_disponiveis',
     'estoque_minimo_ml',
 ])]
+/**
+ * Representa o estoque de sangue de um tipo específico em um local de coleta.
+ * Cada local possui no máximo um registro por tipo sanguíneo.
+ */
 class EstoqueSangue extends Model
 {
     protected $table = 'estoques_sangue';
 
+    /**
+     * Retorna o local de coleta ao qual este estoque pertence.
+     */
     public function localColeta(): BelongsTo
     {
         return $this->belongsTo(LocalColeta::class);

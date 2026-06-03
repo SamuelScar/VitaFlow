@@ -47,7 +47,7 @@
                     <div class="d-flex flex-wrap align-items-start gap-2">
                         <span class="badge text-bg-light border">
                             <i class="bi bi-megaphone me-1" aria-hidden="true"></i>
-                            {{ $campanhas->count() }} {{ $campanhas->count() === 1 ? 'campanha' : 'campanhas' }}
+                            {{ $totalCampanhas }} {{ $totalCampanhas === 1 ? 'campanha' : 'campanhas' }}
                         </span>
                         <button
                             class="btn btn-primary"
@@ -185,6 +185,12 @@
                         <p class="text-secondary mb-0">Cadastre a primeira campanha para iniciar o fluxo de doacao.</p>
                     </div>
                 @endforelse
+
+                @if ($campanhas->hasPages())
+                    <div class="mt-4 d-flex justify-content-center">
+                        {{ $campanhas->links() }}
+                    </div>
+                @endif
             </div>
         </article>
     </section>

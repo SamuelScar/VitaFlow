@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
+/**
+ * Gerencia o cadastro de novos usuários. Todo usuário criado por este fluxo entra com perfil `doador`.
+ */
 class RegisterController extends Controller
 {
     public function create(): View

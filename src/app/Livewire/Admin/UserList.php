@@ -9,6 +9,9 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+/**
+ * Componente Livewire para listagem paginada de usuários com busca em tempo real. A busca filtra por nome ou e-mail (case-insensitive via ILIKE). Os totais por perfil são calculados em uma única query agrupada.
+ */
 class UserList extends Component
 {
     use WithPagination;
@@ -33,6 +36,11 @@ class UserList extends Component
     {
         $busca = trim($this->busca);
 
+        $contagens = User::selectRaw('tipo, count(*) as total')
+            ->groupBy('tipo')
+            ->pluck('total', 'tipo')
+            ->map(fn ($v) => (int) $v);
+
         return view('livewire.admin.user-list', [
             'usuarios' => User::query()
                 ->when($busca !== '', function (Builder $query) use ($busca): void {
@@ -44,9 +52,9 @@ class UserList extends Component
                 ->orderBy('name')
                 ->orderBy('email')
                 ->paginate(10),
-            'totalUsuarios' => User::count(),
-            'totalAdmins' => User::where('tipo', User::TIPO_ADMIN)->count(),
-            'totalDoadores' => User::where('tipo', User::TIPO_DOADOR)->count(),
+            'totalUsuarios' => $contagens->sum(),
+            'totalAdmins'   => $contagens->get(User::TIPO_ADMIN, 0),
+            'totalDoadores' => $contagens->get(User::TIPO_DOADOR, 0),
         ]);
     }
 }

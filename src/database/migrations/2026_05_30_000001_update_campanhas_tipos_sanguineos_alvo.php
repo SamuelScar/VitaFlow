@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\TiposSanguineos;
+use App\Support\TipoSanguineo;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +40,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('campanhas', function (Blueprint $table) {
-            $table->enum('tipo_sanguineo_alvo', TiposSanguineos::TODOS)->nullable();
+            $table->enum('tipo_sanguineo_alvo', TipoSanguineo::values())->nullable();
         });
 
         DB::table('campanhas')

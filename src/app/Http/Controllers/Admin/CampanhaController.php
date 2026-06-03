@@ -5,33 +5,36 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Campanha;
 use App\Models\LocalColeta;
-use App\Support\TiposSanguineos;
+use App\Support\TipoSanguineo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Gerencia o CRUD de campanhas de doação de sangue.
+ */
 class CampanhaController extends Controller
 {
     public function index(): View
     {
+        $campanhas = Campanha::with(['localColeta', 'criador'])
+            ->orderByDesc('data_inicio')
+            ->orderBy('titulo')
+            ->paginate(20);
+
         return view('admin.campanhas.index', [
-            'campanhas' => Campanha::with(['localColeta', 'criador'])
-                ->orderByDesc('data_inicio')
-                ->orderBy('titulo')
-                ->get(),
-            'locaisColeta' => LocalColeta::orderBy('nome')->get(),
-            'tiposSanguineos' => TiposSanguineos::TODOS,
+            'campanhas'       => $campanhas,
+            'totalCampanhas'  => $campanhas->total(),
+            'locaisColeta'    => LocalColeta::orderBy('nome')->get(),
+            'tiposSanguineos' => TipoSanguineo::values(),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $user = $request->user();
-
-        if ($user === null) {
-            abort(403);
-        }
+        assert($user !== null);
 
         $user->campanhasCriadas()->create([
             ...$this->validatedData($request, 'storeCampanha'),
@@ -62,6 +65,8 @@ class CampanhaController extends Controller
     }
 
     /**
+     * Valida os dados da requisição e garante que `tipos_sanguineos_alvo` seja null quando não enviado (em vez de array vazio), respeitando a semântica do campo.
+     *
      * @return array<string, mixed>
      */
     private function validatedData(Request $request, string $errorBag, bool $updating = false): array
@@ -73,6 +78,8 @@ class CampanhaController extends Controller
     }
 
     /**
+     * Retorna as regras de validação. No cadastro, exige que `data_inicio` seja hoje ou futura. Na edição, inclui a regra para o campo `status`.
+     *
      * @return array<string, array<int, mixed>>
      */
     private function rules(bool $updating = false): array
@@ -82,7 +89,7 @@ class CampanhaController extends Controller
             'titulo' => ['required', 'string', 'max:255'],
             'descricao' => ['required', 'string', 'max:5000'],
             'tipos_sanguineos_alvo' => ['nullable', 'array'],
-            'tipos_sanguineos_alvo.*' => ['required', 'distinct', Rule::in(TiposSanguineos::TODOS)],
+            'tipos_sanguineos_alvo.*' => ['required', 'distinct', Rule::in(TipoSanguineo::values())],
             'meta_bolsas' => ['required', 'integer', 'min:1', 'max:100000'],
             'data_inicio' => ['required', 'date'],
             'data_fim' => ['required', 'date', 'after_or_equal:data_inicio'],

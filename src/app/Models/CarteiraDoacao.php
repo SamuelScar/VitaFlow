@@ -18,15 +18,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'status',
     'emitida_em',
 ])]
+/**
+ * Representa a carteirinha de doador — dados complementares do usuário para participar
+ * de campanhas de doação. Cada usuário pode ter no máximo uma carteirinha.
+ */
 class CarteiraDoacao extends Model
 {
     protected $table = 'carteiras_doacao';
 
+    /**
+     * Retorna o usuário dono desta carteirinha.
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Retorna todos os agendamentos feitos com esta carteirinha.
+     */
     public function agendamentos(): HasMany
     {
         return $this->hasMany(Agendamento::class);

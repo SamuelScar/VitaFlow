@@ -3,31 +3,27 @@
 namespace App\Http\Controllers\Doador;
 
 use App\Http\Controllers\Controller;
-use App\Support\TiposSanguineos;
+use App\Support\TipoSanguineo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Gerencia a emissão e edição da carteirinha de doador. Cada usuário doador pode ter no máximo uma carteirinha.
+ */
 class CarteiraDoacaoController extends Controller
 {
     public function create(Request $request): View
     {
-        if (! $request->user()?->isDoador()) {
-            abort(403);
-        }
-
         return view('usuario.carteirinha');
     }
 
     public function store(Request $request): RedirectResponse
     {
         $user = $request->user();
+        assert($user !== null);
         $this->normalizeCpf($request);
-
-        if ($user === null || ! $user->isDoador()) {
-            abort(403);
-        }
 
         if ($user->carteiraDoacao()->exists()) {
             return back()->withErrors([
@@ -39,7 +35,7 @@ class CarteiraDoacaoController extends Controller
 
         $user->carteiraDoacao()->create([
             ...$data,
-            'status' => 'ativa',
+            'status'     => 'ativa',
             'emitida_em' => now()->toDateString(),
         ]);
 
@@ -49,11 +45,8 @@ class CarteiraDoacaoController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
+        assert($user !== null);
         $this->normalizeCpf($request);
-
-        if ($user === null || ! $user->isDoador()) {
-            abort(403);
-        }
 
         $carteira = $user->carteiraDoacao;
 
@@ -68,6 +61,9 @@ class CarteiraDoacaoController extends Controller
         return back()->with('success', 'Dados da carteirinha atualizados com sucesso.');
     }
 
+    /**
+     * Remove todos os caracteres não numéricos do CPF no request antes da validação, aceitando tanto CPF mascarado quanto somente dígitos.
+     */
     private function normalizeCpf(Request $request): void
     {
         $cpf = preg_replace('/\D/', '', (string) $request->input('cpf', ''));
@@ -89,12 +85,12 @@ class CarteiraDoacaoController extends Controller
         }
 
         return [
-            'cpf' => ['required', 'digits:11', $cpfRule],
-            'telefone' => ['required', 'string', 'max:20'],
+            'cpf'             => ['required', 'digits:11', $cpfRule],
+            'telefone'        => ['required', 'string', 'max:20'],
             'data_nascimento' => ['required', 'date', 'before_or_equal:today'],
-            'tipo_sanguineo' => ['required', Rule::in(TiposSanguineos::TODOS)],
-            'peso' => ['required', 'numeric', 'min:0.01', 'max:999.99'],
-            'cidade' => ['required', 'string', 'max:255'],
+            'tipo_sanguineo'  => ['required', Rule::in(TipoSanguineo::values())],
+            'peso'            => ['required', 'numeric', 'min:0.01', 'max:999.99'],
+            'cidade'          => ['required', 'string', 'max:255'],
         ];
     }
 }

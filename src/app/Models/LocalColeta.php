@@ -18,15 +18,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'complemento',
     'capacidade_diaria',
 ])]
+/**
+ * Representa um local físico de coleta de sangue. O atributo `enderecoCompleto`
+ * monta a string de endereço formatada para exibição.
+ */
 class LocalColeta extends Model
 {
     protected $table = 'locais_coleta';
 
+    /**
+     * Retorna todas as campanhas associadas a este local.
+     */
     public function campanhas(): HasMany
     {
         return $this->hasMany(Campanha::class);
     }
 
+    /**
+     * Retorna os registros de estoque de sangue por tipo sanguíneo neste local.
+     */
     public function estoquesSangue(): HasMany
     {
         return $this->hasMany(EstoqueSangue::class);
@@ -43,6 +53,9 @@ class LocalColeta extends Model
     }
 
     /**
+     * Atributo computado que monta o endereço completo formatado
+     * (logradouro, número, bairro, complemento, cidade/UF, CEP).
+     *
      * @return Attribute<string, never>
      */
     protected function enderecoCompleto(): Attribute

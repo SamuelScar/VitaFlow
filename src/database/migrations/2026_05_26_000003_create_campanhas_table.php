@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\TiposSanguineos;
+use App\Support\TipoSanguineo;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('local_coleta_id')->constrained('locais_coleta')->restrictOnDelete();
             $table->string('titulo');
             $table->text('descricao');
-            $table->enum('tipo_sanguineo_alvo', TiposSanguineos::TODOS)->nullable();
+            $table->enum('tipo_sanguineo_alvo', TipoSanguineo::values())->nullable();
             $table->unsignedInteger('meta_bolsas');
             $table->date('data_inicio');
             $table->date('data_fim');

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
+/**
+ * Exibe a listagem administrativa de usuários (renderizada via componente Livewire).
+ */
 class UserController extends Controller
 {
     public function index(): View

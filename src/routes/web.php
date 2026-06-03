@@ -39,13 +39,15 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/conta', [ContaController::class, 'update'])->name('conta.update');
     Route::delete('/conta', [ContaController::class, 'destroy'])->name('conta.destroy');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
-    Route::view('/usuario', 'usuario.dashboard')->name('usuario.dashboard');
-    Route::get('/usuario/carteirinha', [CarteiraDoacaoController::class, 'create'])
-        ->name('usuario.carteirinha');
-    Route::post('/usuario/carteirinha', [CarteiraDoacaoController::class, 'store'])
-        ->name('usuario.carteirinha.store');
-    Route::put('/usuario/carteirinha', [CarteiraDoacaoController::class, 'update'])
-        ->name('usuario.carteirinha.update');
+    Route::middleware('doador')->group(function (): void {
+        Route::view('/usuario', 'usuario.dashboard')->name('usuario.dashboard');
+        Route::get('/usuario/carteirinha', [CarteiraDoacaoController::class, 'create'])
+            ->name('usuario.carteirinha');
+        Route::post('/usuario/carteirinha', [CarteiraDoacaoController::class, 'store'])
+            ->name('usuario.carteirinha.store');
+        Route::put('/usuario/carteirinha', [CarteiraDoacaoController::class, 'update'])
+            ->name('usuario.carteirinha.update');
+    });
 
     Route::middleware('admin')->group(function (): void {
         Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');

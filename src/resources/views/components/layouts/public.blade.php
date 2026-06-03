@@ -1,10 +1,14 @@
-@props(['title' => config('app.name')])
+@props([
+    'title'       => config('app.name'),
+    'description' => 'VitaFlow — Organize campanhas de doacao de sangue, acompanhe locais de coleta e conecte doadores a causas que precisam de apoio.',
+])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light" data-theme-preference="system">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="{{ $description }}">
         <title>{{ $title }} - {{ config('app.name') }}</title>
         <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
         @livewireScriptConfig

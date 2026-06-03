@@ -10,6 +10,9 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
+/**
+ * Gerencia as ações do usuário sobre a própria conta: edição de dados pessoais, troca de senha e exclusão da conta.
+ */
 class ContaController extends Controller
 {
     public function edit(): View
@@ -20,10 +23,7 @@ class ContaController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
-
-        if ($user === null) {
-            abort(403);
-        }
+        assert($user !== null);
 
         $data = $request->validateWithBag('updateConta', [
             'name' => ['required', 'string', 'max:255'],
@@ -46,13 +46,13 @@ class ContaController extends Controller
         return back()->with('success', 'Dados da conta atualizados com sucesso.');
     }
 
+    /**
+     * Exclui a conta do usuário após confirmar a senha. Encerra a sessão antes de apagar o registro para evitar erros de estado.
+     */
     public function destroy(Request $request): RedirectResponse
     {
         $user = $request->user();
-
-        if ($user === null) {
-            abort(403);
-        }
+        assert($user !== null);
 
         $request->validateWithBag('deleteConta', [
             'password' => ['required', 'current_password'],

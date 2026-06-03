@@ -6,6 +6,9 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Valida que a nova senha informada é diferente da senha atual do usuário. Recebe o hash atual no construtor e compara via Hash::check.
+ */
 class DifferentFromCurrentPassword implements ValidationRule
 {
     public function __construct(
