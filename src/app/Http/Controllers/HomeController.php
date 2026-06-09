@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campanha;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
@@ -10,16 +11,38 @@ use Illuminate\View\View;
  */
 class HomeController extends Controller
 {
-    public function __invoke(): View
+    private const ITENS_POR_PAGINA = [6, 12, 24, 48];
+
+    public function __invoke(Request $request): View
     {
+        $itensPorPagina = $request->integer('por_pagina', 12);
+        $itensPorPagina = in_array($itensPorPagina, self::ITENS_POR_PAGINA, true)
+            ? $itensPorPagina
+            : 12;
+
+        $query = Campanha::query()
+            ->where('status', 'ativa')
+            ->whereDate('data_inicio', '<=', now())
+            ->whereDate('data_fim', '>=', now());
+
+        $resumo = (clone $query)
+            ->selectRaw('COUNT(*) as total_campanhas')
+            ->selectRaw('COALESCE(SUM(meta_bolsas), 0) as total_meta_bolsas')
+            ->selectRaw('COUNT(DISTINCT local_coleta_id) as total_locais')
+            ->firstOrFail();
+
         return view('home', [
-            'campanhas' => Campanha::with('localColeta')
-                ->where('status', 'ativa')
-                ->whereDate('data_inicio', '<=', now())
-                ->whereDate('data_fim', '>=', now())
+            'campanhas' => $query
+                ->with('localColeta')
                 ->orderBy('data_fim')
                 ->orderBy('titulo')
-                ->get(),
+                ->paginate($itensPorPagina)
+                ->withQueryString(),
+            'itensPorPagina' => $itensPorPagina,
+            'opcoesPorPagina' => self::ITENS_POR_PAGINA,
+            'totalCampanhas' => (int) $resumo->total_campanhas,
+            'totalMetaBolsas' => (int) $resumo->total_meta_bolsas,
+            'totalLocais' => (int) $resumo->total_locais,
         ]);
     }
 }

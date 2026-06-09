@@ -232,3 +232,28 @@ Senha: Admin@123
 ```
 
 Usuarios criados pelo cadastro comum entram como `doador`. Para se tornar `admin`, o usuario deve ser promovido posteriormente por outro administrador.
+
+### Dados demonstrativos
+
+O `DemoSeeder` cria um conjunto grande e previsivel de dados para apresentacoes do sistema:
+
+- 150 usuarios doadores com carteirinhas;
+- 30 locais de coleta;
+- 240 registros de estoque;
+- 60 campanhas ativas, futuras, encerradas e canceladas;
+- mais de 1.600 agendamentos e cerca de 200 doacoes em diferentes status.
+
+As datas sao calculadas a partir do dia em que o seeder e executado. Assim, as campanhas abertas continuam adequadas para demonstracoes realizadas nos dias seguintes.
+
+Execute dentro do container da aplicacao:
+
+```powershell
+docker compose exec app php artisan db:seed --class=DemoSeeder
+```
+
+O seeder usa registros identificaveis e pode ser executado novamente sem duplicar os dados demonstrativos. Todos os doadores criados usam a senha `Doador@123`. Para acessar um deles:
+
+```txt
+E-mail: doador001@vitaflow.local
+Senha: Doador@123
+```

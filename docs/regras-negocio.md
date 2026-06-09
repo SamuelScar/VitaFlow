@@ -10,6 +10,9 @@ Este documento registra regras que afetam comportamento do sistema.
 - Campanhas com `data_inicio` futura nao aparecem como abertas.
 - Campanhas com `data_fim` anterior ao dia atual nao aparecem como abertas.
 - A ausencia de tipos sanguineos alvo indica que a campanha aceita todos os tipos.
+- A listagem de campanhas abertas e paginada.
+- O visitante pode escolher exibir 6, 12, 24 ou 48 campanhas por pagina.
+- O resumo publico considera todas as campanhas abertas, independentemente da pagina atual.
 
 ## Login
 

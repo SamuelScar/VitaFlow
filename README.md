@@ -78,6 +78,34 @@ Depois:
 docker compose exec app php artisan migrate
 ```
 
+## Dados demonstrativos
+
+Para preencher o sistema com um volume alto de dados para apresentacao:
+
+```powershell
+docker compose exec app php artisan db:seed --class=DemoSeeder
+```
+
+O comando pode ser executado novamente sem duplicar os registros demonstrativos. Ele cria:
+
+- 150 usuarios doadores com carteirinhas;
+- 30 locais de coleta;
+- 240 registros de estoque, cobrindo todos os tipos sanguineos em cada local;
+- 60 campanhas em diferentes periodos e status;
+- mais de 1.600 agendamentos e cerca de 200 doacoes.
+
+Credenciais para demonstracao:
+
+```txt
+Administrador
+E-mail: admin@vitaflow.local
+Senha: Admin@123
+
+Doador
+E-mail: doador001@vitaflow.local
+Senha: Doador@123
+```
+
 ## Rodar em outra maquina
 
 Com o Laravel ja criado em `src/`, rode:
