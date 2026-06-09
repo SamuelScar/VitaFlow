@@ -1,0 +1,116 @@
+// Modelo relacional do banco de dados
+// Apenas tabelas de negocio do sistema
+// Fonte de verdade: migrations atuais da aplicacao
+
+Table users {
+  id bigserial [primary key, not null]
+  name varchar(255) [not null]
+  email varchar(255) [not null, unique]
+  tipo varchar(255) [not null, default: 'doador', note: 'CHECK: admin ou doador. A coluna existe na migration, mas nao aparece na captura do DBeaver']
+  email_verified_at timestamp(0)
+  password varchar(255) [not null]
+  remember_token varchar(100)
+  created_at timestamp(0)
+  updated_at timestamp(0)
+}
+
+Table locais_coleta {
+  id bigserial [primary key, not null]
+  nome varchar(255) [not null]
+  cep varchar(9) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
+  logradouro varchar(255) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
+  numero varchar(30) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
+  bairro varchar(255) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
+  cidade varchar(255) [not null]
+  uf varchar(2) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
+  complemento varchar(255)
+  capacidade_diaria int4 [not null]
+  created_at timestamp(0)
+  updated_at timestamp(0)
+}
+
+Table campanhas {
+  id bigserial [primary key, not null]
+  criada_por_id int8 [not null]
+  local_coleta_id int8 [not null]
+  titulo varchar(255) [not null]
+  descricao text [not null]
+  tipos_sanguineos_alvo json [note: 'Null significa todos os tipos; valores validos sao verificados pela aplicacao']
+  meta_bolsas int4 [not null]
+  data_inicio date [not null]
+  data_fim date [not null]
+  status varchar(255) [not null, default: 'ativa', note: 'CHECK: ativa, encerrada ou cancelada']
+  created_at timestamp(0)
+  updated_at timestamp(0)
+}
+
+Table carteiras_doacao {
+  id bigserial [primary key, not null]
+  user_id int8 [not null, unique]
+  cpf varchar(14) [not null, unique]
+  telefone varchar(20) [not null]
+  data_nascimento date [not null]
+  tipo_sanguineo varchar(255) [not null, note: 'CHECK: A+, A-, B+, B-, AB+, AB-, O+, O-']
+  peso numeric(5,2) [not null]
+  cidade varchar(255) [not null]
+  status varchar(255) [not null, default: 'ativa', note: 'CHECK: ativa, bloqueada ou inativa']
+  emitida_em date [not null]
+  created_at timestamp(0)
+  updated_at timestamp(0)
+}
+
+Table estoques_sangue {
+  id bigserial [primary key, not null]
+  local_coleta_id int8 [not null]
+  tipo_sanguineo varchar(255) [not null, note: 'CHECK: A+, A-, B+, B-, AB+, AB-, O+, O-']
+  quantidade_ml int4 [not null, default: 0]
+  bolsas_disponiveis int4 [not null, default: 0]
+  estoque_minimo_ml int4 [not null, default: 0]
+  created_at timestamp(0)
+  updated_at timestamp(0)
+
+  indexes {
+    (local_coleta_id, tipo_sanguineo) [unique, name: 'estoques_sangue_local_coleta_id_tipo_sanguineo_unique']
+  }
+}
+
+Table agendamentos {
+  id bigserial [primary key, not null]
+  carteira_doacao_id int8 [not null]
+  campanha_id int8 [not null]
+  data_hora timestamp(0) [not null]
+  status varchar(255) [not null, default: 'agendado', note: 'CHECK: agendado, cancelado, realizado ou faltou']
+  created_at timestamp(0)
+  updated_at timestamp(0)
+
+  indexes {
+    (carteira_doacao_id, campanha_id) [unique, name: 'agendamentos_carteira_doacao_id_campanha_id_unique']
+  }
+}
+
+Table doacoes {
+  id bigserial [primary key, not null]
+  agendamento_id int8 [not null, unique]
+  data_coleta timestamp(0) [not null]
+  quantidade_ml int2
+  status varchar(255) [not null, default: 'confirmada', note: 'CHECK: confirmada ou recusada']
+  motivo_recusa text
+  created_at timestamp(0)
+  updated_at timestamp(0)
+}
+
+// Relacionamentos
+
+Ref: campanhas.criada_por_id > users.id [delete: restrict]
+
+Ref: campanhas.local_coleta_id > locais_coleta.id [delete: restrict]
+
+Ref: carteiras_doacao.user_id > users.id [delete: cascade]
+
+Ref: estoques_sangue.local_coleta_id > locais_coleta.id [delete: cascade]
+
+Ref: agendamentos.campanha_id > campanhas.id [delete: restrict]
+
+Ref: agendamentos.carteira_doacao_id > carteiras_doacao.id [delete: restrict]
+
+Ref: doacoes.agendamento_id > agendamentos.id [delete: restrict]

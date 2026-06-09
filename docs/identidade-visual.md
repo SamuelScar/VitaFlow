@@ -1,91 +1,30 @@
 # Identidade visual
 
-A identidade usa Bootstrap como base, com variaveis CSS proprias para manter consistencia visual.
+Usa Bootstrap com CSS customizadas. Paleta vermelha (#C62828) como principal, azul (#1565C0) secundário, verde (#2E7D32) para sucesso e amarelo (#F9A825) para alertas.
 
-## Paleta clara
+## Temas
 
-- Principal: `#C62828`
-- Principal escura: `#B71C1C`
-- Secundaria: `#1565C0`
-- Sucesso: `#2E7D32`
-- Alerta/Pendente: `#F9A825`
-- Fundo: `#F8FAFC`
-- Superficie/cards: `#FFFFFF`
-- Bordas: `#E5E7EB`
-- Texto principal: `#1F2937`
-- Texto secundario: `#6B7280`
+- Sistema: segue `prefers-color-scheme` do navegador
+- Claro / Escuro: opções forçadas
+- Preferência salva em `localStorage` com a chave `vitaflow-theme`
 
-## Paleta escura
+## Cores por uso
 
-- Principal: `#EF5350`
-- Principal escura: `#D32F2F`
-- Secundaria: `#64B5F6`
-- Sucesso: `#66BB6A`
-- Alerta/Pendente: `#FDD663`
-- Fundo: `#0F172A`
-- Superficie/cards: `#111827`
-- Superficie secundaria: `#1F2937`
-- Bordas: `#334155`
-- Texto principal: `#F8FAFC`
-- Texto secundario: `#CBD5E1`
+| Status | Cor |
+|--------|-----|
+| Ação principal | Vermelho |
+| Ação secundária | Azul |
+| Confirmado | Verde |
+| Pendente | Amarelo |
+| Cancelado/Erro | Vermelho escuro |
 
-## Uso
+## Componentes
 
-- Acoes principais: vermelho principal.
-- Acoes secundarias: azul.
-- Marca: gota vermelha do VitaFlow no cabecalho, telas de autenticacao e favicon.
-- Cards: fundo branco, borda cinza clara e texto grafite.
-- Status confirmado/compareceu: verde.
-- Status pendente: ambar com texto escuro.
-- Status cancelado/erro: vermelho escuro.
-- Status nao compareceu: cinza.
+- **Logo**: `src/public/assets/images/logo-vitaflow-drop.png` (42px de altura)
+- **Favicon**: `src/public/favicon.ico`
+- **Ícones**: Bootstrap Icons — usar em botões e dashboards quando apropriado
+- **Alertas**: toasts laterais para sucesso e validação; alerta central para ações destrutivas
 
-## Tema
+## Estilos globais
 
-O sistema usa o suporte nativo do Bootstrap por `data-bs-theme`.
-
-Opcoes disponiveis:
-
-- `Sistema`: padrao, segue `prefers-color-scheme` do navegador.
-- `Claro`: forca o tema claro.
-- `Escuro`: forca o tema escuro.
-
-Comportamento:
-
-- A preferencia fica salva em `localStorage` com a chave `vitaflow-theme`.
-- Um script inline no layout aplica o tema antes do carregamento dos assets para evitar troca visual tardia.
-- O seletor fica na navbar como um icone discreto ao lado das acoes do usuario.
-
-## Icones
-
-O projeto usa Bootstrap Icons.
-
-Uso esperado:
-
-- botoes de acao devem usar icone quando houver simbolo claro;
-- dashboards e cards usam icones para facilitar leitura rapida;
-- badges podem usar icones pequenos para indicar contexto;
-- icones devem ser decorativos com `aria-hidden="true"` quando o texto ja explica a acao.
-
-## Logo
-
-- O logo principal fica em `src/public/assets/images/logo-vitaflow-drop.png`.
-- O favicon fica em `src/public/favicon.ico`.
-- No cabecalho, o logo aparece ao lado do texto `VitaFlow`.
-- A classe `.brand-logo` mantem a altura em 42px e preserva a proporcao da imagem.
-
-## Alertas
-
-- Mensagens de sucesso usam toast lateral.
-- Erros de validacao client-side usam toast lateral de aviso.
-- Toasts pausam o temporizador no hover.
-- Confirmacoes destrutivas podem usar alerta central.
-- Exclusao de conta usa alerta central com espera obrigatoria, senha e estado de carregamento.
-
-## Arquivo principal
-
-As variaveis e ajustes globais ficam em:
-
-```text
-src/resources/css/app.css
-```
+Variáveis e customizações em `src/resources/css/app.css`

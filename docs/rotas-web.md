@@ -2,11 +2,41 @@
 
 Este documento registra as rotas web do sistema.
 
-## Home publica
+## Sumário
 
-```text
-GET /
-```
+### Autenticação
+- [Home pública](#home-pública)
+- [Login](#login)
+- [Autenticação](#autenticação)
+- [Recuperação de senha](#solicitar-recuperação-de-senha)
+- [Cadastro](#cadastro)
+
+### Conta do usuário
+- [Dados da conta](#tela-de-dados-da-conta)
+- [Atualizar conta](#atualizar-dados-da-conta)
+- [Excluir conta](#excluir-conta)
+- [Logout](#logout)
+
+### Doador
+- [Dashboard do doador](#área-do-doador)
+- [Carteirinha](#tela-da-carteirinha-de-doador)
+- [Emitir carteirinha](#emitir-carteirinha-de-doador)
+- [Atualizar carteirinha](#atualizar-carteirinha-de-doador)
+
+### Admin
+- [Dashboard admin](#painel-admin)
+- [Locais de coleta](#tela-de-locais-de-coleta)
+- [Campanhas](#tela-de-campanhas)
+- [Usuários](#tela-de-usuarios)
+
+### Sistema
+- [Health check](#health-check)
+
+---
+
+## Home pública
+
+`GET /`
 
 Exibe a tela publica inicial com campanhas de doacao de sangue em destaque.
 
@@ -40,9 +70,7 @@ Comportamento atual:
 
 ## Login
 
-```text
-GET /login
-```
+`GET /login`
 
 Exibe a tela de login.
 
@@ -58,11 +86,9 @@ View:
 resources/views/auth/login.blade.php
 ```
 
-## Autenticacao
+## Autenticação
 
-```text
-POST /login
-```
+`POST /login`
 
 Valida as credenciais do usuario e inicia a sessao.
 
@@ -77,11 +103,9 @@ Comportamento atual:
 - Se o login for valido, regenera a sessao.
 - Apos autenticar, redireciona para `/dashboard`.
 
-## Solicitar recuperacao de senha
+## Solicitar recuperação de senha
 
-```text
-GET /esqueci-senha
-```
+`GET /esqueci-senha`
 
 Exibe a tela para solicitar o link de redefinicao de senha.
 
@@ -101,11 +125,9 @@ View:
 resources/views/auth/forgot-password.blade.php
 ```
 
-## Enviar link de recuperacao de senha
+## Enviar link de recuperação de senha
 
-```text
-POST /esqueci-senha
-```
+`POST /esqueci-senha`
 
 Valida o e-mail informado e solicita ao broker do Laravel o envio do link de redefinicao.
 
@@ -129,11 +151,9 @@ Comportamento atual:
 - Se o envio for aceito pelo broker, retorna para a tela anterior com mensagem de sucesso.
 - Se o e-mail nao existir ou estiver limitado por throttle, retorna erro de validacao.
 
-## Tela de redefinicao de senha
+## Tela de redefinição de senha
 
-```text
-GET /redefinir-senha/{token}
-```
+`GET /redefinir-senha/{token}`
 
 Exibe a tela para criar uma nova senha a partir do token recebido por e-mail.
 
@@ -155,9 +175,7 @@ resources/views/auth/reset-password.blade.php
 
 ## Redefinir senha
 
-```text
-POST /redefinir-senha
-```
+`POST /redefinir-senha`
 
 Valida o token e atualiza a senha do usuario.
 
@@ -188,9 +206,7 @@ Comportamento atual:
 
 ## Logout
 
-```text
-POST /logout
-```
+`POST /logout`
 
 Encerra a sessao do usuario autenticado.
 
@@ -213,9 +229,7 @@ Comportamento atual:
 
 ## Tela de dados da conta
 
-```text
-GET /conta
-```
+`GET /conta`
 
 Exibe a tela para editar dados da conta e solicitar exclusao da propria conta.
 
@@ -244,9 +258,7 @@ Comportamento atual:
 
 ## Atualizar dados da conta
 
-```text
-PUT /conta
-```
+`PUT /conta`
 
 Atualiza os dados da conta do usuario autenticado.
 
@@ -280,9 +292,7 @@ Comportamento atual:
 
 ## Excluir conta
 
-```text
-DELETE /conta
-```
+`DELETE /conta`
 
 Exclui a conta do usuario autenticado.
 
@@ -312,9 +322,7 @@ Comportamento atual:
 
 ## Dashboard
 
-```text
-GET /dashboard
-```
+`GET /dashboard`
 
 Redireciona o usuario autenticado para a tela inicial correta conforme o tipo.
 
@@ -333,11 +341,9 @@ Comportamento atual:
 - Usuarios com tipo `admin` sao redirecionados para `/admin`.
 - Usuarios com tipo `doador` sao redirecionados para `/usuario`.
 
-## Area do doador
+## Área do doador
 
-```text
-GET /usuario
-```
+`GET /usuario`
 
 Exibe a tela inicial do usuario doador.
 
@@ -360,9 +366,7 @@ Comportamento atual:
 
 ## Tela da carteirinha de doador
 
-```text
-GET /usuario/carteirinha
-```
+`GET /usuario/carteirinha`
 
 Exibe a tela de carteirinha do doador autenticado.
 
@@ -391,9 +395,7 @@ Comportamento atual:
 
 ## Emitir carteirinha de doador
 
-```text
-POST /usuario/carteirinha
-```
+`POST /usuario/carteirinha`
 
 Cria a carteirinha de doador para o usuario autenticado.
 
@@ -427,9 +429,7 @@ Comportamento atual:
 
 ## Atualizar carteirinha de doador
 
-```text
-PUT /usuario/carteirinha
-```
+`PUT /usuario/carteirinha`
 
 Atualiza os dados da carteirinha do doador autenticado.
 
@@ -463,9 +463,7 @@ Comportamento atual:
 
 ## Painel admin
 
-```text
-GET /admin
-```
+`GET /admin`
 
 Exibe a tela inicial administrativa.
 
@@ -488,9 +486,7 @@ Comportamento atual:
 
 ## Tela de locais de coleta
 
-```text
-GET /admin/locais-coleta
-```
+`GET /admin/locais-coleta`
 
 Exibe a tela administrativa de locais de coleta.
 
@@ -521,9 +517,7 @@ Comportamento atual:
 
 ## Cadastrar local de coleta
 
-```text
-POST /admin/locais-coleta
-```
+`POST /admin/locais-coleta`
 
 Cadastra um local de coleta.
 
@@ -561,9 +555,7 @@ Comportamento atual:
 
 ## Atualizar local de coleta
 
-```text
-PUT /admin/locais-coleta/{localColeta}
-```
+`PUT /admin/locais-coleta/{localColeta}`
 
 Atualiza os dados de um local de coleta.
 
@@ -601,9 +593,7 @@ Comportamento atual:
 
 ## Excluir local de coleta
 
-```text
-DELETE /admin/locais-coleta/{localColeta}
-```
+`DELETE /admin/locais-coleta/{localColeta}`
 
 Exclui um local de coleta.
 
@@ -627,9 +617,7 @@ Comportamento atual:
 
 ## Tela de campanhas
 
-```text
-GET /admin/campanhas
-```
+`GET /admin/campanhas`
 
 Exibe a tela administrativa de campanhas.
 
@@ -660,9 +648,7 @@ Comportamento atual:
 
 ## Cadastrar campanha
 
-```text
-POST /admin/campanhas
-```
+`POST /admin/campanhas`
 
 Cadastra uma campanha de doacao de sangue.
 
@@ -698,9 +684,7 @@ Comportamento atual:
 
 ## Atualizar campanha
 
-```text
-PUT /admin/campanhas/{campanha}
-```
+`PUT /admin/campanhas/{campanha}`
 
 Atualiza os dados de uma campanha.
 
@@ -736,9 +720,7 @@ Comportamento atual:
 
 ## Excluir campanha
 
-```text
-DELETE /admin/campanhas/{campanha}
-```
+`DELETE /admin/campanhas/{campanha}`
 
 Exclui uma campanha.
 
@@ -762,9 +744,7 @@ Comportamento atual:
 
 ## Cadastro
 
-```text
-GET /cadastro
-```
+`GET /cadastro`
 
 Exibe a tela de cadastro.
 
@@ -782,9 +762,7 @@ resources/views/auth/register.blade.php
 
 ## Criar usuario
 
-```text
-POST /cadastro
-```
+`POST /cadastro`
 
 Valida os dados do usuario e cria a conta.
 
@@ -804,9 +782,7 @@ Comportamento atual:
 
 ## Tela de usuarios
 
-```text
-GET /admin/usuarios
-```
+`GET /admin/usuarios`
 
 Exibe a tela administrativa de usuarios.
 
@@ -840,9 +816,7 @@ Comportamento atual:
 
 ## Promover usuario para admin
 
-```text
-POST /admin/usuarios/{user}/promover-admin
-```
+`POST /admin/usuarios/{user}/promover-admin`
 
 Promove um usuario existente para administrador.
 
@@ -866,9 +840,7 @@ Comportamento atual:
 
 ## Health check
 
-```text
-GET /health
-```
+`GET /health`
 
 Retorna um JSON simples indicando que a aplicacao esta respondendo.
 

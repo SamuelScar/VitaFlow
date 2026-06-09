@@ -32,7 +32,8 @@ COPY apache.conf /etc/apache2/sites-available/000-default.conf
 COPY local.ini /usr/local/etc/php/conf.d/local.ini
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
+    && chmod +x /usr/local/bin/entrypoint.sh
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 

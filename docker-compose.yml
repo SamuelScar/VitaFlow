@@ -12,6 +12,8 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./.env:/var/www/html/.env:ro
+      - node_modules:/var/www/html/node_modules
+      - vendor:/var/www/html/vendor
     depends_on:
       db:
         condition: service_healthy
@@ -36,3 +38,5 @@ services:
 
 volumes:
   pgdata:
+  node_modules:
+  vendor:

@@ -42,6 +42,14 @@ Para subir o ambiente com o Vite dev server junto, altere no `.env`:
 RUN_VITE_DEV=true
 ```
 
+Ao iniciar, o container instala automaticamente as dependencias do Composer, executa as migrations e, quando o Vite estiver habilitado, instala as dependencias do npm. As instalacoes so sao repetidas quando os arquivos de lock mudam. As pastas `vendor` e `node_modules` ficam em volumes Docker separados para manter compatibilidade entre Windows e Linux.
+
+Para acompanhar as etapas de inicializacao no terminal:
+
+```powershell
+docker compose logs -f app
+```
+
 Com `RUN_VITE_DEV=false`, o Vite nao inicia automaticamente. Nesse caso, gere os assets com `docker compose exec app npm run build` ou rode o dev server manualmente com `docker compose exec app npm run dev -- --host 0.0.0.0`.
 
 ## Recriar a base Laravel do zero
