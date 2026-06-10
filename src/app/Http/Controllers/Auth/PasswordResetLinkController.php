@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 /**
  * Gerencia o envio do link de redefinição de senha por e-mail.
@@ -27,7 +29,17 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        $status = Password::sendResetLink($data);
+        try {
+            $status = Password::sendResetLink($data);
+        } catch (TransportExceptionInterface $exception) {
+            Log::error('Falha ao enviar e-mail de redefinicao de senha.', [
+                'exception' => $exception,
+            ]);
+
+            return back()
+                ->withErrors(['email' => 'Nao foi possivel enviar o e-mail de redefinicao. Tente novamente mais tarde.'])
+                ->onlyInput('email');
+        }
 
         return $status === Password::RESET_LINK_SENT
             ? back()->with('success', __($status))
