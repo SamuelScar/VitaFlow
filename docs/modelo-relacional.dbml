@@ -105,7 +105,7 @@ Ref: campanhas.criada_por_id > users.id [delete: restrict]
 
 Ref: campanhas.local_coleta_id > locais_coleta.id [delete: restrict]
 
-Ref: carteiras_doacao.user_id > users.id [delete: cascade]
+Ref: carteiras_doacao.user_id - users.id [delete: cascade]
 
 Ref: estoques_sangue.local_coleta_id > locais_coleta.id [delete: cascade]
 
@@ -113,4 +113,4 @@ Ref: agendamentos.campanha_id > campanhas.id [delete: restrict]
 
 Ref: agendamentos.carteira_doacao_id > carteiras_doacao.id [delete: restrict]
 
-Ref: doacoes.agendamento_id > agendamentos.id [delete: restrict]
+Ref: doacoes.agendamento_id - agendamentos.id [delete: restrict]
