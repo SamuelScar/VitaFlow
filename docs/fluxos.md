@@ -16,10 +16,11 @@ Este documento registra os fluxos existentes no sistema.
 
 1. Usuario acessa `GET /login`.
 2. Sistema exibe o formulario de login.
-3. Usuario informa e-mail e senha.
-4. Sistema valida as credenciais em `POST /login`.
-5. Se as credenciais forem validas, a sessao e regenerada.
-6. Usuario e redirecionado para `/dashboard`.
+3. Usuario pode retornar a pagina anterior ou acessar a home publica.
+4. Usuario informa e-mail e senha.
+5. Sistema valida as credenciais em `POST /login`.
+6. Se as credenciais forem validas, a sessao e regenerada.
+7. Usuario e redirecionado para `/dashboard`.
 
 ## Dashboard
 
@@ -40,26 +41,28 @@ Este documento registra os fluxos existentes no sistema.
 
 1. Usuario acessa `GET /cadastro`.
 2. Sistema exibe o formulario de cadastro.
-3. Usuario informa nome, e-mail, senha e confirmacao da senha.
-4. Sistema valida os dados em `POST /cadastro`.
-5. Se os dados forem validos, o usuario e criado.
-6. Sistema exibe mensagem de sucesso.
-7. Usuario e redirecionado para `/login` apos alguns segundos.
+3. Usuario pode retornar a pagina anterior ou acessar a home publica.
+4. Usuario informa nome, e-mail, senha e confirmacao da senha.
+5. Sistema valida os dados em `POST /cadastro`.
+6. Se os dados forem validos, o usuario e criado.
+7. Sistema exibe mensagem de sucesso.
+8. Usuario e redirecionado para `/login` apos alguns segundos.
 
 ## Recuperacao de senha
 
 1. Visitante acessa `GET /esqueci-senha`.
 2. Sistema exibe o formulario de solicitacao do link.
-3. Visitante informa o e-mail cadastrado.
-4. Sistema valida o e-mail em `POST /esqueci-senha`.
-5. Se o e-mail existir e nao estiver limitado por throttle, sistema envia o link pelo mailer configurado.
-6. Visitante abre o link recebido por e-mail.
-7. Sistema exibe `GET /redefinir-senha/{token}` com token e e-mail preenchidos.
-8. Visitante informa e confirma a nova senha.
-9. Sistema valida os dados em `POST /redefinir-senha`.
-10. Sistema bloqueia a redefinicao se a nova senha for igual a senha atual.
-11. Se o token for valido, sistema atualiza a senha e renova o token de "lembrar-me".
-12. Sistema redireciona para `/login` com mensagem de sucesso.
+3. Visitante pode retornar a pagina anterior ou acessar a home publica.
+4. Visitante informa o e-mail cadastrado.
+5. Sistema valida o e-mail em `POST /esqueci-senha`.
+6. Se o e-mail existir e nao estiver limitado por throttle, sistema envia o link pelo mailer configurado.
+7. Visitante abre o link recebido por e-mail.
+8. Sistema exibe `GET /redefinir-senha/{token}` com token e e-mail preenchidos.
+9. Visitante informa e confirma a nova senha.
+10. Sistema valida os dados em `POST /redefinir-senha`.
+11. Sistema bloqueia a redefinicao se a nova senha for igual a senha atual.
+12. Se o token for valido, sistema atualiza a senha e renova o token de "lembrar-me".
+13. Sistema redireciona para `/login` com mensagem de sucesso.
 
 ## Atualizacao dos dados da conta
 

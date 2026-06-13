@@ -1,6 +1,8 @@
 <x-layouts.guest title="Login">
     <section class="card login-card w-100 shadow-sm">
         <div class="card-body p-4 p-sm-5">
+            @include('auth.partials.navigation')
+
             <header class="mb-4">
                 <img class="brand-logo mb-3" src="{{ asset('assets/images/logo-vitaflow-drop.png') }}" alt="{{ config('app.name') }}">
                 <h1 class="h3 mb-2">

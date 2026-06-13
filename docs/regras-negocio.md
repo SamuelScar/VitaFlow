@@ -16,6 +16,7 @@ Este documento registra regras que afetam comportamento do sistema.
 
 ## Login
 
+- A tela permite retornar a pagina anterior ou acessar a home publica.
 - O campo `email` e obrigatorio.
 - O campo `email` deve ser um e-mail valido.
 - O campo `password` e obrigatorio.
@@ -24,6 +25,7 @@ Este documento registra regras que afetam comportamento do sistema.
 
 ## Cadastro
 
+- A tela permite retornar a pagina anterior ou acessar a home publica.
 - O campo `name` e obrigatorio.
 - O campo `name` deve ter no maximo 255 caracteres.
 - O campo `email` e obrigatorio.
@@ -38,6 +40,7 @@ Este documento registra regras que afetam comportamento do sistema.
 
 ## Recuperacao de senha
 
+- A tela de solicitacao permite retornar a pagina anterior ou acessar a home publica.
 - Visitantes podem solicitar um link de redefinicao de senha pelo e-mail cadastrado.
 - O campo `email` e obrigatorio e deve ser um e-mail valido.
 - Se o e-mail existir, o sistema envia o link usando o mailer configurado no Laravel.

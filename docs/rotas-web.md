@@ -86,6 +86,10 @@ View:
 resources/views/auth/login.blade.php
 ```
 
+Comportamento atual:
+
+- Exibe botoes para retornar a pagina anterior ou acessar a home publica.
+
 ## Autenticação
 
 `POST /login`
@@ -124,6 +128,10 @@ View:
 ```text
 resources/views/auth/forgot-password.blade.php
 ```
+
+Comportamento atual:
+
+- Exibe botoes para retornar a pagina anterior ou acessar a home publica.
 
 ## Enviar link de recuperação de senha
 
@@ -760,6 +768,10 @@ View:
 ```text
 resources/views/auth/register.blade.php
 ```
+
+Comportamento atual:
+
+- Exibe botoes para retornar a pagina anterior ou acessar a home publica.
 
 ## Criar usuario
 

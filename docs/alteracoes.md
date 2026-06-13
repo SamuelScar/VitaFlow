@@ -28,3 +28,10 @@ A migration `2026_06_13_000001_move_donor_data_to_users.php` transfere os dados 
 ### Regra para o futuro fluxo de agendamento
 
 Antes de criar um agendamento, o sistema deve chamar `User::podeAgendarDoacao()`. Um usuário sem carteirinha ou com carteirinha `bloqueada` ou `inativa` não pode realizar novos agendamentos.
+
+## 13/06/2026 - Navegação nas telas de autenticação
+
+- Adicionados botões `Voltar` e `Home` nas telas de login, cadastro e recuperação de senha.
+- O botão `Voltar` direciona para a página anterior e usa a home quando não existe uma origem diferente da tela atual.
+- O botão `Home` direciona diretamente para a página inicial pública.
+- A navegação compartilhada foi centralizada em `auth/partials/navigation.blade.php`.
