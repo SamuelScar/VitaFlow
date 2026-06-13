@@ -62,6 +62,16 @@ Observacoes:
 - O token e gerenciado pelo broker de senhas do Laravel.
 - A expiracao atual e de 60 minutos.
 
+### `sessions`
+
+Armazena as sessoes autenticadas porque o projeto utiliza `SESSION_DRIVER=database`.
+
+Observacoes:
+
+- As tabelas padrao de cache e filas nao sao criadas.
+- O cache utiliza arquivos locais.
+- Filas, quando utilizadas, executam de forma sincrona.
+
 ### `carteiras_doacao`
 
 Representa a credencial emitida para autorizar o doador a realizar agendamentos.

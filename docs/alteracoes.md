@@ -35,3 +35,12 @@ Antes de criar um agendamento, o sistema deve chamar `User::podeAgendarDoacao()`
 - O botão `Voltar` direciona para a página anterior e usa a home quando não existe uma origem diferente da tela atual.
 - O botão `Home` direciona diretamente para a página inicial pública.
 - A navegação compartilhada foi centralizada em `auth/partials/navigation.blade.php`.
+
+## 13/06/2026 - Limpeza da infraestrutura padrão do Laravel
+
+- Removidas as migrations das tabelas `cache`, `cache_locks`, `jobs`, `job_batches` e `failed_jobs`, que não são utilizadas pelo projeto.
+- Mantidas as tabelas `sessions` e `password_reset_tokens`, necessárias para autenticação e recuperação de senha.
+- Alterado o cache padrão para arquivos locais e a fila padrão para execução síncrona.
+- Removido o worker de filas do script de desenvolvimento.
+- Removidas variáveis de cache e filas dos arquivos de ambiente e configurações SMTP sem uso do `.env` local.
+- Bancos existentes devem ser recriados para remover fisicamente as tabelas antigas; nenhuma operação destrutiva foi executada automaticamente.
