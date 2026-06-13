@@ -196,18 +196,25 @@ Este documento registra os fluxos existentes no sistema.
 5. Usuario pode abrir o seletor discreto na navbar e escolher `Sistema`, `Claro` ou `Escuro`.
 6. Sistema salva a preferencia e atualiza o tema da pagina.
 
-## Promocao de usuario para admin
+## Convite administrativo
 
 1. Admin autenticado acessa `GET /admin/usuarios`.
-2. Sistema lista usuarios cadastrados com nome, e-mail e tipo atual.
-3. Admin pode buscar usuarios por nome ou e-mail sem recarregar a pagina.
-4. Sistema sincroniza a busca com o parametro `busca` da URL.
-5. Sistema mantem a busca aplicada ao navegar entre paginas da listagem.
-6. Admin aciona a promocao de um usuario doador.
-7. Sistema envia `POST /admin/usuarios/{user}/promover-admin`.
-8. Sistema valida o acesso pelo middleware `admin`.
-9. Usuario informado tem seu tipo alterado para `admin`.
-10. Sistema retorna para a pagina anterior com mensagem de sucesso.
+2. Sistema lista usuarios, permite filtrar por perfil e exibe convites pendentes.
+3. Admin informa o e-mail que deseja convidar.
+4. Sistema valida que o e-mail ainda nao pertence a um usuario.
+5. Sistema cria o convite com token protegido por hash e validade de 48 horas.
+6. Sistema envia o link de aceite por e-mail.
+7. Enquanto o convite nao for aceito ou cancelado, o admin pode reenvia-lo ou cancela-lo.
+
+## Aceite de convite administrativo
+
+1. Convidado acessa `GET /convites-admin/{token}`.
+2. Sistema valida o token, a validade, o status do convite e a disponibilidade do e-mail.
+3. Convidado informa nome, senha e confirmacao da senha.
+4. Sistema valida os dados em `POST /convites-admin/{token}`.
+5. Sistema cria diretamente um usuario com tipo `admin`.
+6. Sistema marca o e-mail como verificado e o convite como aceito.
+7. Convidado e redirecionado para o login.
 
 ## Health check
 

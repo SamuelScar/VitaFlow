@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\CampanhaController;
+use App\Http\Controllers\Admin\ConviteAdminController;
 use App\Http\Controllers\Admin\LocalColetaController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\UserPromotionController;
+use App\Http\Controllers\Auth\AceiteConviteAdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -32,6 +33,12 @@ Route::get('/redefinir-senha/{token}', [NewPasswordController::class, 'create'])
 Route::post('/redefinir-senha', [NewPasswordController::class, 'store'])
     ->middleware('guest')
     ->name('password.update');
+Route::get('/convites-admin/{token}', [AceiteConviteAdminController::class, 'create'])
+    ->middleware('guest')
+    ->name('convites-admin.accept');
+Route::post('/convites-admin/{token}', [AceiteConviteAdminController::class, 'store'])
+    ->middleware('guest')
+    ->name('convites-admin.store');
 
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
@@ -69,8 +76,12 @@ Route::middleware('auth')->group(function (): void {
             ->name('admin.campanhas.destroy');
         Route::get('/admin/usuarios', [UserController::class, 'index'])
             ->name('admin.usuarios.index');
-        Route::post('/admin/usuarios/{user}/promover-admin', UserPromotionController::class)
-            ->name('users.promote-admin');
+        Route::post('/admin/convites-admin', [ConviteAdminController::class, 'store'])
+            ->name('admin.convites-admin.store');
+        Route::put('/admin/convites-admin/{conviteAdmin}/reenviar', [ConviteAdminController::class, 'resend'])
+            ->name('admin.convites-admin.resend');
+        Route::delete('/admin/convites-admin/{conviteAdmin}', [ConviteAdminController::class, 'destroy'])
+            ->name('admin.convites-admin.destroy');
     });
 });
 

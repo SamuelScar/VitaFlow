@@ -19,7 +19,7 @@
                     </span>
                     <h1 class="h2 fw-bold mb-2">Gestao do VitaFlow</h1>
                     <p class="text-secondary mb-0">
-                        Gerencie campanhas de sangue, acompanhe agendamentos e promova usuarios quando necessario.
+                        Gerencie campanhas de sangue, acompanhe agendamentos e convide administradores quando necessario.
                     </p>
                 </div>
 
@@ -70,7 +70,7 @@
             <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
                     title="Usuarios"
-                    description="Promocao de doadores para administradores."
+                    description="Usuarios cadastrados e convites administrativos."
                     :href="route('admin.usuarios.index')"
                     button-label="Gerenciar usuarios"
                     icon="bi-people"

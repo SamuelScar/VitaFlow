@@ -44,3 +44,13 @@ Antes de criar um agendamento, o sistema deve chamar `User::podeAgendarDoacao()`
 - Removido o worker de filas do script de desenvolvimento.
 - Removidas variáveis de cache e filas dos arquivos de ambiente e configurações SMTP sem uso do `.env` local.
 - Bancos existentes devem ser recriados para remover fisicamente as tabelas antigas; nenhuma operação destrutiva foi executada automaticamente.
+
+## 13/06/2026 - Convites para administradores
+
+- Removido o fluxo que promovia doadores existentes para administradores.
+- Criada a entidade `ConviteAdmin` com token armazenado em hash, validade, aceite e cancelamento.
+- Adicionados envio, reenvio e cancelamento de convites na tela administrativa de usuarios.
+- Adicionado o aceite publico que cria diretamente uma conta `admin` com e-mail verificado.
+- Administradores e doadores passaram a ser tratados como perfis exclusivos.
+- A listagem de usuarios ganhou filtro por perfil e deixou de exibir a acao de promocao.
+- E-mails passaram a ser normalizados no cadastro e na atualizacao da conta para preservar a unicidade entre perfis.

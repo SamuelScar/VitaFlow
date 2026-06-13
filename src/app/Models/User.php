@@ -52,6 +52,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Retorna os convites administrativos enviados pelo usuário.
+     */
+    public function convitesAdminEnviados(): HasMany
+    {
+        return $this->hasMany(ConviteAdmin::class, 'convidado_por_id');
+    }
+
+    /**
      * Retorna todos os agendamentos realizados pelo usuário.
      */
     public function agendamentos(): HasMany
@@ -82,18 +90,6 @@ class User extends Authenticatable
     {
         return $this->isDoador()
             && $this->carteiraDoacao()->where('status', 'ativa')->exists();
-    }
-
-    /**
-     * Promove o usuário para administrador. Não faz nada se já for admin (idempotente).
-     */
-    public function promoteToAdmin(): void
-    {
-        if ($this->isAdmin()) {
-            return;
-        }
-
-        $this->forceFill(['tipo' => self::TIPO_ADMIN])->save();
     }
 
     /**

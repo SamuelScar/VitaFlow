@@ -6,10 +6,28 @@ Table users {
   id bigserial [primary key, not null]
   name varchar(255) [not null]
   email varchar(255) [not null, unique]
-  tipo varchar(255) [not null, default: 'doador', note: 'CHECK: admin ou doador. A coluna existe na migration, mas nao aparece na captura do DBeaver']
+  tipo varchar(255) [not null, default: 'doador', note: 'CHECK: admin ou doador']
+  cpf varchar(11) [unique]
+  telefone varchar(20)
+  data_nascimento date
+  tipo_sanguineo varchar(255) [note: 'CHECK: A+, A-, B+, B-, AB+, AB-, O+, O-']
+  peso numeric(5,2)
+  cidade varchar(255)
   email_verified_at timestamp(0)
   password varchar(255) [not null]
   remember_token varchar(100)
+  created_at timestamp(0)
+  updated_at timestamp(0)
+}
+
+Table convites_admin {
+  id bigserial [primary key, not null]
+  email varchar(255) [not null, unique]
+  token_hash varchar(64) [not null, unique]
+  convidado_por_id int8
+  expira_em timestamp(0) [not null]
+  aceito_em timestamp(0)
+  cancelado_em timestamp(0)
   created_at timestamp(0)
   updated_at timestamp(0)
 }
@@ -47,12 +65,6 @@ Table campanhas {
 Table carteiras_doacao {
   id bigserial [primary key, not null]
   user_id int8 [not null, unique]
-  cpf varchar(14) [not null, unique]
-  telefone varchar(20) [not null]
-  data_nascimento date [not null]
-  tipo_sanguineo varchar(255) [not null, note: 'CHECK: A+, A-, B+, B-, AB+, AB-, O+, O-']
-  peso numeric(5,2) [not null]
-  cidade varchar(255) [not null]
   status varchar(255) [not null, default: 'ativa', note: 'CHECK: ativa, bloqueada ou inativa']
   emitida_em date [not null]
   created_at timestamp(0)
@@ -76,7 +88,7 @@ Table estoques_sangue {
 
 Table agendamentos {
   id bigserial [primary key, not null]
-  carteira_doacao_id int8 [not null]
+  user_id int8 [not null]
   campanha_id int8 [not null]
   data_hora timestamp(0) [not null]
   status varchar(255) [not null, default: 'agendado', note: 'CHECK: agendado, cancelado, realizado ou faltou']
@@ -84,7 +96,7 @@ Table agendamentos {
   updated_at timestamp(0)
 
   indexes {
-    (carteira_doacao_id, campanha_id) [unique, name: 'agendamentos_carteira_doacao_id_campanha_id_unique']
+    (user_id, campanha_id) [unique, name: 'agendamentos_user_id_campanha_id_unique']
   }
 }
 
@@ -103,6 +115,8 @@ Table doacoes {
 
 Ref: campanhas.criada_por_id > users.id [delete: restrict]
 
+Ref: convites_admin.convidado_por_id > users.id [delete: set null]
+
 Ref: campanhas.local_coleta_id > locais_coleta.id [delete: restrict]
 
 Ref: carteiras_doacao.user_id - users.id [delete: cascade]
@@ -111,6 +125,6 @@ Ref: estoques_sangue.local_coleta_id > locais_coleta.id [delete: cascade]
 
 Ref: agendamentos.campanha_id > campanhas.id [delete: restrict]
 
-Ref: agendamentos.carteira_doacao_id > carteiras_doacao.id [delete: restrict]
+Ref: agendamentos.user_id > users.id [delete: restrict]
 
 Ref: doacoes.agendamento_id - agendamentos.id [delete: restrict]

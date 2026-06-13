@@ -32,6 +32,7 @@ Este documento registra regras que afetam comportamento do sistema.
 - O campo `email` deve ser um e-mail valido.
 - O campo `email` deve ter no maximo 255 caracteres.
 - O campo `email` deve ser unico na tabela `users`.
+- O e-mail e normalizado para letras minusculas antes de ser salvo.
 - O campo `password` e obrigatorio.
 - O campo `password` deve ter no minimo 8 caracteres.
 - O campo `password` deve ser confirmado por `password_confirmation`.
@@ -56,18 +57,27 @@ Este documento registra regras que afetam comportamento do sistema.
 
 - Usuarios criados pelo cadastro comum entram como `doador`.
 - O cadastro comum nao permite criar usuario com tipo `admin`.
+- Os perfis `admin` e `doador` sao exclusivos.
+- Um doador existente nao pode ser promovido para administrador.
 - Apenas usuarios com tipo `admin` podem acessar a listagem administrativa de usuarios.
 - A listagem administrativa de usuarios pode ser filtrada por nome ou e-mail sem recarregar a pagina.
+- A listagem administrativa de usuarios pode ser filtrada por perfil.
 - A listagem administrativa de usuarios e paginada pelo componente Livewire.
-- Apenas usuarios com tipo `admin` podem promover outro usuario para admin.
-- A promocao de privilegio altera o tipo do usuario promovido para `admin`.
-- A promocao nao altera nome, e-mail, senha ou dados de doador.
+- Apenas usuarios com tipo `admin` podem enviar, reenviar ou cancelar convites administrativos.
+- O e-mail convidado nao pode pertencer a um usuario existente.
+- Convites administrativos expiram em 48 horas e podem ser aceitos apenas uma vez.
+- Convites pendentes ou expirados podem ser reenviados.
+- Links de convites aceitos ou cancelados nao podem ser utilizados.
+- Um e-mail cujo convite foi cancelado pode receber um novo convite.
+- O aceite do convite cria diretamente um usuario com tipo `admin` e marca seu e-mail como verificado.
+- Administradores criados por convite nao recebem dados pessoais de doador nem carteirinha.
 
 ## Conta do usuario
 
 - Apenas usuarios autenticados podem atualizar os dados da propria conta.
 - O campo `name` e obrigatorio e deve ter no maximo 255 caracteres.
 - O campo `email` e obrigatorio, deve ser valido, deve ter no maximo 255 caracteres e deve ser unico.
+- O e-mail e normalizado para letras minusculas antes de ser salvo.
 - Na atualizacao, o e-mail atual do proprio usuario nao conta como duplicado.
 - A senha e opcional na atualizacao da conta.
 - Se uma nova senha for informada, a senha atual deve ser confirmada por `current_password`.

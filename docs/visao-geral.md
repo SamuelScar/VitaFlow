@@ -26,7 +26,7 @@ Funcionalidades ja cobertas:
 - Emissao e edicao da carteirinha de doador.
 - Cadastro, edicao e exclusao de locais de coleta.
 - Cadastro, edicao e exclusao de campanhas.
-- Listagem de usuarios e promocao de doadores para administradores.
+- Listagem de usuarios por perfil e convites para novos administradores.
 - Campanhas com multiplos tipos sanguineos alvo.
 - Exibicao publica de campanhas ativas dentro do periodo vigente.
 
@@ -46,7 +46,8 @@ Os controllers são organizados por fluxo ou caso de uso, não obrigatoriamente 
 - `Auth\RegisterController`: fluxo de cadastro.
 - `ContaController`: fluxo de edição e exclusão da própria conta.
 - `Admin\UserController`: listagem administrativa de usuários.
-- `Admin\UserPromotionController`: fluxo administrativo de promoção de usuário.
+- `Admin\ConviteAdminController`: envio, reenvio e cancelamento de convites administrativos.
+- `Auth\AceiteConviteAdminController`: aceite de convite e criacao da conta administrativa.
 - `Admin\LocalColetaController`: fluxo administrativo de locais de coleta.
 - `Admin\CampanhaController`: fluxo administrativo de campanhas.
 

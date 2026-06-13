@@ -46,6 +46,13 @@ Relacionamentos:
 - Um usuario pode ter uma carteira de doacao.
 - Um usuario pode ter muitos agendamentos.
 - Um usuario admin pode criar muitas campanhas.
+- Um usuario admin pode enviar muitos convites administrativos.
+
+Observacoes:
+
+- Os perfis `admin` e `doador` sao exclusivos.
+- No fluxo da aplicacao, administradores sao criados diretamente pelo aceite de convite e nao possuem dados ou direitos de doador.
+- O `AdminUserSeeder` cria somente o administrador inicial necessario para acessar o sistema.
 
 ### `password_reset_tokens`
 
@@ -71,6 +78,29 @@ Observacoes:
 - As tabelas padrao de cache e filas nao sao criadas.
 - O cache utiliza arquivos locais.
 - Filas, quando utilizadas, executam de forma sincrona.
+
+### `convites_admin`
+
+Representa convites enviados para criacao de contas administrativas.
+
+Campos principais:
+
+- `email`
+- `token_hash`
+- `convidado_por_id`
+- `expira_em`
+- `aceito_em`
+- `cancelado_em`
+
+Relacionamentos:
+
+- Pertence ao administrador que enviou o convite.
+
+Observacoes:
+
+- O token e armazenado somente como hash.
+- O convite expira em 48 horas e pode ser aceito apenas uma vez.
+- O aceite cria diretamente um usuario com tipo `admin`.
 
 ### `carteiras_doacao`
 
@@ -242,7 +272,7 @@ E-mail: admin@vitaflow.local
 Senha: Admin@123
 ```
 
-Usuarios criados pelo cadastro comum entram como `doador`. Para se tornar `admin`, o usuario deve ser promovido posteriormente por outro administrador.
+Usuarios criados pelo cadastro comum entram como `doador`. Novos administradores sao criados exclusivamente pelo fluxo de convite administrativo.
 
 ### Dados demonstrativos
 

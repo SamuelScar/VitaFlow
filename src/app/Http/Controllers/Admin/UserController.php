@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ConviteAdmin;
 use Illuminate\View\View;
 
 /**
@@ -12,6 +13,12 @@ class UserController extends Controller
 {
     public function index(): View
     {
-        return view('admin.usuarios.index');
+        return view('admin.usuarios.index', [
+            'convitesPendentes' => ConviteAdmin::with('convidadoPor')
+                ->whereNull('aceito_em')
+                ->whereNull('cancelado_em')
+                ->latest()
+                ->get(),
+        ]);
     }
 }

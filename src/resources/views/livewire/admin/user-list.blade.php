@@ -2,7 +2,7 @@
     <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
         <div>
             <h2 class="h5 fw-bold mb-1">Usuarios cadastrados</h2>
-            <p class="text-secondary mb-0">A promocao altera apenas o perfil de acesso do usuario.</p>
+            <p class="text-secondary mb-0">Administradores e doadores possuem perfis exclusivos.</p>
         </div>
 
         <div class="d-flex flex-wrap align-items-start gap-2">
@@ -18,7 +18,7 @@
                 <i class="bi bi-person-heart me-1" aria-hidden="true"></i>
                 {{ $totalDoadores }} {{ $totalDoadores === 1 ? 'doador' : 'doadores' }}
             </span>
-            @if (trim($busca) !== '')
+            @if (trim($busca) !== '' || $tipo !== '')
                 <span class="badge text-bg-primary">
                     <i class="bi bi-search me-1" aria-hidden="true"></i>
                     {{ $usuarios->total() }} {{ $usuarios->total() === 1 ? 'resultado' : 'resultados' }}
@@ -28,7 +28,7 @@
     </div>
 
     <div class="row g-2 mb-4">
-        <div class="col-12 col-lg">
+        <div class="col-12 col-lg-8">
             <label class="form-label fw-semibold" for="busca">Buscar usuario</label>
             <input
                 class="form-control"
@@ -39,15 +39,23 @@
                 autocomplete="off"
             >
         </div>
-        <div class="col-12 col-lg-auto d-flex align-items-end gap-2">
-            <button class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" type="button" wire:click="limparBusca" @disabled(trim($busca) === '')>
+        <div class="col-12 col-lg-4">
+            <label class="form-label fw-semibold" for="tipo">Perfil</label>
+            <select class="form-select" id="tipo" wire:model.live="tipo">
+                <option value="">Todos os perfis</option>
+                <option value="admin">Administradores</option>
+                <option value="doador">Doadores</option>
+            </select>
+        </div>
+        <div class="col-12 d-flex justify-content-end gap-2">
+            <button class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" type="button" wire:click="limparFiltros" @disabled(trim($busca) === '' && $tipo === '')>
                 <i class="bi bi-x-lg" aria-hidden="true"></i>
-                Limpar
+                Limpar filtros
             </button>
         </div>
     </div>
 
-    <div wire:loading.class="opacity-50" wire:target="busca,limparBusca,previousPage,nextPage,gotoPage">
+    <div wire:loading.class="opacity-50" wire:target="busca,tipo,limparFiltros,previousPage,nextPage,gotoPage">
         @forelse ($usuarios as $usuario)
             <div class="border rounded-3 p-3 mb-3" wire:key="usuario-{{ $usuario->id }}">
                 <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
@@ -69,37 +77,15 @@
 
                         <p class="text-secondary mb-0">{{ $usuario->email }}</p>
                     </div>
-
-                    <div class="d-grid d-sm-flex flex-sm-nowrap flex-shrink-0 align-items-start justify-content-sm-end gap-2">
-                        @if ($usuario->isDoador())
-                            <form
-                                class="d-grid m-0"
-                                method="POST"
-                                action="{{ route('users.promote-admin', $usuario) }}"
-                                onsubmit="return confirm('Promover este usuario para administrador?')"
-                            >
-                                @csrf
-                                <button class="btn btn-outline-primary d-inline-flex align-items-center justify-content-center gap-2" type="submit">
-                                    <i class="bi bi-shield-plus" aria-hidden="true"></i>
-                                    Promover
-                                </button>
-                            </form>
-                        @else
-                            <button class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center gap-2" type="button" disabled>
-                                <i class="bi bi-check-lg" aria-hidden="true"></i>
-                                Ja e admin
-                            </button>
-                        @endif
-                    </div>
                 </div>
             </div>
         @empty
             <div class="border rounded-3 p-4 text-center">
                 <h3 class="h6 fw-bold mb-1">
-                    {{ trim($busca) === '' ? 'Nenhum usuario cadastrado' : 'Nenhum usuario encontrado' }}
+                    {{ trim($busca) === '' && $tipo === '' ? 'Nenhum usuario cadastrado' : 'Nenhum usuario encontrado' }}
                 </h3>
                 <p class="text-secondary mb-0">
-                    {{ trim($busca) === '' ? 'Novos usuarios aparecerao aqui apos o cadastro.' : 'Revise o nome ou e-mail buscado e tente novamente.' }}
+                    {{ trim($busca) === '' && $tipo === '' ? 'Novos usuarios aparecerao aqui apos o cadastro.' : 'Revise os filtros aplicados e tente novamente.' }}
                 </p>
             </div>
         @endforelse

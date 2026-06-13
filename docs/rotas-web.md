@@ -10,6 +10,7 @@ Este documento registra as rotas web do sistema.
 - [Autenticação](#autenticação)
 - [Recuperação de senha](#solicitar-recuperação-de-senha)
 - [Cadastro](#cadastro)
+- [Aceitar convite administrativo](#aceitar-convite-administrativo)
 
 ### Conta do usuário
 - [Dados da conta](#tela-de-dados-da-conta)
@@ -28,6 +29,7 @@ Este documento registra as rotas web do sistema.
 - [Locais de coleta](#tela-de-locais-de-coleta)
 - [Campanhas](#tela-de-campanhas)
 - [Usuários](#tela-de-usuarios)
+- [Convites administrativos](#enviar-convite-administrativo)
 
 ### Sistema
 - [Health check](#health-check)
@@ -823,20 +825,20 @@ Comportamento atual:
 - Mantem a busca no parametro `busca` da URL.
 - Pagina a listagem sem recarregar a pagina.
 - Exibe resumo com total de usuarios, administradores e doadores.
-- Quando ha busca, exibe tambem o total de resultados encontrados.
-- Usuarios doadores podem ser promovidos para administradores.
-- Usuarios administradores aparecem com acao desabilitada.
+- Quando ha busca ou filtro por perfil, exibe tambem o total de resultados encontrados.
+- Permite filtrar a listagem por perfil.
+- Exibe formulario para convidar administradores e lista convites pendentes.
 
-## Promover usuario para admin
+## Enviar convite administrativo
 
-`POST /admin/usuarios/{user}/promover-admin`
+`POST /admin/convites-admin`
 
-Promove um usuario existente para administrador.
+Cria e envia um convite para uma nova conta administrativa.
 
 Controller:
 
 ```text
-App\Http\Controllers\Admin\UserPromotionController
+App\Http\Controllers\Admin\ConviteAdminController@store
 ```
 
 Middlewares:
@@ -848,8 +850,48 @@ Comportamento atual:
 
 - Apenas usuarios autenticados com tipo `admin` podem acessar.
 - Se o usuario autenticado nao for admin, retorna erro `403`.
-- Se o usuario informado existir, altera seu tipo para `admin`.
-- Apos promover, retorna para a pagina anterior com mensagem de sucesso.
+- O e-mail informado nao pode pertencer a um usuario existente.
+- O token enviado por e-mail e armazenado somente como hash.
+- O convite expira em 48 horas.
+
+## Reenviar convite administrativo
+
+`PUT /admin/convites-admin/{conviteAdmin}/reenviar`
+
+Renova o token e o prazo de um convite pendente ou expirado e envia um novo e-mail.
+
+## Cancelar convite administrativo
+
+`DELETE /admin/convites-admin/{conviteAdmin}`
+
+Cancela um convite ainda nao aceito.
+
+## Aceitar convite administrativo
+
+`GET /convites-admin/{token}`
+
+Exibe o formulario para criacao da conta administrativa.
+
+`POST /convites-admin/{token}`
+
+Valida o convite e cria diretamente um usuario com tipo `admin`.
+
+Controller:
+
+```text
+App\Http\Controllers\Auth\AceiteConviteAdminController
+```
+
+Middlewares:
+
+- `guest`
+
+Comportamento atual:
+
+- Convites expirados, cancelados ou aceitos nao podem ser utilizados.
+- O e-mail do convite nao pode pertencer a outro usuario.
+- O aceite exige nome, senha e confirmacao da senha.
+- A conta criada nao recebe dados nem permissoes de doador.
 
 ## Health check
 

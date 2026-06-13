@@ -6,6 +6,7 @@ use App\Rules\DifferentFromCurrentPassword;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
@@ -24,6 +25,9 @@ class ContaController extends Controller
     {
         $user = $request->user();
         assert($user !== null);
+        $request->merge([
+            'email' => Str::lower(trim((string) $request->input('email'))),
+        ]);
 
         $data = $request->validateWithBag('updateConta', [
             'name' => ['required', 'string', 'max:255'],
