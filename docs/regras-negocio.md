@@ -112,9 +112,10 @@ Este documento registra regras que afetam comportamento do sistema.
 
 - Apenas usuarios autenticados com tipo `doador` podem emitir carteirinha.
 - Cada usuario doador pode ter apenas uma carteirinha.
+- `cpf`, `telefone`, `data_nascimento`, `tipo_sanguineo`, `peso` e `cidade` pertencem ao usuario.
 - O `cpf` e obrigatorio, deve ter 11 digitos e deve ser unico.
 - O `cpf` e salvo apenas com digitos.
-- Na atualizacao, a validacao de CPF unico ignora a propria carteirinha do doador.
+- Na atualizacao, a validacao de CPF unico ignora o proprio usuario.
 - O `telefone` e obrigatorio e deve ter no maximo 20 caracteres.
 - A `data_nascimento` e obrigatoria e nao pode ser futura.
 - O `tipo_sanguineo` e obrigatorio e deve estar na lista de tipos aceitos pelo sistema.
@@ -122,8 +123,8 @@ Este documento registra regras que afetam comportamento do sistema.
 - A `cidade` e obrigatoria e deve ter no maximo 255 caracteres.
 - Carteirinhas emitidas pelo fluxo comum entram com status `ativa`.
 - A data de emissao e preenchida automaticamente pelo sistema.
-- O doador pode atualizar os dados da propria carteirinha.
-- A atualizacao da carteirinha nao altera `status` nem `emitida_em`.
+- A tela da carteirinha permite atualizar os dados do usuario sem alterar `status` nem `emitida_em`.
+- Um usuario somente pode realizar agendamentos quando for doador e possuir uma carteirinha ativa.
 
 ## Validacao e feedback visual
 

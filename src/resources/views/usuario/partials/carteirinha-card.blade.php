@@ -51,7 +51,7 @@
                         id="editar_carteirinha_cpf"
                         name="cpf"
                         type="text"
-                        value="{{ old('cpf', $carteira->cpf) }}"
+                        value="{{ old('cpf', $usuario->cpf) }}"
                         inputmode="numeric"
                         maxlength="14"
                         x-mask="999.999.999-99"
@@ -72,7 +72,7 @@
                         id="editar_carteirinha_telefone"
                         name="telefone"
                         type="text"
-                        value="{{ old('telefone', $carteira->telefone) }}"
+                        value="{{ old('telefone', $usuario->telefone) }}"
                         inputmode="tel"
                         maxlength="20"
                         x-mask:dynamic="$input.replace(/\D/g, '').length &gt; 10 ? '(99) 99999-9999' : '(99) 9999-9999'"
@@ -92,7 +92,7 @@
                         id="editar_carteirinha_cidade"
                         name="cidade"
                         type="text"
-                        value="{{ old('cidade', $carteira->cidade) }}"
+                        value="{{ old('cidade', $usuario->cidade) }}"
                         maxlength="255"
                         required
                         @readonly(! $editando)
@@ -110,7 +110,7 @@
                         id="editar_carteirinha_data_nascimento"
                         name="data_nascimento"
                         type="date"
-                        value="{{ old('data_nascimento', $carteira->data_nascimento->format('Y-m-d')) }}"
+                        value="{{ old('data_nascimento', $usuario->data_nascimento->format('Y-m-d')) }}"
                         max="{{ now()->toDateString() }}"
                         required
                         @readonly(! $editando)
@@ -128,7 +128,7 @@
                         id="editar_carteirinha_peso"
                         name="peso"
                         type="number"
-                        value="{{ old('peso', $carteira->peso) }}"
+                        value="{{ old('peso', $usuario->peso) }}"
                         min="0.01"
                         max="999.99"
                         step="0.01"
@@ -157,7 +157,7 @@
                     x-bind:disabled="!editing"
                 >
                     @foreach ($tiposSanguineos as $tipoSanguineo)
-                        <option value="{{ $tipoSanguineo }}" @selected(old('tipo_sanguineo', $carteira->tipo_sanguineo) === $tipoSanguineo)>
+                        <option value="{{ $tipoSanguineo }}" @selected(old('tipo_sanguineo', $usuario->tipo_sanguineo) === $tipoSanguineo)>
                             {{ $tipoSanguineo }}
                         </option>
                     @endforeach
@@ -181,6 +181,6 @@
             <span class="small text-secondary text-uppercase d-block">Emitida em</span>
             <strong>{{ $carteira->emitida_em->format('d/m/Y') }}</strong>
         </div>
-        <p class="text-secondary mb-0">Esses dados serao usados nos proximos agendamentos de doacao de sangue.</p>
+        <p class="text-secondary mb-0">A carteirinha ativa autoriza o usuario a realizar agendamentos de doacao de sangue.</p>
     </div>
 </form>

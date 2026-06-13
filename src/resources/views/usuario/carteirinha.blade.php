@@ -45,7 +45,6 @@
                         'action' => route('usuario.carteirinha.store'),
                         'submitLabel' => 'Emitir carteirinha',
                         'idPrefix' => 'emitir_carteirinha',
-                        'carteira' => null,
                     ])
                 </div>
             </div>

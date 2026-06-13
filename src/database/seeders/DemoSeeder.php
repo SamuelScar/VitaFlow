@@ -69,6 +69,12 @@ class DemoSeeder extends Seeder
                 [
                     'name' => $nomes[$indice % count($nomes)].' '.$sobrenomes[intdiv($indice, count($nomes))],
                     'tipo' => User::TIPO_DOADOR,
+                    'cpf' => sprintf('9%010d', $numero),
+                    'telefone' => sprintf('(81) 9%04d-%04d', intdiv($numero, 10000), $numero % 10000),
+                    'data_nascimento' => $hoje->subYears(20 + ($indice % 36))->subDays($indice % 300),
+                    'tipo_sanguineo' => $tiposSanguineos[$indice % count($tiposSanguineos)],
+                    'peso' => 55.5 + (($indice * 7) % 36),
+                    'cidade' => $cidades[$indice % count($cidades)]['nome'],
                     'email_verified_at' => $hoje,
                     'password' => $senha,
                 ],
@@ -77,12 +83,6 @@ class DemoSeeder extends Seeder
             $carteiras[] = CarteiraDoacao::updateOrCreate(
                 ['user_id' => $usuario->id],
                 [
-                    'cpf' => sprintf('9%010d', $numero),
-                    'telefone' => sprintf('(81) 9%04d-%04d', intdiv($numero, 10000), $numero % 10000),
-                    'data_nascimento' => $hoje->subYears(20 + ($indice % 36))->subDays($indice % 300),
-                    'tipo_sanguineo' => $tiposSanguineos[$indice % count($tiposSanguineos)],
-                    'peso' => 55.5 + (($indice * 7) % 36),
-                    'cidade' => $cidades[$indice % count($cidades)]['nome'],
                     'status' => match ($numero % 25) {
                         0 => 'bloqueada',
                         1 => 'inativa',
@@ -214,7 +214,7 @@ class DemoSeeder extends Seeder
 
                 $agendamento = Agendamento::updateOrCreate(
                     [
-                        'carteira_doacao_id' => $carteira->id,
+                        'user_id' => $carteira->user_id,
                         'campanha_id' => $campanha->id,
                     ],
                     [

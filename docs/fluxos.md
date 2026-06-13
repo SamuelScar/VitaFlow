@@ -100,9 +100,10 @@ Este documento registra os fluxos existentes no sistema.
 6. Sistema valida se o usuario logado tem tipo `doador`.
 7. Sistema verifica se o doador ainda nao possui carteirinha.
 8. Sistema valida os dados informados.
-9. Se os dados forem validos, cria a carteirinha com status `ativa`.
-10. Sistema registra a data de emissao automaticamente.
-11. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
+9. Se os dados forem validos, atualiza os dados pessoais e de doador no usuario.
+10. Sistema cria a carteirinha com status `ativa`.
+11. Sistema registra a data de emissao automaticamente.
+12. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
 
 ## Atualizacao da carteirinha de doador
 
@@ -113,7 +114,7 @@ Este documento registra os fluxos existentes no sistema.
 5. Doador envia `PUT /usuario/carteirinha`.
 6. Sistema valida se o usuario logado tem tipo `doador`.
 7. Sistema valida os dados informados.
-8. Se os dados forem validos, atualiza a carteirinha.
+8. Se os dados forem validos, atualiza os dados do usuario.
 9. Sistema mantem o status e a data de emissao originais.
 10. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
 

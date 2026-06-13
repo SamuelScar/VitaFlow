@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Support\TipoSanguineo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
- * Gerencia a emissão e edição da carteirinha de doador. Cada usuário doador pode ter no máximo uma carteirinha.
+ * Gerencia a emissão da carteirinha e os dados do usuário exibidos nela.
+ * Cada usuário doador pode ter no máximo uma carteirinha.
  */
 class CarteiraDoacaoController extends Controller
 {
@@ -31,13 +33,15 @@ class CarteiraDoacaoController extends Controller
             ]);
         }
 
-        $data = $request->validate($this->rules());
+        $data = $request->validate($this->rules($user->id));
 
-        $user->carteiraDoacao()->create([
-            ...$data,
-            'status'     => 'ativa',
-            'emitida_em' => now()->toDateString(),
-        ]);
+        DB::transaction(function () use ($data, $user): void {
+            $user->update($data);
+            $user->carteiraDoacao()->create([
+                'status' => 'ativa',
+                'emitida_em' => now()->toDateString(),
+            ]);
+        });
 
         return back()->with('success', 'Carteirinha de doador emitida com sucesso.');
     }
@@ -56,9 +60,9 @@ class CarteiraDoacaoController extends Controller
             ]);
         }
 
-        $carteira->update($request->validate($this->rules($carteira->id)));
+        $user->update($request->validate($this->rules($user->id)));
 
-        return back()->with('success', 'Dados da carteirinha atualizados com sucesso.');
+        return back()->with('success', 'Dados do usuario atualizados com sucesso.');
     }
 
     /**
@@ -76,16 +80,10 @@ class CarteiraDoacaoController extends Controller
     /**
      * @return array<string, array<int, mixed>>
      */
-    private function rules(?int $carteiraId = null): array
+    private function rules(int $userId): array
     {
-        $cpfRule = Rule::unique('carteiras_doacao', 'cpf');
-
-        if ($carteiraId !== null) {
-            $cpfRule->ignore($carteiraId);
-        }
-
         return [
-            'cpf'             => ['required', 'digits:11', $cpfRule],
+            'cpf'             => ['required', 'digits:11', Rule::unique('users', 'cpf')->ignore($userId)],
             'telefone'        => ['required', 'string', 'max:20'],
             'data_nascimento' => ['required', 'date', 'before_or_equal:today'],
             'tipo_sanguineo'  => ['required', Rule::in(TipoSanguineo::values())],

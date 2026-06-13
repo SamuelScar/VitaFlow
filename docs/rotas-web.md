@@ -390,8 +390,8 @@ Comportamento atual:
 
 - Apenas usuarios com tipo `doador` podem acessar.
 - Se o doador ainda nao tiver carteirinha, exibe o formulario de emissao.
-- Se o doador ja tiver carteirinha, exibe o resumo dos dados cadastrados.
-- Se o doador ja tiver carteirinha, permite editar os dados na propria tela.
+- Se o doador ja tiver carteirinha, combina os dados do usuario com o status e a data de emissao da carteirinha.
+- Se o doador ja tiver carteirinha, permite editar os dados do usuario na propria tela.
 
 ## Emitir carteirinha de doador
 
@@ -424,14 +424,15 @@ Comportamento atual:
 - Se o usuario autenticado for `admin`, retorna erro `403`.
 - Se o usuario ja tiver carteirinha, retorna erro de validacao.
 - O CPF e salvo apenas com digitos.
-- Se os dados forem validos, cria uma carteira com status `ativa`.
+- Se os dados forem validos, salva os dados pessoais e de doador no usuario.
+- A carteira criada armazena somente o usuario, o status `ativa` e a data de emissao.
 - A data de emissao e preenchida automaticamente.
 
 ## Atualizar carteirinha de doador
 
 `PUT /usuario/carteirinha`
 
-Atualiza os dados da carteirinha do doador autenticado.
+Atualiza os dados pessoais e de doador do usuario autenticado pela tela da carteirinha.
 
 Controller:
 
@@ -458,7 +459,7 @@ Comportamento atual:
 - Se o usuario autenticado for `admin`, retorna erro `403`.
 - Se o doador ainda nao tiver carteirinha, retorna erro de validacao.
 - O CPF e salvo apenas com digitos.
-- A validacao de CPF unico ignora a propria carteirinha do doador.
+- A validacao de CPF unico ignora o proprio usuario.
 - `status` e `emitida_em` nao sao alterados por esse fluxo.
 
 ## Painel admin

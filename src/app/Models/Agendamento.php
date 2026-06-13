@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['carteira_doacao_id', 'campanha_id', 'data_hora', 'status'])]
+#[Fillable(['user_id', 'campanha_id', 'data_hora', 'status'])]
 /**
  * Representa o agendamento de um doador para uma campanha. Um doador não pode
  * se agendar mais de uma vez na mesma campanha (constraint única no banco).
@@ -15,11 +15,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Agendamento extends Model
 {
     /**
-     * Retorna a carteirinha do doador que fez o agendamento.
+     * Retorna o usuário doador que fez o agendamento.
      */
-    public function carteiraDoacao(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(CarteiraDoacao::class);
+        return $this->belongsTo(User::class);
     }
 
     /**

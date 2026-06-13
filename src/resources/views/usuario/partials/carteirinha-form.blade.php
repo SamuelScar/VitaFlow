@@ -12,7 +12,7 @@
             id="{{ $idPrefix }}_cpf"
             name="cpf"
             type="text"
-            value="{{ old('cpf', $carteira?->cpf) }}"
+            value="{{ old('cpf', $usuario->cpf) }}"
             inputmode="numeric"
             maxlength="14"
             placeholder="000.000.000-00"
@@ -31,7 +31,7 @@
             id="{{ $idPrefix }}_telefone"
             name="telefone"
             type="text"
-            value="{{ old('telefone', $carteira?->telefone) }}"
+            value="{{ old('telefone', $usuario->telefone) }}"
             inputmode="tel"
             maxlength="20"
             placeholder="(11) 99999-9999"
@@ -50,7 +50,7 @@
             id="{{ $idPrefix }}_data_nascimento"
             name="data_nascimento"
             type="date"
-            value="{{ old('data_nascimento', $carteira?->data_nascimento?->format('Y-m-d')) }}"
+            value="{{ old('data_nascimento', $usuario->data_nascimento?->format('Y-m-d')) }}"
             max="{{ now()->toDateString() }}"
             required
         >
@@ -69,7 +69,7 @@
         >
             <option value="">Selecione</option>
             @foreach ($tiposSanguineos as $tipoSanguineo)
-                <option value="{{ $tipoSanguineo }}" @selected(old('tipo_sanguineo', $carteira?->tipo_sanguineo) === $tipoSanguineo)>
+                <option value="{{ $tipoSanguineo }}" @selected(old('tipo_sanguineo', $usuario->tipo_sanguineo) === $tipoSanguineo)>
                     {{ $tipoSanguineo }}
                 </option>
             @endforeach
@@ -86,7 +86,7 @@
             id="{{ $idPrefix }}_peso"
             name="peso"
             type="number"
-            value="{{ old('peso', $carteira?->peso) }}"
+            value="{{ old('peso', $usuario->peso) }}"
             min="0.01"
             max="999.99"
             step="0.01"
@@ -105,7 +105,7 @@
             id="{{ $idPrefix }}_cidade"
             name="cidade"
             type="text"
-            value="{{ old('cidade', $carteira?->cidade) }}"
+            value="{{ old('cidade', $usuario->cidade) }}"
             maxlength="255"
             required
         >

@@ -11,7 +11,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable([
+    'name',
+    'email',
+    'password',
+    'cpf',
+    'telefone',
+    'data_nascimento',
+    'tipo_sanguineo',
+    'peso',
+    'cidade',
+])]
 #[Hidden(['password', 'remember_token'])]
 /**
  * Representa um usuário do sistema. O campo `tipo` define o nível de acesso:
@@ -42,6 +52,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Retorna todos os agendamentos realizados pelo usuário.
+     */
+    public function agendamentos(): HasMany
+    {
+        return $this->hasMany(Agendamento::class);
+    }
+
+    /**
      * Verifica se o usuário possui perfil de administrador.
      */
     public function isAdmin(): bool
@@ -55,6 +73,15 @@ class User extends Authenticatable
     public function isDoador(): bool
     {
         return $this->tipo === self::TIPO_DOADOR;
+    }
+
+    /**
+     * Verifica se o usuário está autorizado a realizar agendamentos.
+     */
+    public function podeAgendarDoacao(): bool
+    {
+        return $this->isDoador()
+            && $this->carteiraDoacao()->where('status', 'ativa')->exists();
     }
 
     /**
@@ -77,8 +104,10 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'data_nascimento' => 'date',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'peso' => 'decimal:2',
         ];
     }
 }

@@ -29,6 +29,12 @@ Campos principais:
 - `email`
 - `password`
 - `tipo`
+- `cpf`
+- `telefone`
+- `data_nascimento`
+- `tipo_sanguineo`
+- `peso`
+- `cidade`
 
 Tipos atuais:
 
@@ -38,6 +44,7 @@ Tipos atuais:
 Relacionamentos:
 
 - Um usuario pode ter uma carteira de doacao.
+- Um usuario pode ter muitos agendamentos.
 - Um usuario admin pode criar muitas campanhas.
 
 ### `password_reset_tokens`
@@ -57,17 +64,11 @@ Observacoes:
 
 ### `carteiras_doacao`
 
-Representa os dados complementares do doador.
+Representa a credencial emitida para autorizar o doador a realizar agendamentos.
 
 Campos principais:
 
 - `user_id`
-- `cpf`
-- `telefone`
-- `data_nascimento`
-- `tipo_sanguineo`
-- `peso`
-- `cidade`
 - `status`
 - `emitida_em`
 
@@ -80,7 +81,6 @@ Status atuais:
 Relacionamentos:
 
 - Pertence a um usuario.
-- Pode ter muitos agendamentos.
 - Cada usuario pode ter apenas uma carteira.
 
 ### `locais_coleta`
@@ -166,7 +166,7 @@ Representa a participacao agendada de um doador em uma campanha.
 
 Campos principais:
 
-- `carteira_doacao_id`
+- `user_id`
 - `campanha_id`
 - `data_hora`
 - `status`
@@ -180,10 +180,11 @@ Status atuais:
 
 Relacionamentos:
 
-- Pertence a uma carteira de doacao.
+- Pertence a um usuario.
 - Pertence a uma campanha.
 - Pode ter uma doacao registrada.
-- A mesma carteira nao pode repetir agendamento na mesma campanha.
+- O mesmo usuario nao pode repetir agendamento na mesma campanha.
+- A criacao de um agendamento exige que o usuario possua uma carteira ativa.
 
 ### `doacoes`
 
