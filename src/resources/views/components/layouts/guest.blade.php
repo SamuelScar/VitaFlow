@@ -11,6 +11,12 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
+        @php
+            $alertError = collect($errors->getBags())
+                ->flatMap(fn ($bag) => $bag->all())
+                ->first();
+        @endphp
+
         @if (session('success'))
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
@@ -21,10 +27,12 @@
                     });
                 });
             </script>
-        @elseif ($errors->any())
+        @elseif ($alertError)
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
-                    window.alertError();
+                    window.alertError({
+                        text: @json($alertError),
+                    });
                 });
             </script>
         @endif

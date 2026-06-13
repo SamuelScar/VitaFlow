@@ -64,10 +64,6 @@
                             </span>
                         </div>
 
-                        @error('convite')
-                            <div class="alert alert-danger" role="alert">{{ $message }}</div>
-                        @enderror
-
                         @forelse ($convitesPendentes as $convite)
                             <div class="border rounded-3 p-3 mb-2">
                                 <div class="d-flex flex-column flex-xl-row justify-content-between gap-3">
@@ -96,7 +92,10 @@
                                         <form
                                             method="POST"
                                             action="{{ route('admin.convites-admin.destroy', $convite) }}"
-                                            onsubmit="return confirm('Cancelar este convite administrativo?')"
+                                            data-confirm-title="Cancelar convite?"
+                                            data-confirm-text="O link enviado deixara de funcionar."
+                                            data-confirm-button-text="Cancelar convite"
+                                            data-confirm-button-color="#c62828"
                                         >
                                             @csrf
                                             @method('DELETE')

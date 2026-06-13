@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -41,6 +42,28 @@ class UserList extends Component
         $this->resetPage();
     }
 
+    public function alterarStatusCarteirinha(int $userId): void
+    {
+        abort_unless(Auth::user()?->isAdmin(), 403);
+
+        $user = User::with('carteiraDoacao')->findOrFail($userId);
+        $carteira = $user->carteiraDoacao;
+
+        if (! $user->isDoador() || $carteira === null) {
+            $this->dispatch(
+                'alert-error',
+                message: 'Somente doadores com carteirinha emitida podem ter seu status alterado.',
+            );
+
+            return;
+        }
+
+        $novoStatus = $carteira->status === 'ativa' ? 'inativa' : 'ativa';
+        $carteira->update(['status' => $novoStatus]);
+
+        $this->dispatch('alert-success', message: "Carteirinha {$novoStatus} com sucesso.");
+    }
+
     public function render(): View
     {
         $busca = trim($this->busca);
@@ -55,6 +78,7 @@ class UserList extends Component
 
         return view('livewire.admin.user-list', [
             'usuarios' => User::query()
+                ->with('carteiraDoacao')
                 ->when($busca !== '', function (Builder $query) use ($busca): void {
                     $query->where(function (Builder $query) use ($busca): void {
                         $query->where('name', 'ilike', "%{$busca}%")

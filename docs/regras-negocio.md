@@ -137,13 +137,17 @@ Este documento registra regras que afetam comportamento do sistema.
 - Carteirinhas emitidas pelo fluxo comum entram com status `ativa`.
 - A data de emissao e preenchida automaticamente pelo sistema.
 - A tela da carteirinha permite atualizar os dados do usuario sem alterar `status` nem `emitida_em`.
+- Apenas administradores podem alterar o status de uma carteirinha ja emitida entre `ativa` e `inativa`.
+- Doadores sem carteirinha emitida e usuarios administradores nao possuem status de carteirinha para alterar.
 - Um usuario somente pode realizar agendamentos quando for doador e possuir uma carteirinha ativa.
 
 ## Validacao e feedback visual
 
 - Formularios com `data-validate-form` fazem uma validacao inicial no navegador antes de enviar para o backend.
 - Quando ha erro no formulario, o sistema exibe um alerta lateral discreto e rola ate o primeiro campo invalido.
+- Erros retornados pelo backend sao apresentados com SweetAlert, incluindo formularios que usam error bags nomeadas.
 - Mensagens de sucesso tambem usam alerta lateral.
+- Acoes destrutivas solicitam confirmacao com SweetAlert antes do envio.
 - Alertas laterais pausam o temporizador quando o usuario passa o mouse.
 - A validacao no navegador nao substitui a validacao do backend.
 

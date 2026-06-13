@@ -12,10 +12,6 @@
                 <p class="text-secondary mb-0">Defina seus dados para aceitar o convite.</p>
             </header>
 
-            @error('convite')
-                <div class="alert alert-danger" role="alert">{{ $message }}</div>
-            @enderror
-
             <form
                 method="POST"
                 action="{{ route('convites-admin.store', $token) }}"

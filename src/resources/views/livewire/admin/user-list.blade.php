@@ -75,8 +75,37 @@
                             @endif
                         </div>
 
-                        <p class="text-secondary mb-0">{{ $usuario->email }}</p>
+                        <p class="text-secondary mb-2">{{ $usuario->email }}</p>
+
+                        @if ($usuario->isDoador())
+                            @if ($usuario->carteiraDoacao)
+                                <span class="badge {{ $usuario->carteiraDoacao->status === 'ativa' ? 'text-bg-success' : 'text-bg-secondary' }}">
+                                    Carteirinha {{ $usuario->carteiraDoacao->status }}
+                                </span>
+                            @else
+                                <span class="badge text-bg-light border">Carteirinha nao emitida</span>
+                            @endif
+                        @endif
                     </div>
+
+                    @if ($usuario->isDoador() && $usuario->carteiraDoacao)
+                        <button
+                            class="btn {{ $usuario->carteiraDoacao->status === 'ativa' ? 'btn-outline-danger' : 'btn-outline-success' }} flex-shrink-0 align-self-lg-center"
+                            type="button"
+                            wire:loading.attr="disabled"
+                            wire:target="alterarStatusCarteirinha({{ $usuario->id }})"
+                            x-on:click="
+                                window.confirmAction({
+                                    title: '{{ $usuario->carteiraDoacao->status === 'ativa' ? 'Inativar' : 'Ativar' }} carteirinha?',
+                                    text: 'Esta alteracao afeta a permissao do doador para realizar agendamentos.',
+                                    confirmButtonText: '{{ $usuario->carteiraDoacao->status === 'ativa' ? 'Inativar' : 'Ativar' }}',
+                                    buttonColor: '{{ $usuario->carteiraDoacao->status === 'ativa' ? '#c62828' : '#198754' }}',
+                                }).then((confirmed) => confirmed && $wire.alterarStatusCarteirinha({{ $usuario->id }}))
+                            "
+                        >
+                            {{ $usuario->carteiraDoacao->status === 'ativa' ? 'Inativar carteirinha' : 'Ativar carteirinha' }}
+                        </button>
+                    @endif
                 </div>
             </div>
         @empty

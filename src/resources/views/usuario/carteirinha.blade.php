@@ -35,12 +35,6 @@
         @else
             <div class="card shadow-sm rounded-3">
                 <div class="card-body p-4 p-lg-5">
-                    @if ($errors->has('carteira'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ $errors->first('carteira') }}
-                        </div>
-                    @endif
-
                     @include('usuario.partials.carteirinha-form', [
                         'action' => route('usuario.carteirinha.store'),
                         'submitLabel' => 'Emitir carteirinha',

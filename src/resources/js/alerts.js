@@ -55,10 +55,69 @@ const alertWarning = ({
     });
 };
 
+const confirmAction = ({
+    title = 'Confirmar acao?',
+    text,
+    confirmButtonText = 'Confirmar',
+    cancelButtonText = 'Cancelar',
+    buttonColor = confirmButtonColor,
+} = {}) => Swal.fire({
+    icon: 'question',
+    title,
+    text,
+    showCancelButton: true,
+    confirmButtonColor: buttonColor,
+    confirmButtonText,
+    cancelButtonText,
+    reverseButtons: true,
+}).then(({ isConfirmed }) => isConfirmed);
+
 const registerAlertHelpers = () => {
     window.alertSuccess = alertSuccess;
     window.alertError = alertError;
     window.alertWarning = alertWarning;
+    window.confirmAction = confirmAction;
 };
 
-export { confirmButtonColor, registerAlertHelpers };
+const registerLivewireAlertListeners = (Livewire) => {
+    Livewire.on('alert-success', ({ message }) => {
+        alertSuccess({ text: message });
+    });
+
+    Livewire.on('alert-error', ({ message }) => {
+        alertError({ text: message });
+    });
+};
+
+const initConfirmActions = () => {
+    document.addEventListener('submit', async (event) => {
+        const form = event.target;
+
+        if (!(form instanceof HTMLFormElement) || !form.dataset.confirmTitle || form.dataset.confirmed === 'true') {
+            return;
+        }
+
+        event.preventDefault();
+
+        const confirmed = await confirmAction({
+            title: form.dataset.confirmTitle,
+            text: form.dataset.confirmText,
+            confirmButtonText: form.dataset.confirmButtonText,
+            buttonColor: form.dataset.confirmButtonColor,
+        });
+
+        if (!confirmed) {
+            return;
+        }
+
+        form.dataset.confirmed = 'true';
+        form.requestSubmit();
+    });
+};
+
+export {
+    confirmButtonColor,
+    initConfirmActions,
+    registerAlertHelpers,
+    registerLivewireAlertListeners,
+};

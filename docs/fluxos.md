@@ -121,6 +121,17 @@ Este documento registra os fluxos existentes no sistema.
 9. Sistema mantem o status e a data de emissao originais.
 10. Sistema retorna para a tela da carteirinha com mensagem de sucesso.
 
+## Alteracao administrativa do status da carteirinha
+
+1. Admin autenticado acessa `GET /admin/usuarios`.
+2. Sistema exibe o status das carteirinhas dos doadores.
+3. Admin escolhe ativar ou inativar uma carteirinha ja emitida.
+4. Sistema solicita confirmacao usando SweetAlert.
+5. Apos a confirmacao, o componente Livewire valida que o usuario e admin e que o usuario informado e doador com carteirinha emitida.
+6. Sistema alterna o status entre `ativa` e `inativa`.
+7. A listagem e o status sao atualizados sem recarregar a pagina.
+8. Sistema exibe o resultado em um alerta SweetAlert.
+
 ## Cadastro de local de coleta
 
 1. Admin autenticado acessa `GET /admin/locais-coleta`.

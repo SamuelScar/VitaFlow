@@ -54,3 +54,16 @@ Antes de criar um agendamento, o sistema deve chamar `User::podeAgendarDoacao()`
 - Administradores e doadores passaram a ser tratados como perfis exclusivos.
 - A listagem de usuarios ganhou filtro por perfil e deixou de exibir a acao de promocao.
 - E-mails passaram a ser normalizados no cadastro e na atualizacao da conta para preservar a unicidade entre perfis.
+
+## 13/06/2026 - Gerenciamento administrativo de carteirinhas
+
+- Adicionado o status da carteirinha dos doadores na listagem administrativa de usuarios.
+- Administradores podem ativar ou inativar carteirinhas ja emitidas.
+- Doadores sem carteirinha emitida e usuarios administradores nao possuem acao de alteracao de status.
+- A alteracao ocorre pelo componente Livewire sem recarregar a pagina e usa SweetAlert para confirmacao e feedback.
+
+## 13/06/2026 - Padronizacao de alertas e confirmacoes
+
+- Substituidas confirmacoes nativas de exclusao e cancelamento por SweetAlert.
+- Erros de operacao e validacao retornados pelo backend passaram a usar SweetAlert nos layouts publico e de autenticacao.
+- Mantidas mensagens inline somente nos campos invalidos para orientar a correcao.

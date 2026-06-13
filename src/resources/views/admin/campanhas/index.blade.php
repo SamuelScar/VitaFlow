@@ -64,8 +64,11 @@
                 </div>
 
                 @if ($locaisColeta->isEmpty())
-                    <div class="alert alert-warning" role="alert">
-                        Cadastre um local de coleta antes de criar campanhas.
+                    <div class="border border-warning-subtle bg-warning-subtle rounded-3 p-3 mb-4">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-exclamation-triangle text-warning-emphasis" aria-hidden="true"></i>
+                            <span class="text-warning-emphasis">Cadastre um local de coleta antes de criar campanhas.</span>
+                        </div>
                     </div>
                 @endif
 
@@ -86,12 +89,6 @@
                         ])
                     </div>
                 </div>
-
-                @if ($errors->has('campanha'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ $errors->first('campanha') }}
-                    </div>
-                @endif
 
                 @forelse ($campanhas as $campanha)
                     @php
@@ -153,7 +150,10 @@
                                     class="d-grid m-0"
                                     method="POST"
                                     action="{{ route('admin.campanhas.destroy', $campanha) }}"
-                                    onsubmit="return confirm('Excluir esta campanha?')"
+                                    data-confirm-title="Excluir campanha?"
+                                    data-confirm-text="Esta acao nao podera ser desfeita."
+                                    data-confirm-button-text="Excluir"
+                                    data-confirm-button-color="#c62828"
                                 >
                                     @csrf
                                     @method('DELETE')

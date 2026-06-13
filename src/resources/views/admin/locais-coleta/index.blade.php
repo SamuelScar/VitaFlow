@@ -69,12 +69,6 @@
                     </div>
                 </div>
 
-                @if ($errors->has('local_coleta'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ $errors->first('local_coleta') }}
-                    </div>
-                @endif
-
                 @forelse ($locaisColeta as $localColeta)
                     @php
                         $editando = $errors->updateLocalColeta->any()
@@ -125,7 +119,10 @@
                                     class="d-grid m-0"
                                     method="POST"
                                     action="{{ route('admin.locais-coleta.destroy', $localColeta) }}"
-                                    onsubmit="return confirm('Excluir este local de coleta?')"
+                                    data-confirm-title="Excluir local de coleta?"
+                                    data-confirm-text="Esta acao nao podera ser desfeita."
+                                    data-confirm-button-text="Excluir"
+                                    data-confirm-button-color="#c62828"
                                 >
                                     @csrf
                                     @method('DELETE')

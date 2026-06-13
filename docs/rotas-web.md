@@ -827,7 +827,20 @@ Comportamento atual:
 - Exibe resumo com total de usuarios, administradores e doadores.
 - Quando ha busca ou filtro por perfil, exibe tambem o total de resultados encontrados.
 - Permite filtrar a listagem por perfil.
+- Exibe o status da carteirinha dos doadores e permite ativar ou inativar carteirinhas ja emitidas.
 - Exibe formulario para convidar administradores e lista convites pendentes.
+
+### Alterar status da carteirinha de um doador
+
+A acao `alterarStatusCarteirinha` do componente Livewire ativa ou inativa a carteirinha ja emitida de um doador sem recarregar a pagina.
+
+Comportamento atual:
+
+- A acao valida novamente que o usuario autenticado possui tipo `admin`.
+- O usuario informado deve ser doador e possuir uma carteirinha emitida.
+- O status e alternado entre `ativa` e `inativa`.
+- Doadores sem carteirinha e usuarios administradores nao podem ter status de carteirinha alterado.
+- A confirmacao e o feedback usam SweetAlert.
 
 ## Enviar convite administrativo
 
