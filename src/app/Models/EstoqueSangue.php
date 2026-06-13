@@ -9,12 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable([
     'local_coleta_id',
     'tipo_sanguineo',
-    'quantidade_ml',
-    'bolsas_disponiveis',
     'estoque_minimo_ml',
 ])]
 /**
- * Representa o estoque de sangue de um tipo específico em um local de coleta.
+ * Representa a configuração de estoque mínimo de um tipo sanguíneo em um local.
  * Cada local possui no máximo um registro por tipo sanguíneo.
  */
 class EstoqueSangue extends Model
@@ -35,8 +33,6 @@ class EstoqueSangue extends Model
     protected function casts(): array
     {
         return [
-            'quantidade_ml' => 'integer',
-            'bolsas_disponiveis' => 'integer',
             'estoque_minimo_ml' => 'integer',
         ];
     }

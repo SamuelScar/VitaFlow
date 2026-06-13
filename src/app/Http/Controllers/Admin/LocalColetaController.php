@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LocalColeta;
+use App\Support\TipoSanguineo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
@@ -24,7 +26,16 @@ class LocalColetaController extends Controller
     {
         $this->normalizeAddress($request);
 
-        LocalColeta::create($request->validateWithBag('storeLocalColeta', $this->rules()));
+        DB::transaction(function () use ($request): void {
+            $local = LocalColeta::create($request->validateWithBag('storeLocalColeta', $this->rules()));
+
+            foreach (TipoSanguineo::values() as $tipoSanguineo) {
+                $local->estoquesSangue()->create([
+                    'tipo_sanguineo' => $tipoSanguineo,
+                    'estoque_minimo_ml' => 0,
+                ]);
+            }
+        });
 
         return back()->with('success', 'Local de coleta cadastrado com sucesso.');
     }
@@ -40,9 +51,9 @@ class LocalColetaController extends Controller
 
     public function destroy(LocalColeta $localColeta): RedirectResponse
     {
-        if ($localColeta->campanhas()->exists() || $localColeta->estoquesSangue()->exists()) {
+        if ($localColeta->campanhas()->exists() || $localColeta->bolsasSangue()->exists()) {
             return back()->withErrors([
-                'local_coleta' => 'Nao e possivel excluir um local de coleta com campanhas ou estoque vinculado.',
+                'local_coleta' => 'Nao e possivel excluir um local de coleta com campanhas ou bolsas vinculadas.',
             ]);
         }
 

@@ -35,11 +35,16 @@ class LocalColeta extends Model
     }
 
     /**
-     * Retorna os registros de estoque de sangue por tipo sanguíneo neste local.
+     * Retorna as configurações de estoque mínimo por tipo sanguíneo neste local.
      */
     public function estoquesSangue(): HasMany
     {
         return $this->hasMany(EstoqueSangue::class);
+    }
+
+    public function bolsasSangue(): HasMany
+    {
+        return $this->hasMany(BolsaSangue::class);
     }
 
     /**

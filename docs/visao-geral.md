@@ -2,7 +2,7 @@
 
 O VitaFlow e um sistema web para organizar campanhas de doacao de sangue, aproximando administradores, doadores e visitantes em um unico fluxo.
 
-No estado atual, administradores gerenciam locais de coleta, campanhas e usuarios. Doadores podem criar conta, emitir e editar a carteirinha e consultar a home publica de campanhas. Visitantes podem visualizar informacoes publicas e acessar login, cadastro ou recuperacao de senha.
+No estado atual, administradores gerenciam locais de coleta, campanhas, usuarios, bolsas e estoque de sangue. Doadores podem criar conta, emitir e editar a carteirinha e consultar a home publica de campanhas. Visitantes podem visualizar informacoes publicas e acessar login, cadastro ou recuperacao de senha.
 
 Estado atual do monolito:
 
@@ -27,6 +27,8 @@ Funcionalidades ja cobertas:
 - Cadastro, edicao e exclusao de locais de coleta.
 - Cadastro, edicao e exclusao de campanhas.
 - Listagem de usuarios por perfil e convites para novos administradores.
+- Estoque calculado a partir das bolsas disponiveis.
+- Consulta, utilizacao, descarte e transferencia de bolsas de sangue.
 - Campanhas com multiplos tipos sanguineos alvo.
 - Exibicao publica de campanhas ativas dentro do periodo vigente.
 
@@ -50,6 +52,7 @@ Os controllers são organizados por fluxo ou caso de uso, não obrigatoriamente 
 - `Auth\AceiteConviteAdminController`: aceite de convite e criacao da conta administrativa.
 - `Admin\LocalColetaController`: fluxo administrativo de locais de coleta.
 - `Admin\CampanhaController`: fluxo administrativo de campanhas.
+- `Admin\BolsaSangueController`: entrada para a gestao administrativa de bolsas e estoque.
 
 Essa decisão evita controllers grandes demais e deixa cada entrada HTTP com uma responsabilidade clara.
 

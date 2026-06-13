@@ -28,6 +28,7 @@ Este documento registra as rotas web do sistema.
 - [Dashboard admin](#painel-admin)
 - [Locais de coleta](#tela-de-locais-de-coleta)
 - [Campanhas](#tela-de-campanhas)
+- [Bolsas e estoque](#tela-de-bolsas-e-estoque)
 - [Usuários](#tela-de-usuarios)
 - [Convites administrativos](#enviar-convite-administrativo)
 
@@ -491,9 +492,7 @@ resources/views/admin/dashboard.blade.php
 
 Comportamento atual:
 
-- Exibe atalhos para locais de coleta, campanhas de sangue, usuarios e home publica.
-- Exibe card informativo de agendamentos.
-- O card de agendamentos ainda nao possui rota propria de gestao.
+- Exibe atalhos para locais de coleta, campanhas, bolsas e estoque, usuarios e home publica.
 
 ## Tela de locais de coleta
 
@@ -524,7 +523,7 @@ Comportamento atual:
 - Exibe o endereco formatado a partir de CEP, logradouro, numero, bairro, cidade e UF.
 - Exibe formulario para cadastrar novo local.
 - Permite abrir o formulario de edicao de cada local.
-- Permite solicitar exclusao de locais sem campanhas ou estoque vinculado.
+- Permite solicitar exclusao de locais sem campanhas ou bolsas vinculadas.
 
 ## Cadastrar local de coleta
 
@@ -622,7 +621,7 @@ Middlewares:
 Comportamento atual:
 
 - Apenas usuarios com tipo `admin` podem excluir locais de coleta.
-- Se o local tiver campanhas ou estoque de sangue vinculado, a exclusao e bloqueada.
+- Se o local tiver campanhas ou bolsas de sangue vinculadas, a exclusao e bloqueada.
 - Se o local nao tiver vinculos, exclui o registro.
 - Apos excluir, retorna para a pagina anterior com mensagem de sucesso.
 
@@ -752,6 +751,39 @@ Comportamento atual:
 - Se a campanha tiver agendamentos vinculados, a exclusao e bloqueada.
 - Se a campanha nao tiver vinculos, exclui o registro.
 - Apos excluir, retorna para a pagina anterior com mensagem de sucesso.
+
+## Tela de bolsas e estoque
+
+`GET /admin/bolsas-sangue`
+
+Exibe o estoque calculado e a gestao administrativa das bolsas de sangue.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\BolsaSangueController@index
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/bolsas-sangue/index.blade.php
+```
+
+Comportamento atual:
+
+- Calcula o estoque por local e tipo sanguineo usando bolsas disponiveis ou transferidas e dentro da validade.
+- Compara o saldo calculado com o estoque minimo configurado.
+- Permite atualizar o estoque minimo sem recarregar a pagina.
+- Lista e filtra bolsas por local, tipo sanguineo e status.
+- Permite registrar utilizacao, descarte e transferencia de bolsas disponiveis.
+- Considera automaticamente como vencidas as bolsas cuja validade terminou.
+- Todas as movimentacoes usam Livewire e SweetAlert sem recarregar a pagina.
 
 ## Cadastro
 

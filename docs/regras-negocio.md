@@ -102,8 +102,7 @@ Este documento registra regras que afetam comportamento do sistema.
 - O campo `capacidade_diaria` e obrigatorio, deve ser inteiro e deve ficar entre 1 e 10000.
 - O CEP informado pode preencher automaticamente logradouro, bairro, cidade e UF no formulario.
 - A consulta de CEP e uma ajuda de preenchimento; o backend continua validando os campos enviados.
-- Locais de coleta com campanhas vinculadas nao podem ser excluidos.
-- Locais de coleta com estoque de sangue vinculado nao podem ser excluidos.
+- Locais de coleta com campanhas ou bolsas de sangue vinculadas nao podem ser excluidos.
 
 ## Campanhas
 
@@ -140,6 +139,23 @@ Este documento registra regras que afetam comportamento do sistema.
 - Apenas administradores podem alterar o status de uma carteirinha ja emitida entre `ativa` e `inativa`.
 - Doadores sem carteirinha emitida e usuarios administradores nao possuem status de carteirinha para alterar.
 - Um usuario somente pode realizar agendamentos quando for doador e possuir uma carteirinha ativa.
+
+## Bolsas de sangue e estoque
+
+- Uma doacao confirmada com quantidade coletada gera uma unica bolsa de sangue.
+- Uma doacao recusada nao gera bolsa de sangue.
+- A bolsa nasce no local da campanha vinculada ao agendamento.
+- A validade da bolsa e definida como 42 dias apos a data da coleta.
+- O vencimento e determinado automaticamente pela data de validade, sem atualizacao manual do status persistido.
+- Bolsas disponiveis e transferidas podem ser utilizadas, descartadas ou transferidas.
+- Bolsas utilizadas, descartadas ou vencidas nao podem ser movimentadas.
+- A transferencia exige um local de destino diferente do local atual.
+- Bolsas transferidas continuam disponiveis e passam a compor o estoque do destino.
+- O estoque considera somente bolsas disponiveis ou transferidas e dentro da validade.
+- `estoques_sangue` armazena apenas o estoque minimo configurado por local e tipo sanguineo.
+- O administrador pode configurar o estoque minimo entre 0 e 1.000.000 ml.
+- Apenas administradores podem consultar e movimentar bolsas de sangue.
+- Movimentacoes bloqueiam a bolsa durante a operacao para impedir alteracoes simultaneas conflitantes.
 
 ## Validacao e feedback visual
 

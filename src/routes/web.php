@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BolsaSangueController;
 use App\Http\Controllers\Admin\CampanhaController;
 use App\Http\Controllers\Admin\ConviteAdminController;
 use App\Http\Controllers\Admin\LocalColetaController;
@@ -74,6 +75,8 @@ Route::middleware('auth')->group(function (): void {
             ->name('admin.campanhas.update');
         Route::delete('/admin/campanhas/{campanha}', [CampanhaController::class, 'destroy'])
             ->name('admin.campanhas.destroy');
+        Route::get('/admin/bolsas-sangue', [BolsaSangueController::class, 'index'])
+            ->name('admin.bolsas-sangue.index');
         Route::get('/admin/usuarios', [UserController::class, 'index'])
             ->name('admin.usuarios.index');
         Route::post('/admin/convites-admin', [ConviteAdminController::class, 'store'])

@@ -160,7 +160,7 @@ Este documento registra os fluxos existentes no sistema.
 1. Admin autenticado acessa `GET /admin/locais-coleta`.
 2. Sistema exibe a lista de locais cadastrados.
 3. Admin envia `DELETE /admin/locais-coleta/{localColeta}`.
-4. Sistema verifica se o local possui campanhas ou estoque vinculado.
+4. Sistema verifica se o local possui campanhas ou bolsas vinculadas.
 5. Se houver vinculo, sistema bloqueia a exclusao e retorna erro de validacao.
 6. Se nao houver vinculo, sistema exclui o local de coleta.
 7. Sistema retorna para a pagina anterior com mensagem de sucesso.
@@ -197,6 +197,27 @@ Este documento registra os fluxos existentes no sistema.
 5. Se houver vinculo, sistema bloqueia a exclusao e retorna erro de validacao.
 6. Se nao houver vinculo, sistema exclui a campanha.
 7. Sistema retorna para a pagina anterior com mensagem de sucesso.
+
+## Gerenciamento de bolsas e estoque
+
+1. Admin autenticado acessa `GET /admin/bolsas-sangue`.
+2. Sistema calcula o estoque por local e tipo sanguineo usando bolsas disponiveis ou transferidas e dentro da validade.
+3. Sistema compara o saldo calculado com o estoque minimo configurado.
+4. Admin pode atualizar o estoque minimo de cada local e tipo sanguineo.
+5. Admin filtra bolsas por local, tipo sanguineo ou status.
+6. Admin pode registrar utilizacao ou descarte de uma bolsa disponivel.
+7. Admin pode transferir uma bolsa disponivel para outro local de coleta.
+8. O componente Livewire valida novamente o estado da bolsa antes da movimentacao.
+9. Sistema atualiza a bolsa, recalcula o estoque e exibe o resultado sem recarregar a pagina.
+
+## Geracao e vencimento de bolsa
+
+1. Sistema registra o resultado de uma coleta como doacao.
+2. Se a doacao for recusada, nenhuma bolsa e criada.
+3. Se a doacao for confirmada, sistema cria uma bolsa vinculada a doacao.
+4. A bolsa recebe o tipo sanguineo do doador, o local da campanha, a quantidade e a data da coleta.
+5. Sistema define a validade para 42 dias apos a coleta.
+6. Ao consultar ou movimentar a bolsa, o sistema considera vencida qualquer bolsa disponivel cuja validade tenha terminado.
 
 ## Alteracao de tema
 

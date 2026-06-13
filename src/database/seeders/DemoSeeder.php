@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Agendamento;
+use App\Models\BolsaSangue;
 use App\Models\Campanha;
 use App\Models\CarteiraDoacao;
 use App\Models\Doacao;
@@ -39,6 +40,7 @@ class DemoSeeder extends Seeder
                 $campanhas = $this->criarCampanhas($admin, $locais, $hoje);
 
                 $this->criarAgendamentosEDoacoes($carteiras, $campanhas, $hoje);
+                $this->criarCicloBolsas($locais);
             });
         });
     }
@@ -133,23 +135,48 @@ class DemoSeeder extends Seeder
     {
         $tiposSanguineos = TipoSanguineo::values();
 
-        foreach ($locais as $indiceLocal => $local) {
+        foreach ($locais as $local) {
             foreach ($tiposSanguineos as $indiceTipo => $tipoSanguineo) {
-                $bolsas = 2 + (($indiceLocal + ($indiceTipo * 3)) % 19);
-
                 EstoqueSangue::updateOrCreate(
                     [
                         'local_coleta_id' => $local->id,
                         'tipo_sanguineo' => $tipoSanguineo,
                     ],
                     [
-                        'quantidade_ml' => $bolsas * 450,
-                        'bolsas_disponiveis' => $bolsas,
                         'estoque_minimo_ml' => 4500 + (($indiceTipo % 3) * 900),
                     ],
                 );
             }
         }
+    }
+
+    /**
+     * @param array<int, LocalColeta> $locais
+     */
+    private function criarCicloBolsas(array $locais): void
+    {
+        BolsaSangue::with('doacao.agendamento.campanha')
+            ->orderBy('id')
+            ->get()
+            ->each(function (BolsaSangue $bolsa, int $indice) use ($locais): void {
+                $localOrigemId = $bolsa->doacao->agendamento->campanha->local_coleta_id;
+                $status = BolsaSangue::STATUS_DISPONIVEL;
+                $localAtualId = $localOrigemId;
+
+                if ($indice % 11 === 0) {
+                    $status = BolsaSangue::STATUS_UTILIZADA;
+                } elseif ($indice % 13 === 0) {
+                    $status = BolsaSangue::STATUS_DESCARTADA;
+                } elseif ($indice % 17 === 0) {
+                    $status = BolsaSangue::STATUS_TRANSFERIDA;
+                    $localAtualId = $locais[($indice + 1) % count($locais)]->id;
+                }
+
+                $bolsa->update([
+                    'local_coleta_id' => $localAtualId,
+                    'status' => $status,
+                ]);
+            });
     }
 
     /**

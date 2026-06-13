@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['agendamento_id', 'data_coleta', 'quantidade_ml', 'status', 'motivo_recusa'])]
 /**
@@ -21,6 +22,36 @@ class Doacao extends Model
     public function agendamento(): BelongsTo
     {
         return $this->belongsTo(Agendamento::class);
+    }
+
+    public function bolsaSangue(): HasOne
+    {
+        return $this->hasOne(BolsaSangue::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (Doacao $doacao): void {
+            if ($doacao->status !== 'confirmada' || $doacao->quantidade_ml === null) {
+                return;
+            }
+
+            $doacao->loadMissing('agendamento.campanha', 'agendamento.user');
+            $agendamento = $doacao->agendamento;
+
+            if ($agendamento?->campanha === null || $agendamento->user?->tipo_sanguineo === null) {
+                return;
+            }
+
+            $doacao->bolsaSangue()->firstOrCreate([], [
+                'local_coleta_id' => $agendamento->campanha->local_coleta_id,
+                'tipo_sanguineo' => $agendamento->user->tipo_sanguineo,
+                'quantidade_ml' => $doacao->quantidade_ml,
+                'data_coleta' => $doacao->data_coleta,
+                'validade_em' => $doacao->data_coleta->copy()->addDays((int) env('BOLSA_SANGUE_VALIDADE_DIAS', 42)),
+                'status' => BolsaSangue::STATUS_DISPONIVEL,
+            ]);
+        });
     }
 
     /**

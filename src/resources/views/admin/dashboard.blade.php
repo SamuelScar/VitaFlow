@@ -61,9 +61,11 @@
 
             <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
-                    title="Agendamentos"
-                    description="Acompanhamento das doacoes de sangue agendadas pelo sistema."
-                    icon="bi-calendar-check"
+                    title="Bolsas e estoque"
+                    description="Consulte o estoque calculado e gerencie o ciclo das bolsas."
+                    :href="route('admin.bolsas-sangue.index')"
+                    button-label="Gerenciar bolsas"
+                    icon="bi-droplet-half"
                 />
             </div>
 

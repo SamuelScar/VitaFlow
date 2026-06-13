@@ -67,3 +67,15 @@ Antes de criar um agendamento, o sistema deve chamar `User::podeAgendarDoacao()`
 - Substituidas confirmacoes nativas de exclusao e cancelamento por SweetAlert.
 - Erros de operacao e validacao retornados pelo backend passaram a usar SweetAlert nos layouts publico e de autenticacao.
 - Mantidas mensagens inline somente nos campos invalidos para orientar a correcao.
+
+## 13/06/2026 - Bolsas de sangue e estoque calculado
+
+- Criada a entidade `BolsaSangue` para representar o sangue armazenado apos uma doacao confirmada.
+- Doacoes confirmadas geram automaticamente uma bolsa vinculada ao local da campanha e ao tipo sanguineo do doador.
+- A validade da bolsa foi definida em 42 dias e o vencimento passou a ser calculado automaticamente.
+- Adicionados os fluxos administrativos de consulta, utilizacao, descarte e transferencia de bolsas.
+- Bolsas transferidas continuam disponiveis e passam a compor o estoque do local de destino.
+- Removidos os saldos editaveis de `estoques_sangue`; a tabela permanece apenas com a configuracao de estoque minimo.
+- A configuracao de estoque minimo pode ser atualizada pelo administrador na tela de bolsas e estoque.
+- O estoque passou a ser calculado a partir das bolsas disponiveis ou transferidas e dentro da validade.
+- Atualizados o `DemoSeeder`, os relacionamentos, o painel administrativo e a documentacao tecnica.

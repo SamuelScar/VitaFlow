@@ -142,7 +142,8 @@ Campos principais:
 Relacionamentos:
 
 - Pode ter muitas campanhas.
-- Pode ter muitos registros de estoque de sangue.
+- Pode ter muitas configuracoes de estoque minimo.
+- Pode armazenar muitas bolsas de sangue.
 
 Observacoes:
 
@@ -185,20 +186,19 @@ Observacoes:
 
 ### `estoques_sangue`
 
-Representa o estoque de sangue por local de coleta e tipo sanguineo.
+Representa a configuracao de estoque minimo por local de coleta e tipo sanguineo.
 
 Campos principais:
 
 - `local_coleta_id`
 - `tipo_sanguineo`
-- `quantidade_ml`
-- `bolsas_disponiveis`
 - `estoque_minimo_ml`
 
 Relacionamentos:
 
 - Pertence a um local de coleta.
 - Cada local possui apenas um registro por tipo sanguineo.
+- O saldo atual nao e armazenado nesta tabela; ele e calculado a partir das bolsas disponiveis.
 
 ### `agendamentos`
 
@@ -247,10 +247,46 @@ Relacionamentos:
 
 - Pertence a um agendamento.
 - Cada agendamento pode ter apenas uma doacao registrada.
+- Uma doacao confirmada gera uma bolsa de sangue.
+- Uma doacao recusada nao gera bolsa.
+
+### `bolsas_sangue`
+
+Representa o sangue armazenado e seu ciclo de vida apos uma doacao confirmada.
+
+Campos principais:
+
+- `doacao_id`
+- `local_coleta_id`
+- `tipo_sanguineo`
+- `quantidade_ml`
+- `data_coleta`
+- `validade_em`
+- `status`
+
+Status atuais:
+
+- `disponivel`
+- `utilizada`
+- `vencida`
+- `descartada`
+- `transferida`
+
+Relacionamentos:
+
+- Pertence a uma doacao confirmada.
+- Pertence ao local de coleta onde esta armazenada atualmente.
+
+Observacoes:
+
+- Cada doacao confirmada pode gerar apenas uma bolsa.
+- O vencimento e determinado automaticamente pela data de validade.
+- Bolsas transferidas continuam disponiveis no local de destino.
+- O estoque soma somente bolsas disponiveis ou transferidas que ainda nao venceram.
 
 ## Tipos sanguineos
 
-Os tipos sanguineos aceitos ficam centralizados em `App\Support\TiposSanguineos`:
+Os tipos sanguineos aceitos ficam centralizados em `App\Support\TipoSanguineo`:
 
 - `A+`
 - `A-`
@@ -280,9 +316,9 @@ O `DemoSeeder` cria um conjunto grande e previsivel de dados para apresentacoes 
 
 - 150 usuarios doadores com carteirinhas;
 - 30 locais de coleta;
-- 240 registros de estoque;
+- 240 configuracoes de estoque minimo;
 - 60 campanhas ativas, futuras, encerradas e canceladas;
-- mais de 1.600 agendamentos e cerca de 200 doacoes em diferentes status.
+- mais de 1.600 agendamentos, cerca de 200 doacoes e bolsas em diferentes etapas do ciclo de vida.
 
 As datas sao calculadas a partir do dia em que o seeder e executado. Assim, as campanhas abertas continuam adequadas para demonstracoes realizadas nos dias seguintes.
 
