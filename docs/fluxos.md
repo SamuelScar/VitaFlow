@@ -58,6 +58,38 @@ Este documento registra os fluxos existentes no sistema.
 6. Sistema lista data, horario, doador, campanha, local, status do agendamento e situacao da doacao.
 7. Admin pode limpar os filtros para voltar a lista completa.
 
+## Registro administrativo de comparecimento
+
+1. Admin autenticado acessa `GET /admin/agendamentos`.
+2. Sistema exibe a situacao de registro de cada agendamento.
+3. Para agendamentos futuros, sistema exibe "Aguardando horario" e nao libera acoes.
+4. Quando o horario agendado chega, sistema libera as acoes de comparecimento por 24 horas.
+5. Admin escolhe marcar o agendamento como `realizado`, `faltou` ou `cancelado`.
+6. Sistema solicita confirmacao antes de alterar o registro.
+7. Com a confirmacao, componente Livewire bloqueia o agendamento durante a operacao.
+8. Sistema valida que o usuario e admin, o status atual permite registro de comparecimento, a janela operacional esta aberta e nao existe doacao vinculada.
+9. Se a validacao for aprovada, sistema atualiza o status do agendamento.
+10. Sistema atualiza a listagem e os resumos sem recarregar a pagina inteira.
+11. Se o registro precisar ser corrigido dentro da janela de 24 horas, admin pode trocar entre `realizado`, `faltou` e `cancelado`.
+12. Apos 24 horas do horario agendado, sistema exibe "Prazo encerrado" e bloqueia novas alteracoes pelo fluxo normal.
+
+## Registro administrativo de doacao
+
+1. Admin autenticado acessa `GET /admin/agendamentos` ou o detalhe de uma campanha.
+2. Sistema lista os agendamentos com a situacao da doacao vinculada.
+3. Para agendamentos com horario ja iniciado, status `realizado` e sem doacao, sistema exibe a acao "Registrar".
+4. Admin abre o formulario de registro da doacao na propria listagem.
+5. Admin escolhe o resultado `confirmada` ou `recusada`.
+6. Se a doacao for confirmada, admin informa a quantidade coletada em mililitros.
+7. Se a doacao for recusada, admin informa o motivo da recusa.
+8. Sistema solicita confirmacao com espera de 3 segundos antes de gravar.
+9. Sistema bloqueia o agendamento durante a operacao.
+10. Sistema valida que o usuario e admin, o horario do agendamento ja chegou, o agendamento esta `realizado` e ainda nao possui doacao.
+11. Para doacao confirmada, sistema valida que a campanha e o tipo sanguineo do doador estao disponiveis para gerar a bolsa.
+12. Sistema cria a doacao com a data e hora do registro.
+13. Se a doacao for confirmada, o modelo `Doacao` gera a bolsa de sangue automaticamente.
+14. Sistema atualiza a listagem sem recarregar a pagina inteira.
+
 ## Login
 
 1. Usuario acessa `GET /login`.
@@ -223,6 +255,18 @@ Este documento registra os fluxos existentes no sistema.
 8. Sistema cria a campanha com status `ativa` e registra o admin como criador.
 9. Sistema retorna para a pagina anterior com mensagem de sucesso.
 
+## Visualizacao administrativa de campanha
+
+1. Admin autenticado acessa `GET /admin/campanhas`.
+2. Admin clica no titulo ou na acao "Detalhes" de uma campanha.
+3. Sistema exibe `GET /admin/campanhas/{campanha}` com dados principais da campanha.
+4. Sistema exibe local de coleta, tipos sanguineos alvo, periodo, horario, meta, limite por horario e criador.
+5. Sistema exibe resumo dos agendamentos da campanha por status.
+6. Sistema exibe o formulario de edicao da campanha na propria tela.
+7. Sistema exibe a listagem administrativa de agendamentos filtrada pela campanha atual.
+8. Admin pode gerenciar comparecimento dos agendamentos da campanha sem sair da tela.
+9. Alteracoes de campanha, comparecimento e doacao exigem confirmacao com espera de 3 segundos antes da acao.
+
 ## Atualizacao de campanha
 
 1. Admin autenticado acessa `GET /admin/campanhas`.
@@ -249,12 +293,13 @@ Este documento registra os fluxos existentes no sistema.
 1. Admin autenticado acessa `GET /admin/bolsas-sangue`.
 2. Sistema calcula o estoque por local e tipo sanguineo usando bolsas disponiveis ou transferidas e dentro da validade.
 3. Sistema compara o saldo calculado com o estoque minimo configurado.
-4. Admin pode atualizar o estoque minimo de cada local e tipo sanguineo.
-5. Admin filtra bolsas por local, tipo sanguineo ou status.
-6. Admin pode registrar utilizacao ou descarte de uma bolsa disponivel.
-7. Admin pode transferir uma bolsa disponivel para outro local de coleta.
-8. O componente Livewire valida novamente o estado da bolsa antes da movimentacao.
-9. Sistema atualiza a bolsa, recalcula o estoque e exibe o resultado sem recarregar a pagina.
+4. Admin pode filtrar o estoque calculado por local e tipo sanguineo.
+5. Admin pode atualizar o estoque minimo de cada local e tipo sanguineo.
+6. Admin filtra bolsas por local, tipo sanguineo ou status.
+7. Admin pode registrar utilizacao ou descarte de uma bolsa disponivel.
+8. Admin pode transferir uma bolsa disponivel para outro local de coleta.
+9. O componente Livewire valida novamente o estado da bolsa antes da movimentacao.
+10. Sistema atualiza a bolsa, recalcula o estoque e exibe o resultado sem recarregar a pagina.
 
 ## Geracao e vencimento de bolsa
 

@@ -89,6 +89,8 @@ Route::middleware('auth')->group(function (): void {
             ->name('admin.campanhas.index');
         Route::post('/admin/campanhas', [CampanhaController::class, 'store'])
             ->name('admin.campanhas.store');
+        Route::get('/admin/campanhas/{campanha}', [CampanhaController::class, 'show'])
+            ->name('admin.campanhas.show');
         Route::put('/admin/campanhas/{campanha}', [CampanhaController::class, 'update'])
             ->name('admin.campanhas.update');
         Route::delete('/admin/campanhas/{campanha}', [CampanhaController::class, 'destroy'])

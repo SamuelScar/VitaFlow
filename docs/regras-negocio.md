@@ -122,6 +122,11 @@ Este documento registra regras que afetam comportamento do sistema.
 - Campanhas novas entram com status `ativa`.
 - Na atualizacao, o status deve ser `ativa`, `encerrada` ou `cancelada`.
 - Campanhas com agendamentos vinculados nao podem ser excluidas.
+- Administradores podem abrir a tela de detalhe de uma campanha cadastrada.
+- A tela de detalhe de campanha exibe informacoes operacionais, resumo de agendamentos e a listagem de agendamentos filtrada pela campanha.
+- A tela de detalhe permite atualizar a propria campanha.
+- A exclusao pela tela de detalhe so fica disponivel quando a campanha nao possui agendamentos vinculados.
+- Criacao, atualizacao e exclusao de campanha exigem confirmacao com espera de 3 segundos antes da acao.
 
 ## Carteirinha de doador
 
@@ -165,6 +170,25 @@ Este documento registra regras que afetam comportamento do sistema.
 - A visao administrativa de agendamentos pode ser filtrada por campanha, local de coleta, status e periodo.
 - Os filtros da visao administrativa de agendamentos sao aplicados sem recarregar a pagina inteira.
 - O acompanhamento administrativo exibe dados do doador, campanha, local, status do agendamento e doacao vinculada quando existir.
+- Apenas administradores podem registrar comparecimento de agendamentos.
+- O registro de comparecimento permite alterar um agendamento para `realizado`, `faltou` ou `cancelado`.
+- O registro de comparecimento so fica disponivel a partir do horario agendado.
+- A janela operacional de registro encerra 24 horas apos o horario agendado.
+- Antes do horario agendado, o sistema exibe "Aguardando horario" e bloqueia as acoes.
+- Depois da janela de 24 horas, o sistema exibe "Prazo encerrado" e bloqueia novas alteracoes pelo fluxo normal.
+- Dentro da janela operacional, registros de comparecimento podem ser corrigidos entre `realizado`, `faltou` e `cancelado`.
+- Agendamentos com status `agendado`, `realizado`, `faltou` ou `cancelado` podem receber registro ou correcao de comparecimento dentro da janela operacional.
+- Agendamentos com doacao vinculada nao podem ter o comparecimento alterado.
+- O registro de comparecimento bloqueia o agendamento durante a operacao para impedir alteracoes simultaneas conflitantes.
+- Apenas administradores podem registrar doacoes.
+- Doacoes so podem ser registradas apos o horario do agendamento.
+- Doacoes so podem ser registradas para agendamentos com status `realizado`.
+- Cada agendamento pode ter no maximo uma doacao registrada.
+- Doacoes confirmadas exigem quantidade coletada entre 1 e 1000 ml.
+- Doacoes recusadas exigem motivo da recusa.
+- Uma doacao confirmada exige campanha vinculada e tipo sanguineo do doador para gerar a bolsa.
+- O registro de doacao usa a data e hora do momento do registro.
+- O registro de doacao bloqueia o agendamento durante a operacao para impedir duplicidade.
 
 ## Bolsas de sangue e estoque
 
@@ -180,6 +204,7 @@ Este documento registra regras que afetam comportamento do sistema.
 - O estoque considera somente bolsas disponiveis ou transferidas e dentro da validade.
 - `estoques_sangue` armazena apenas o estoque minimo configurado por local e tipo sanguineo.
 - O administrador pode configurar o estoque minimo entre 0 e 1.000.000 ml.
+- O estoque calculado pode ser filtrado por local de coleta e tipo sanguineo sem recarregar a pagina.
 - Apenas administradores podem consultar e movimentar bolsas de sangue.
 - Movimentacoes bloqueiam a bolsa durante a operacao para impedir alteracoes simultaneas conflitantes.
 

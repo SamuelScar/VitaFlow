@@ -2,6 +2,47 @@
 
 Este documento registra decisões e alterações relevantes realizadas no VitaFlow.
 
+## 16/06/2026 - Detalhe administrativo de campanha
+
+- Criada a tela de detalhe administrativo de campanha.
+- O titulo e a acao "Detalhes" na listagem de campanhas passaram a abrir a tela da campanha.
+- O card publico da campanha passou a direcionar administradores para o detalhe administrativo da campanha.
+- A tela exibe dados principais, local de coleta, tipos sanguineos alvo, periodo, horario, meta, vagas e criador.
+- A tela exibe resumo dos agendamentos da campanha por status.
+- A tela permite editar os dados da campanha sem voltar para a listagem.
+- A tela permite excluir campanhas sem agendamentos vinculados.
+- A tela incorpora o acompanhamento de agendamentos ja filtrado pela campanha atual.
+- Criacoes, edicoes, exclusoes de campanha e alteracoes de comparecimento passaram a usar confirmacao com espera de 3 segundos antes de liberar a acao.
+
+## 16/06/2026 - Filtros no estoque calculado
+
+- O bloco "Estoque calculado" passou a exibir filtros por local e tipo sanguineo.
+- Os filtros sao aplicados pelo componente Livewire sem recarregar a pagina.
+- A paginacao do estoque e da lista de bolsas passou a ser reiniciada corretamente quando local ou tipo sanguineo mudam.
+
+## 16/06/2026 - Registro administrativo de doacao
+
+- Administradores passaram a registrar doacao a partir de agendamentos marcados como `realizado`.
+- A acao fica disponivel somente quando o agendamento ainda nao possui doacao vinculada.
+- A acao tambem exige que o horario do agendamento ja tenha chegado.
+- Doacoes confirmadas exigem quantidade coletada em mililitros.
+- Doacoes recusadas exigem motivo da recusa.
+- O registro usa confirmacao com espera de 3 segundos antes de gravar.
+- A gravacao bloqueia o agendamento durante a operacao para evitar duplicidade.
+- Doacoes confirmadas continuam gerando bolsa de sangue automaticamente pelo modelo `Doacao`.
+
+## 16/06/2026 - Registro administrativo de comparecimento
+
+- Administradores passaram a registrar comparecimento na listagem administrativa de agendamentos.
+- Agendamentos dentro da janela operacional podem ser marcados como `realizado`, `faltou` ou `cancelado`.
+- Registros ja marcados podem ser corrigidos dentro da mesma janela operacional de 24 horas.
+- A janela de registro abre no horario agendado e encerra 24 horas depois.
+- Agendamentos futuros exibem o estado "Aguardando horario".
+- Agendamentos que ultrapassaram a janela exibem o estado "Prazo encerrado".
+- Agendamentos com doacao vinculada ou fora da janela operacional nao podem ser alterados pelo registro de comparecimento.
+- A alteracao ocorre pelo componente Livewire, com confirmacao e feedback sem recarregar a pagina.
+- O registro bloqueia o agendamento durante a operacao para evitar alteracoes simultaneas.
+
 ## 16/06/2026 - Acompanhamento administrativo de agendamentos
 
 - Criada a tela administrativa `Agendamentos`.

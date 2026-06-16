@@ -8,6 +8,11 @@
         : ($campanha?->tipos_sanguineos_alvo ?? []);
     $tiposSelecionados = is_array($tiposSelecionados) ? $tiposSelecionados : [];
     $fieldErrors = $errors->getBag($errorBag);
+    $confirmTitle = $confirmTitle ?? null;
+    $confirmText = $confirmText ?? null;
+    $confirmButtonText = $confirmButtonText ?? $submitLabel;
+    $confirmButtonColor = $confirmButtonColor ?? '#c62828';
+    $confirmDelayMs = $confirmDelayMs ?? null;
 @endphp
 
 <form
@@ -15,6 +20,15 @@
     action="{{ $action }}"
     class="row g-3"
     data-validate-form
+    @if ($confirmTitle)
+        data-confirm-title="{{ $confirmTitle }}"
+        data-confirm-text="{{ $confirmText }}"
+        data-confirm-button-text="{{ $confirmButtonText }}"
+        data-confirm-button-color="{{ $confirmButtonColor }}"
+        @if ($confirmDelayMs)
+            data-confirm-delay-ms="{{ $confirmDelayMs }}"
+        @endif
+    @endif
     x-data='{
         dataInicio: @json((string) $fieldValue('data_inicio', $campanha?->data_inicio?->format('Y-m-d'))),
         dataFim: @json((string) $fieldValue('data_fim', $campanha?->data_fim?->format('Y-m-d'))),

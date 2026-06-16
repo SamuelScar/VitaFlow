@@ -34,17 +34,17 @@ class BolsaSangueList extends Component
 
     public function updatedLocalId(): void
     {
-        $this->resetPage();
+        $this->resetarPaginas();
     }
 
     public function updatedTipoSanguineo(): void
     {
-        $this->resetPage();
+        $this->resetarPaginas();
     }
 
     public function updatedStatus(): void
     {
-        $this->resetPage();
+        $this->resetPage('bolsaPage');
     }
 
     public function limparFiltros(): void
@@ -52,7 +52,14 @@ class BolsaSangueList extends Component
         $this->localId = '';
         $this->tipoSanguineo = '';
         $this->status = '';
-        $this->resetPage();
+        $this->resetarPaginas();
+    }
+
+    public function limparFiltrosEstoque(): void
+    {
+        $this->localId = '';
+        $this->tipoSanguineo = '';
+        $this->resetPage('estoquePage');
     }
 
     public function utilizar(int $bolsaId): void
@@ -209,6 +216,12 @@ class BolsaSangueList extends Component
             'alert-error',
             message: 'A bolsa nao esta disponivel ou a movimentacao informada nao e valida.',
         );
+    }
+
+    private function resetarPaginas(): void
+    {
+        $this->resetPage('estoquePage');
+        $this->resetPage('bolsaPage');
     }
 
     private function filtrarStatus(Builder $query, string $status): Builder

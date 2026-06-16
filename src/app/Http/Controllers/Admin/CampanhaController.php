@@ -31,6 +31,25 @@ class CampanhaController extends Controller
         ]);
     }
 
+    public function show(Campanha $campanha): View
+    {
+        $campanha->load(['localColeta', 'criador']);
+
+        $resumoAgendamentos = $campanha->agendamentos()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return view('admin.campanhas.show', [
+            'campanha' => $campanha,
+            'doacoesRegistradas' => $campanha->agendamentos()->whereHas('doacao')->count(),
+            'locaisColeta' => LocalColeta::orderBy('nome')->get(),
+            'resumoAgendamentos' => $resumoAgendamentos,
+            'tiposSanguineos' => TipoSanguineo::values(),
+            'totalAgendamentos' => $resumoAgendamentos->sum(),
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $user = $request->user();

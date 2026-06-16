@@ -492,7 +492,47 @@ resources/views/admin/dashboard.blade.php
 
 Comportamento atual:
 
-- Exibe atalhos para locais de coleta, campanhas, bolsas e estoque, usuarios e home publica.
+- Exibe atalhos para locais de coleta, campanhas, agendamentos, bolsas e estoque, usuarios e home publica.
+
+## Tela administrativa de agendamentos
+
+`GET /admin/agendamentos`
+
+Exibe a tela administrativa de acompanhamento de agendamentos.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\AgendamentoController@index
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/agendamentos/index.blade.php
+```
+
+Componente Livewire:
+
+```text
+App\Livewire\Admin\AgendamentoList
+```
+
+Comportamento atual:
+
+- Lista agendamentos com data, horario, doador, campanha, local, status e doacao vinculada.
+- Filtra por campanha, local de coleta, status e periodo sem recarregar a pagina.
+- Permite escolher quantos registros exibir por pagina.
+- Exibe resumo dos agendamentos por status considerando os filtros atuais.
+- Permite registrar e corrigir comparecimento dentro da janela operacional de 24 horas.
+- Permite registrar doacao para agendamentos com horario ja iniciado, status `realizado` e sem doacao vinculada.
+- Doacoes confirmadas exigem quantidade coletada e geram bolsa de sangue automaticamente.
+- Doacoes recusadas exigem motivo de recusa e nao geram bolsa.
 
 ## Tela de locais de coleta
 
@@ -652,9 +692,43 @@ Comportamento atual:
 
 - Lista as campanhas cadastradas.
 - Exibe formulario para cadastrar nova campanha.
+- Permite abrir a tela de detalhe de cada campanha pelo titulo ou pela acao "Detalhes".
 - Permite abrir o formulario de edicao de cada campanha.
 - Permite solicitar exclusao de campanhas sem agendamentos vinculados.
 - Exibe tipos sanguineos alvo como lista; ausencia de tipos indica todos.
+
+## Detalhe de campanha
+
+`GET /admin/campanhas/{campanha}`
+
+Exibe a tela administrativa de detalhe de uma campanha.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\CampanhaController@show
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/campanhas/show.blade.php
+```
+
+Comportamento atual:
+
+- Exibe titulo, descricao, status, periodo, horario, meta, limite por horario e tipos sanguineos alvo.
+- Exibe o local de coleta, o admin criador e a quantidade de doacoes registradas.
+- Exibe resumo dos agendamentos da campanha por status.
+- Exibe formulario para atualizar os dados da campanha.
+- Permite excluir a campanha somente quando ela nao possui agendamentos vinculados.
+- Incorpora a listagem administrativa de agendamentos filtrada pela campanha atual.
+- Alteracoes de campanha, comparecimento e doacao usam confirmacao com espera de 3 segundos.
 
 ## Cadastrar campanha
 
@@ -681,6 +755,9 @@ Campos:
 - `tipos_sanguineos_alvo`: opcional e deve ser uma lista.
 - `tipos_sanguineos_alvo.*`: deve ser um tipo sanguineo aceito e nao pode repetir.
 - `meta_bolsas`: obrigatorio, inteiro, minimo de 1 e maximo de 100000.
+- `agendamentos_por_horario`: obrigatorio, inteiro, minimo de 1 e maximo de 100.
+- `horario_inicio`: obrigatorio no formato `HH:MM`.
+- `horario_fim`: obrigatorio no formato `HH:MM` e posterior a `horario_inicio`.
 - `data_inicio`: obrigatorio, data e posterior ou igual ao dia atual.
 - `data_fim`: obrigatorio, data e posterior ou igual a `data_inicio`.
 
@@ -717,6 +794,9 @@ Campos:
 - `tipos_sanguineos_alvo`: opcional e deve ser uma lista.
 - `tipos_sanguineos_alvo.*`: deve ser um tipo sanguineo aceito e nao pode repetir.
 - `meta_bolsas`: obrigatorio, inteiro, minimo de 1 e maximo de 100000.
+- `agendamentos_por_horario`: obrigatorio, inteiro, minimo de 1 e maximo de 100.
+- `horario_inicio`: obrigatorio no formato `HH:MM`.
+- `horario_fim`: obrigatorio no formato `HH:MM` e posterior a `horario_inicio`.
 - `data_inicio`: obrigatorio e deve ser uma data.
 - `data_fim`: obrigatorio, data e posterior ou igual a `data_inicio`.
 - `status`: obrigatorio e deve ser `ativa`, `encerrada` ou `cancelada`.

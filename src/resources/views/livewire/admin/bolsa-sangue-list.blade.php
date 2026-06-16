@@ -14,7 +14,39 @@
 
     <div class="collapse" id="collapseEstoque" wire:ignore.self>
         <div class="card-body p-4 pt-0">
-            <div class="table-responsive">
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-lg-5">
+                    <label class="form-label fw-semibold" for="local_estoque">Local</label>
+                    <select class="form-select" id="local_estoque" wire:model.live="localId">
+                        <option value="">Todos os locais</option>
+                        @foreach ($locais as $local)
+                            <option value="{{ $local->id }}">{{ $local->nome }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <label class="form-label fw-semibold" for="tipo_estoque">Tipo sanguineo</label>
+                    <select class="form-select" id="tipo_estoque" wire:model.live="tipoSanguineo">
+                        <option value="">Todos os tipos</option>
+                        @foreach ($tiposSanguineos as $tipo)
+                            <option value="{{ $tipo }}">{{ $tipo }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-end">
+                    <button
+                        class="btn btn-outline-secondary w-100"
+                        type="button"
+                        wire:click="limparFiltrosEstoque"
+                        wire:loading.attr="disabled"
+                        @disabled($localId === '' && $tipoSanguineo === '')
+                    >
+                        Limpar filtros
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive" wire:loading.class="opacity-50" wire:target="localId,tipoSanguineo,limparFiltrosEstoque,atualizarEstoqueMinimo">
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>

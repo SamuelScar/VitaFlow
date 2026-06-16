@@ -8,18 +8,20 @@
     $usuario = auth()->user();
     $usuarioAgendado = $usuario?->isDoador() && (bool) ($campanha->usuario_agendado ?? false);
     $linkAgendamento = $usuario?->isAdmin()
-        ? route('dashboard')
+        ? route('admin.campanhas.show', $campanha)
         : ($usuarioAgendado
             ? route('usuario.agendamentos.index')
             : route('usuario.agendamentos.create', $campanha));
     $rotuloAcao = $usuario?->isAdmin()
-        ? 'Acessar painel'
+        ? 'Ver campanha'
         : ($usuarioAgendado
             ? 'Ver meu agendamento'
             : 'Agendar doacao');
-    $iconeAcao = $usuarioAgendado
-        ? 'bi-calendar-check'
-        : 'bi-calendar-plus';
+    $iconeAcao = $usuario?->isAdmin()
+        ? 'bi-eye'
+        : ($usuarioAgendado
+            ? 'bi-calendar-check'
+            : 'bi-calendar-plus');
 @endphp
 
 <article class="card h-100 shadow-sm rounded-3">

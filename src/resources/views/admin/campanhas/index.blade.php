@@ -86,6 +86,11 @@
                             'tiposSanguineos' => $tiposSanguineos,
                             'errorBag' => 'storeCampanha',
                             'useOldValues' => $criando,
+                            'confirmTitle' => 'Cadastrar campanha?',
+                            'confirmText' => 'Revise os dados antes de criar a campanha.',
+                            'confirmButtonText' => 'Cadastrar campanha',
+                            'confirmButtonColor' => '#0d6efd',
+                            'confirmDelayMs' => 3000,
                         ])
                     </div>
                 </div>
@@ -104,7 +109,11 @@
                         <div class="d-flex flex-column flex-xl-row justify-content-between gap-3">
                             <div class="flex-grow-1">
                                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                                    <h3 class="h6 fw-bold mb-0">{{ $campanha->titulo }}</h3>
+                                    <h3 class="h6 fw-bold mb-0">
+                                        <a class="text-body text-decoration-none" href="{{ route('admin.campanhas.show', $campanha) }}">
+                                            {{ $campanha->titulo }}
+                                        </a>
+                                    </h3>
                                     <span class="badge {{ $statusClasses[$campanha->status] ?? 'text-bg-light' }}">
                                         <i class="bi bi-circle-fill me-1" aria-hidden="true"></i>
                                         {{ $statusLabels[$campanha->status] ?? $campanha->status }}
@@ -142,6 +151,14 @@
                             </div>
 
                             <div class="d-grid d-sm-flex flex-sm-nowrap flex-shrink-0 align-items-start justify-content-sm-end gap-2">
+                                <a
+                                    class="btn btn-outline-primary d-inline-flex align-items-center justify-content-center gap-2"
+                                    href="{{ route('admin.campanhas.show', $campanha) }}"
+                                >
+                                    <i class="bi bi-eye" aria-hidden="true"></i>
+                                    Detalhes
+                                </a>
+
                                 <button
                                     class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center gap-2"
                                     type="button"
@@ -162,6 +179,7 @@
                                     data-confirm-text="Esta acao nao podera ser desfeita."
                                     data-confirm-button-text="Excluir"
                                     data-confirm-button-color="#c62828"
+                                    data-confirm-delay-ms="3000"
                                 >
                                     @csrf
                                     @method('DELETE')
@@ -184,6 +202,11 @@
                                 'tiposSanguineos' => $tiposSanguineos,
                                 'errorBag' => 'updateCampanha',
                                 'useOldValues' => $editando,
+                                'confirmTitle' => 'Salvar alteracoes da campanha?',
+                                'confirmText' => 'As novas informacoes serao aplicadas nesta campanha.',
+                                'confirmButtonText' => 'Salvar alteracoes',
+                                'confirmButtonColor' => '#0d6efd',
+                                'confirmDelayMs' => 3000,
                             ])
                         </div>
                     </div>
