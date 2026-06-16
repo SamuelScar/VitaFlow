@@ -80,6 +80,23 @@
     </div>
 
     <div class="col-md-6">
+        <label class="form-label" for="{{ $idPrefix }}_sexo">Sexo biologico</label>
+        <select
+            class="form-select @error('sexo') is-invalid @enderror"
+            id="{{ $idPrefix }}_sexo"
+            name="sexo"
+            required
+        >
+            <option value="">Selecione</option>
+            <option value="feminino" @selected(old('sexo', $usuario->sexo) === 'feminino')>Feminino</option>
+            <option value="masculino" @selected(old('sexo', $usuario->sexo) === 'masculino')>Masculino</option>
+        </select>
+        @error('sexo')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="col-md-6">
         <label class="form-label" for="{{ $idPrefix }}_peso">Peso</label>
         <input
             class="form-control @error('peso') is-invalid @enderror"

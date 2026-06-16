@@ -13,10 +13,17 @@
     },
     "dependencies": {
         "@alpinejs/mask": "^3.15.12",
+        "@fullcalendar/core": "^6.1.15",
+        "@fullcalendar/daygrid": "^6.1.15",
+        "@fullcalendar/interaction": "^6.1.15",
+        "@fullcalendar/timegrid": "^6.1.15",
         "@popperjs/core": "^2.11.8",
         "alpinejs": "^3.15.12",
         "bootstrap": "^5.3.8",
         "bootstrap-icons": "^1.13.1",
         "sweetalert2": "^11.26.25"
+    },
+    "overrides": {
+        "shell-quote": "1.8.4"
     }
 }

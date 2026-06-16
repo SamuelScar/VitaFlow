@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Doador\AgendamentoController;
 use App\Http\Controllers\Doador\CarteiraDoacaoController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,10 @@ Route::middleware('auth')->group(function (): void {
             ->name('usuario.carteirinha.store');
         Route::put('/usuario/carteirinha', [CarteiraDoacaoController::class, 'update'])
             ->name('usuario.carteirinha.update');
+        Route::get('/usuario/campanhas/{campanha}/agendar', [AgendamentoController::class, 'create'])
+            ->name('usuario.agendamentos.create');
+        Route::post('/usuario/campanhas/{campanha}/agendar', [AgendamentoController::class, 'store'])
+            ->name('usuario.agendamentos.store');
     });
 
     Route::middleware('admin')->group(function (): void {

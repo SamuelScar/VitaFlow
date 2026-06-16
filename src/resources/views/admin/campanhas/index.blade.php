@@ -127,6 +127,14 @@
                                         {{ $campanha->meta_bolsas }} bolsas
                                     </span>
                                     <span class="badge text-bg-light border">
+                                        <i class="bi bi-people me-1" aria-hidden="true"></i>
+                                        {{ $campanha->agendamentos_por_horario }} por horario
+                                    </span>
+                                    <span class="badge text-bg-light border">
+                                        <i class="bi bi-clock me-1" aria-hidden="true"></i>
+                                        {{ substr((string) $campanha->horario_inicio, 0, 5) }} as {{ substr((string) $campanha->horario_fim, 0, 5) }}
+                                    </span>
+                                    <span class="badge text-bg-light border">
                                         <i class="bi bi-calendar-event me-1" aria-hidden="true"></i>
                                         {{ $campanha->data_inicio->format('d/m/Y') }} ate {{ $campanha->data_fim->format('d/m/Y') }}
                                     </span>

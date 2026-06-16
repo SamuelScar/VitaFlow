@@ -10,6 +10,7 @@ Table users {
   cpf varchar(11) [unique]
   telefone varchar(20)
   data_nascimento date
+  sexo varchar(255) [note: 'CHECK: masculino ou feminino']
   tipo_sanguineo varchar(255) [note: 'CHECK: A+, A-, B+, B-, AB+, AB-, O+, O-']
   peso numeric(5,2)
   cidade varchar(255)
@@ -55,6 +56,9 @@ Table campanhas {
   descricao text [not null]
   tipos_sanguineos_alvo json [note: 'Null significa todos os tipos; valores validos sao verificados pela aplicacao']
   meta_bolsas int4 [not null]
+  agendamentos_por_horario int2 [not null, default: 4]
+  horario_inicio time [not null, default: '08:00']
+  horario_fim time [not null, default: '17:00']
   data_inicio date [not null]
   data_fim date [not null]
   status varchar(255) [not null, default: 'ativa', note: 'CHECK: ativa, encerrada ou cancelada']

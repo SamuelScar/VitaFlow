@@ -113,6 +113,9 @@ Este documento registra regras que afetam comportamento do sistema.
 - O campo `tipos_sanguineos_alvo` e opcional e deve ser uma lista de tipos sanguineos aceitos pelo sistema.
 - Se nenhum tipo sanguineo alvo for informado, a campanha considera todos os tipos sanguineos como alvo.
 - O campo `meta_bolsas` e obrigatorio, deve ser inteiro e deve ficar entre 1 e 100000.
+- O campo `agendamentos_por_horario` e obrigatorio e deve ficar entre 1 e 100.
+- `horario_inicio` e `horario_fim` sao obrigatorios.
+- `horario_fim` deve ser posterior a `horario_inicio`.
 - O campo `data_inicio` e obrigatorio.
 - Ao cadastrar uma campanha, `data_inicio` nao pode ser anterior ao dia atual.
 - O campo `data_fim` e obrigatorio e deve ser posterior ou igual a `data_inicio`.
@@ -124,12 +127,13 @@ Este documento registra regras que afetam comportamento do sistema.
 
 - Apenas usuarios autenticados com tipo `doador` podem emitir carteirinha.
 - Cada usuario doador pode ter apenas uma carteirinha.
-- `cpf`, `telefone`, `data_nascimento`, `tipo_sanguineo`, `peso` e `cidade` pertencem ao usuario.
+- `cpf`, `telefone`, `data_nascimento`, `sexo`, `tipo_sanguineo`, `peso` e `cidade` pertencem ao usuario.
 - O `cpf` e obrigatorio, deve ter 11 digitos e deve ser unico.
 - O `cpf` e salvo apenas com digitos.
 - Na atualizacao, a validacao de CPF unico ignora o proprio usuario.
 - O `telefone` e obrigatorio e deve ter no maximo 20 caracteres.
 - A `data_nascimento` e obrigatoria e nao pode ser futura.
+- O `sexo` e obrigatorio e deve ser `masculino` ou `feminino`.
 - O `tipo_sanguineo` e obrigatorio e deve estar na lista de tipos aceitos pelo sistema.
 - O `peso` e obrigatorio, deve ser numerico e deve ficar entre 0.01 e 999.99.
 - A `cidade` e obrigatoria e deve ter no maximo 255 caracteres.
@@ -139,6 +143,18 @@ Este documento registra regras que afetam comportamento do sistema.
 - Apenas administradores podem alterar o status de uma carteirinha ja emitida entre `ativa` e `inativa`.
 - Doadores sem carteirinha emitida e usuarios administradores nao possuem status de carteirinha para alterar.
 - Um usuario somente pode realizar agendamentos quando for doador e possuir uma carteirinha ativa.
+- O agendamento e vinculado ao usuario doador.
+- O mesmo doador nao pode agendar a mesma campanha mais de uma vez.
+- A campanha precisa estar ativa e dentro do periodo vigente para aceitar agendamento.
+- A data e horario do agendamento nao podem estar no passado.
+- A data e horario do agendamento devem estar dentro do periodo da campanha.
+- O horario do agendamento deve ficar dentro da janela diaria de atendimento da campanha.
+- Agendamentos so podem ser feitos em horarios de 30 em 30 minutos.
+- Cada horario respeita o limite configurado em `agendamentos_por_horario` da campanha.
+- O doador deve respeitar o intervalo minimo entre doacoes ou agendamentos ativos.
+- Para `sexo` masculino, o intervalo minimo e de 60 dias.
+- Para `sexo` feminino, o intervalo minimo e de 90 dias.
+- Horarios dentro do intervalo minimo ficam bloqueados no calendario e tambem sao recusados pelo backend.
 
 ## Bolsas de sangue e estoque
 

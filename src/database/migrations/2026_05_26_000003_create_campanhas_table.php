@@ -20,6 +20,9 @@ return new class extends Migration
             $table->text('descricao');
             $table->enum('tipo_sanguineo_alvo', TipoSanguineo::values())->nullable();
             $table->unsignedInteger('meta_bolsas');
+            $table->unsignedSmallInteger('agendamentos_por_horario')->default(4);
+            $table->time('horario_inicio')->default('08:00');
+            $table->time('horario_fim')->default('17:00');
             $table->date('data_inicio');
             $table->date('data_fim');
             $table->enum('status', ['ativa', 'encerrada', 'cancelada'])->default('ativa');

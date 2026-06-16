@@ -9,8 +9,27 @@ Este documento registra os fluxos existentes no sistema.
 3. Sistema exibe o resumo publico com total de campanhas abertas, meta de bolsas e locais participantes.
 4. Sistema lista as campanhas encontradas com local de coleta, tipos sanguineos alvo, meta e data final.
 5. Se nao houver campanha aberta, sistema exibe uma mensagem informativa.
-6. Visitante pode acessar o login pela acao de participacao.
-7. Usuario autenticado pode acessar o dashboard pela acao de participacao.
+6. Visitante pode iniciar a acao de agendamento e e redirecionado para login.
+7. Doador autenticado pode acessar a tela de agendamento pela acao da campanha.
+
+## Agendamento de doacao
+
+1. Doador autenticado acessa `GET /usuario/campanhas/{campanha}/agendar`.
+2. Sistema verifica se o usuario e doador e possui carteirinha ativa.
+3. Sistema verifica se a campanha esta ativa e dentro do periodo vigente.
+4. Sistema bloqueia agendamento duplicado do mesmo doador na mesma campanha.
+5. Sistema verifica se o doador possui sexo biologico informado para calcular o intervalo minimo entre doacoes.
+6. Sistema exibe os dados da campanha e o calendario de horarios, bloqueando horarios que violem o intervalo minimo.
+7. Doador seleciona um horario disponivel e revisa o resumo de selecao.
+8. Doador confirma o envio em um alerta de confirmacao.
+9. Doador envia `POST /usuario/campanhas/{campanha}/agendar`.
+10. Sistema valida se a data e horario estao dentro do periodo da campanha e nao estao no passado.
+11. Sistema valida se o horario fica dentro da janela diaria de atendimento da campanha.
+12. Sistema valida se o horario segue intervalo de 30 minutos.
+13. Sistema valida se a data respeita o intervalo minimo de 60 dias para masculino ou 90 dias para feminino, considerando doacoes confirmadas e agendamentos ativos.
+14. Sistema verifica se o horario ainda possui vaga conforme `agendamentos_por_horario`.
+15. Sistema cria o agendamento com status `agendado`.
+16. Sistema redireciona o doador para sua area com mensagem de sucesso.
 
 ## Login
 
@@ -102,7 +121,7 @@ Este documento registra os fluxos existentes no sistema.
 5. Doador envia `POST /usuario/carteirinha`.
 6. Sistema valida se o usuario logado tem tipo `doador`.
 7. Sistema verifica se o doador ainda nao possui carteirinha.
-8. Sistema valida os dados informados.
+8. Sistema valida os dados informados, incluindo o sexo biologico usado para regras de intervalo entre doacoes.
 9. Se os dados forem validos, atualiza os dados pessoais e de doador no usuario.
 10. Sistema cria a carteirinha com status `ativa`.
 11. Sistema registra a data de emissao automaticamente.
@@ -116,7 +135,7 @@ Este documento registra os fluxos existentes no sistema.
 4. Sistema libera os campos da propria carteirinha para edicao.
 5. Doador envia `PUT /usuario/carteirinha`.
 6. Sistema valida se o usuario logado tem tipo `doador`.
-7. Sistema valida os dados informados.
+7. Sistema valida os dados informados, incluindo o sexo biologico usado para regras de intervalo entre doacoes.
 8. Se os dados forem validos, atualiza os dados do usuario.
 9. Sistema mantem o status e a data de emissao originais.
 10. Sistema retorna para a tela da carteirinha com mensagem de sucesso.

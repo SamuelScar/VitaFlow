@@ -91,6 +91,9 @@ class CampanhaController extends Controller
             'tipos_sanguineos_alvo' => ['nullable', 'array'],
             'tipos_sanguineos_alvo.*' => ['required', 'distinct', Rule::in(TipoSanguineo::values())],
             'meta_bolsas' => ['required', 'integer', 'min:1', 'max:100000'],
+            'agendamentos_por_horario' => ['required', 'integer', 'min:1', 'max:100'],
+            'horario_inicio' => ['required', 'date_format:H:i'],
+            'horario_fim' => ['required', 'date_format:H:i', 'after:horario_inicio'],
             'data_inicio' => ['required', 'date'],
             'data_fim' => ['required', 'date', 'after_or_equal:data_inicio'],
         ];

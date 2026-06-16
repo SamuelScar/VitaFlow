@@ -5,6 +5,10 @@
     $tiposAlvo = is_array($tiposAlvo) && count($tiposAlvo) > 0
         ? implode(', ', $tiposAlvo)
         : 'Todos os tipos';
+    $usuario = auth()->user();
+    $linkAgendamento = $usuario?->isAdmin()
+        ? route('dashboard')
+        : route('usuario.agendamentos.create', $campanha);
 @endphp
 
 <article class="card h-100 shadow-sm rounded-3">
@@ -30,6 +34,14 @@
                     Meta de {{ $campanha->meta_bolsas }} {{ $campanha->meta_bolsas === 1 ? 'bolsa' : 'bolsas' }}
                 </span>
                 <span>
+                    <i class="bi bi-people me-1" aria-hidden="true"></i>
+                    {{ $campanha->agendamentos_por_horario }} por horario
+                </span>
+                <span>
+                    <i class="bi bi-clock me-1" aria-hidden="true"></i>
+                    {{ substr((string) $campanha->horario_inicio, 0, 5) }} as {{ substr((string) $campanha->horario_fim, 0, 5) }}
+                </span>
+                <span>
                     <i class="bi bi-droplet-half me-1" aria-hidden="true"></i>
                     {{ $tiposAlvo }}
                 </span>
@@ -39,9 +51,9 @@
                 </span>
             </div>
 
-            <a class="btn btn-outline-primary w-100 d-inline-flex align-items-center justify-content-center gap-2" href="{{ auth()->check() ? route('dashboard') : route('login') }}">
+            <a class="btn btn-outline-primary w-100 d-inline-flex align-items-center justify-content-center gap-2" href="{{ $linkAgendamento }}">
                 <i class="bi bi-calendar-plus" aria-hidden="true"></i>
-                Entrar para participar
+                {{ $usuario?->isAdmin() ? 'Acessar painel' : 'Agendar doacao' }}
             </a>
         </div>
     </div>

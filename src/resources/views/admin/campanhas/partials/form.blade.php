@@ -155,6 +155,63 @@
     </div>
 
     <div class="col-md-2">
+        <label class="form-label" for="{{ $idPrefix }}_agendamentos_por_horario">Por horario</label>
+        <input
+            class="form-control @error('agendamentos_por_horario', $errorBag) is-invalid @enderror"
+            id="{{ $idPrefix }}_agendamentos_por_horario"
+            name="agendamentos_por_horario"
+            type="number"
+            value="{{ $fieldValue('agendamentos_por_horario', $campanha?->agendamentos_por_horario ?? 4) }}"
+            min="1"
+            max="100"
+            step="1"
+            required
+        >
+        @error('agendamentos_por_horario', $errorBag)
+            <div class="invalid-feedback">{{ $message }}</div>
+        @else
+            <div class="form-text">Limite a cada 30 minutos.</div>
+            <div class="invalid-feedback">Informe um limite valido.</div>
+        @enderror
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label" for="{{ $idPrefix }}_horario_inicio">Abre</label>
+        <input
+            class="form-control @error('horario_inicio', $errorBag) is-invalid @enderror"
+            id="{{ $idPrefix }}_horario_inicio"
+            name="horario_inicio"
+            type="time"
+            value="{{ $fieldValue('horario_inicio', substr((string) ($campanha?->horario_inicio ?? '08:00'), 0, 5)) }}"
+            step="1800"
+            required
+        >
+        @error('horario_inicio', $errorBag)
+            <div class="invalid-feedback">{{ $message }}</div>
+        @else
+            <div class="invalid-feedback">Informe um horario de inicio valido.</div>
+        @enderror
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label" for="{{ $idPrefix }}_horario_fim">Fecha</label>
+        <input
+            class="form-control @error('horario_fim', $errorBag) is-invalid @enderror"
+            id="{{ $idPrefix }}_horario_fim"
+            name="horario_fim"
+            type="time"
+            value="{{ $fieldValue('horario_fim', substr((string) ($campanha?->horario_fim ?? '17:00'), 0, 5)) }}"
+            step="1800"
+            required
+        >
+        @error('horario_fim', $errorBag)
+            <div class="invalid-feedback">{{ $message }}</div>
+        @else
+            <div class="invalid-feedback">O horario final deve ser posterior ao inicial.</div>
+        @enderror
+    </div>
+
+    <div class="col-md-2">
         <label class="form-label" for="{{ $idPrefix }}_data_inicio">Inicio</label>
         <input
             class="form-control @error('data_inicio', $errorBag) is-invalid @enderror"

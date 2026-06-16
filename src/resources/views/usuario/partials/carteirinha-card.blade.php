@@ -140,6 +140,25 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <div class="col-sm-6">
+                    <label class="small text-secondary text-uppercase" for="editar_carteirinha_sexo">Sexo biologico</label>
+                    <select
+                        class="form-select fw-semibold donor-pass-field @error('sexo') is-invalid @enderror"
+                        id="editar_carteirinha_sexo"
+                        name="sexo"
+                        required
+                        @disabled(! $editando)
+                        x-bind:disabled="!editing"
+                    >
+                        <option value="">Selecione</option>
+                        <option value="feminino" @selected(old('sexo', $usuario->sexo) === 'feminino')>Feminino</option>
+                        <option value="masculino" @selected(old('sexo', $usuario->sexo) === 'masculino')>Masculino</option>
+                    </select>
+                    @error('sexo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
 

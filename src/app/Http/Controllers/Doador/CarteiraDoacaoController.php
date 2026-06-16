@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doador;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Support\TipoSanguineo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -86,6 +87,7 @@ class CarteiraDoacaoController extends Controller
             'cpf'             => ['required', 'digits:11', Rule::unique('users', 'cpf')->ignore($userId)],
             'telefone'        => ['required', 'string', 'max:20'],
             'data_nascimento' => ['required', 'date', 'before_or_equal:today'],
+            'sexo'            => ['required', Rule::in(User::SEXOS_DOADOR)],
             'tipo_sanguineo'  => ['required', Rule::in(TipoSanguineo::values())],
             'peso'            => ['required', 'numeric', 'min:0.01', 'max:999.99'],
             'cidade'          => ['required', 'string', 'max:255'],

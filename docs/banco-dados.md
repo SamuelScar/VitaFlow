@@ -32,6 +32,7 @@ Campos principais:
 - `cpf`
 - `telefone`
 - `data_nascimento`
+- `sexo`
 - `tipo_sanguineo`
 - `peso`
 - `cidade`
@@ -52,6 +53,7 @@ Observacoes:
 
 - Os perfis `admin` e `doador` sao exclusivos.
 - No fluxo da aplicacao, administradores sao criados diretamente pelo aceite de convite e nao possuem dados ou direitos de doador.
+- O campo `sexo` e usado para calcular o intervalo minimo entre doacoes no agendamento.
 - O `AdminUserSeeder` cria somente o administrador inicial necessario para acessar o sistema.
 
 ### `password_reset_tokens`
@@ -163,6 +165,9 @@ Campos principais:
 - `descricao`
 - `tipos_sanguineos_alvo`
 - `meta_bolsas`
+- `agendamentos_por_horario`
+- `horario_inicio`
+- `horario_fim`
 - `data_inicio`
 - `data_fim`
 - `status`
@@ -178,6 +183,8 @@ Relacionamentos:
 - Pertence a um usuario criador.
 - Pertence a um local de coleta.
 - Pode ter muitos agendamentos.
+- Define quantos agendamentos podem ocupar o mesmo horario de 30 minutos.
+- Define a janela diaria de atendimento usada para gerar horarios disponiveis.
 
 Observacoes:
 
@@ -225,6 +232,8 @@ Relacionamentos:
 - Pode ter uma doacao registrada.
 - O mesmo usuario nao pode repetir agendamento na mesma campanha.
 - A criacao de um agendamento exige que o usuario possua uma carteira ativa.
+- A criacao de um agendamento respeita o intervalo minimo entre doacoes: 60 dias para sexo masculino e 90 dias para sexo feminino.
+- A regra considera doacoes confirmadas e agendamentos ativos do usuario.
 
 ### `doacoes`
 

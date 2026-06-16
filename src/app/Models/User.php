@@ -18,6 +18,7 @@ use Illuminate\Notifications\Notifiable;
     'cpf',
     'telefone',
     'data_nascimento',
+    'sexo',
     'tipo_sanguineo',
     'peso',
     'cidade',
@@ -31,6 +32,12 @@ class User extends Authenticatable
 {
     public const TIPO_ADMIN = 'admin';
     public const TIPO_DOADOR = 'doador';
+    public const SEXO_FEMININO = 'feminino';
+    public const SEXO_MASCULINO = 'masculino';
+    public const SEXOS_DOADOR = [
+        self::SEXO_FEMININO,
+        self::SEXO_MASCULINO,
+    ];
 
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -90,6 +97,15 @@ class User extends Authenticatable
     {
         return $this->isDoador()
             && $this->carteiraDoacao()->where('status', 'ativa')->exists();
+    }
+
+    public function intervaloMinimoDoacaoDias(): ?int
+    {
+        return match ($this->sexo) {
+            self::SEXO_MASCULINO => 60,
+            self::SEXO_FEMININO => 90,
+            default => null,
+        };
     }
 
     /**

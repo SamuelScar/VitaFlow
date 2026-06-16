@@ -2,6 +2,16 @@
 
 Este documento registra decisões e alterações relevantes realizadas no VitaFlow.
 
+## 15/06/2026 - Intervalo minimo entre doacoes no agendamento
+
+- Adicionado `sexo` aos dados de doador armazenados no `User`.
+- A emissao e a atualizacao da carteirinha passaram a exigir sexo biologico.
+- O agendamento passou a bloquear horarios dentro do intervalo minimo entre coletas.
+- Para sexo masculino, o intervalo minimo aplicado e de 60 dias.
+- Para sexo feminino, o intervalo minimo aplicado e de 90 dias.
+- A validacao considera doacoes confirmadas e agendamentos ativos do proprio doador.
+- Horarios bloqueados por intervalo aparecem como indisponiveis no calendario e tambem sao recusados no backend.
+
 ## 13/06/2026 - Responsabilidades de usuário, carteirinha e agendamento
 
 ### Decisão

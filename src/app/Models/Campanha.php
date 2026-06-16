@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'descricao',
     'tipos_sanguineos_alvo',
     'meta_bolsas',
+    'agendamentos_por_horario',
+    'horario_inicio',
+    'horario_fim',
     'data_inicio',
     'data_fim',
     'status',
@@ -55,6 +58,7 @@ class Campanha extends Model
         return [
             'tipos_sanguineos_alvo' => 'array',
             'meta_bolsas' => 'integer',
+            'agendamentos_por_horario' => 'integer',
             'data_inicio' => 'date',
             'data_fim' => 'date',
         ];
