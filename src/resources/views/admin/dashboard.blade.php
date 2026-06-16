@@ -61,6 +61,16 @@
 
             <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
+                    title="Agendamentos"
+                    description="Acompanhe horarios, doadores, campanhas e status dos agendamentos."
+                    :href="route('admin.agendamentos.index')"
+                    button-label="Acompanhar agendamentos"
+                    icon="bi-calendar-check"
+                />
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <x-dashboard-card
                     title="Bolsas e estoque"
                     description="Consulte o estoque calculado e gerencie o ciclo das bolsas."
                     :href="route('admin.bolsas-sangue.index')"

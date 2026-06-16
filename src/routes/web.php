@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AgendamentoController as AdminAgendamentoController;
 use App\Http\Controllers\Admin\BolsaSangueController;
 use App\Http\Controllers\Admin\CampanhaController;
 use App\Http\Controllers\Admin\ConviteAdminController;
@@ -56,6 +57,16 @@ Route::middleware('auth')->group(function (): void {
             ->name('usuario.carteirinha.store');
         Route::put('/usuario/carteirinha', [CarteiraDoacaoController::class, 'update'])
             ->name('usuario.carteirinha.update');
+        Route::get('/usuario/agendamentos', [AgendamentoController::class, 'index'])
+            ->name('usuario.agendamentos.index');
+        Route::get('/usuario/agendamentos/{agendamento}', [AgendamentoController::class, 'show'])
+            ->name('usuario.agendamentos.show');
+        Route::get('/usuario/agendamentos/{agendamento}/reagendar', [AgendamentoController::class, 'edit'])
+            ->name('usuario.agendamentos.edit');
+        Route::put('/usuario/agendamentos/{agendamento}/reagendar', [AgendamentoController::class, 'update'])
+            ->name('usuario.agendamentos.update');
+        Route::patch('/usuario/agendamentos/{agendamento}/cancelar', [AgendamentoController::class, 'cancel'])
+            ->name('usuario.agendamentos.cancel');
         Route::get('/usuario/campanhas/{campanha}/agendar', [AgendamentoController::class, 'create'])
             ->name('usuario.agendamentos.create');
         Route::post('/usuario/campanhas/{campanha}/agendar', [AgendamentoController::class, 'store'])
@@ -64,6 +75,8 @@ Route::middleware('auth')->group(function (): void {
 
     Route::middleware('admin')->group(function (): void {
         Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+        Route::get('/admin/agendamentos', [AdminAgendamentoController::class, 'index'])
+            ->name('admin.agendamentos.index');
         Route::get('/admin/locais-coleta', [LocalColetaController::class, 'index'])
             ->name('admin.locais-coleta.index');
         Route::post('/admin/locais-coleta', [LocalColetaController::class, 'store'])

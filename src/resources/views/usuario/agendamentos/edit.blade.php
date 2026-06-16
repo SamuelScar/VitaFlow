@@ -1,4 +1,4 @@
-<x-layouts.public title="Agendar doacao">
+<x-layouts.public title="Reagendar doacao">
     @php
         $tiposAlvo = $campanha->tipos_sanguineos_alvo;
         $tiposAlvo = is_array($tiposAlvo) && count($tiposAlvo) > 0
@@ -13,17 +13,19 @@
             <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
                 <div class="col-lg-8">
                     <span class="badge text-bg-light border mb-3">
-                        <i class="bi bi-calendar-plus me-1" aria-hidden="true"></i>
-                        Agendamento de doacao
+                        <i class="bi bi-calendar2-week me-1" aria-hidden="true"></i>
+                        Reagendamento de doacao
                     </span>
                     <h1 class="h2 fw-bold mb-3">{{ $campanha->titulo }}</h1>
-                    <p class="text-secondary mb-0">{{ $campanha->descricao }}</p>
+                    <p class="text-secondary mb-0">
+                        Horario atual: {{ $agendamento->data_hora->format('d/m/Y') }} as {{ $agendamento->data_hora->format('H:i') }}.
+                    </p>
                 </div>
 
                 <div class="d-grid gap-2 align-self-lg-start">
-                    <a class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center gap-2" href="{{ route('home') }}">
+                    <a class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center gap-2" href="{{ route('usuario.agendamentos.show', $agendamento) }}">
                         <i class="bi bi-arrow-left" aria-hidden="true"></i>
-                        Ver campanhas
+                        Voltar
                     </a>
                 </div>
             </div>
@@ -86,13 +88,17 @@
         </div>
 
         @include('usuario.agendamentos.partials.form', [
-            'action' => route('usuario.agendamentos.store', $campanha),
-            'cancelUrl' => route('home'),
-            'submitLabel' => 'Confirmar agendamento',
-            'submitIcon' => 'bi-calendar-check',
-            'confirmTitle' => 'Confirmar agendamento?',
-            'confirmDefaultText' => 'Revise o horario escolhido antes de confirmar.',
-            'confirmButtonText' => 'Confirmar agendamento',
+            'action' => route('usuario.agendamentos.update', $agendamento),
+            'method' => 'PUT',
+            'cancelUrl' => route('usuario.agendamentos.show', $agendamento),
+            'cancelLabel' => 'Voltar',
+            'submitLabel' => 'Salvar reagendamento',
+            'submitIcon' => 'bi-calendar2-check',
+            'selectedDataHora' => $agendamento->data_hora->format('Y-m-d\TH:i'),
+            'confirmTitle' => 'Confirmar reagendamento?',
+            'confirmDefaultText' => 'Revise o novo horario antes de confirmar.',
+            'confirmButtonText' => 'Salvar reagendamento',
+            'emptyMessage' => 'Nenhum horario disponivel para reagendar esta campanha.',
         ])
     </section>
 </x-layouts.public>

@@ -155,6 +155,16 @@ Este documento registra regras que afetam comportamento do sistema.
 - Para `sexo` masculino, o intervalo minimo e de 60 dias.
 - Para `sexo` feminino, o intervalo minimo e de 90 dias.
 - Horarios dentro do intervalo minimo ficam bloqueados no calendario e tambem sao recusados pelo backend.
+- O doador pode consultar apenas os proprios agendamentos.
+- Apenas agendamentos com status `agendado` e data futura podem ser cancelados ou reagendados pelo doador.
+- O cancelamento do doador altera o status do agendamento para `cancelado`.
+- O reagendamento nao cria um novo registro; ele atualiza a data e horario do agendamento existente.
+- O reagendamento aplica as mesmas regras de periodo, horario de atendimento, intervalo de 30 minutos, vagas por horario e intervalo minimo entre doacoes.
+- No reagendamento, o proprio agendamento e ignorado no calculo de ocupacao e intervalo minimo.
+- Apenas administradores podem acessar a visao administrativa de agendamentos.
+- A visao administrativa de agendamentos pode ser filtrada por campanha, local de coleta, status e periodo.
+- Os filtros da visao administrativa de agendamentos sao aplicados sem recarregar a pagina inteira.
+- O acompanhamento administrativo exibe dados do doador, campanha, local, status do agendamento e doacao vinculada quando existir.
 
 ## Bolsas de sangue e estoque
 

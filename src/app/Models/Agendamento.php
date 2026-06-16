@@ -38,6 +38,12 @@ class Agendamento extends Model
         return $this->hasOne(Doacao::class);
     }
 
+    public function podeSerGerenciadoPeloDoador(): bool
+    {
+        return $this->status === 'agendado'
+            && $this->data_hora->greaterThanOrEqualTo(now());
+    }
+
     /**
      * @return array<string, string>
      */

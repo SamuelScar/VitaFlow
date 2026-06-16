@@ -31,6 +31,33 @@ Este documento registra os fluxos existentes no sistema.
 15. Sistema cria o agendamento com status `agendado`.
 16. Sistema redireciona o doador para sua area com mensagem de sucesso.
 
+## Gerenciamento de agendamentos pelo doador
+
+1. Doador autenticado acessa `GET /usuario/agendamentos`.
+2. Sistema lista agendamentos ativos e futuros separados do historico.
+3. Doador acessa `GET /usuario/agendamentos/{agendamento}` para ver os detalhes de um agendamento proprio.
+4. Sistema bloqueia acesso a agendamentos de outros usuarios.
+5. Se o agendamento estiver `agendado` e em data futura, sistema exibe acoes de cancelamento e reagendamento.
+6. Para cancelar, doador confirma a acao e envia `PATCH /usuario/agendamentos/{agendamento}/cancelar`.
+7. Sistema bloqueia o registro do agendamento durante a operacao e altera o status para `cancelado`.
+8. Para reagendar, doador acessa `GET /usuario/agendamentos/{agendamento}/reagendar`.
+9. Sistema exibe o mesmo calendario de horarios usado no agendamento inicial.
+10. Doador escolhe um novo horario e envia `PUT /usuario/agendamentos/{agendamento}/reagendar`.
+11. Sistema valida periodo da campanha, janela diaria, intervalo de 30 minutos, intervalo minimo entre doacoes e vagas por horario.
+12. Sistema ignora o proprio agendamento ao calcular ocupacao e intervalo minimo para permitir a troca de horario.
+13. Se houver vaga, sistema atualiza `data_hora` mantendo o status `agendado`.
+14. Sistema redireciona para o detalhe do agendamento com mensagem de sucesso.
+
+## Acompanhamento administrativo de agendamentos
+
+1. Admin autenticado acessa `GET /admin/agendamentos`.
+2. Sistema carrega agendamentos com doador, campanha, local de coleta e doacao vinculada.
+3. Admin pode filtrar por campanha, local de coleta, status, data inicial e data final.
+4. Sistema aplica os filtros pelo componente Livewire sem recarregar a pagina inteira.
+5. Sistema exibe resumo por status considerando os filtros atuais.
+6. Sistema lista data, horario, doador, campanha, local, status do agendamento e situacao da doacao.
+7. Admin pode limpar os filtros para voltar a lista completa.
+
 ## Login
 
 1. Usuario acessa `GET /login`.

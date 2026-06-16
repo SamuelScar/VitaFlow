@@ -529,3 +529,17 @@ body {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
+
+.agendamentos-pagination nav > div {
+    gap: 1rem;
+}
+
+.agendamentos-pagination nav .d-sm-flex {
+    gap: 1rem;
+}
+
+.agendamentos-pagination .pagination {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0;
+}

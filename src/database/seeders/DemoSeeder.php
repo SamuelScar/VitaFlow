@@ -282,18 +282,18 @@ class DemoSeeder extends Seeder
     {
         return match ($indice % 6) {
             0 => [
-                'data_inicio' => $hoje->subDays(14),
-                'data_fim' => $hoje->addDays(45),
+                'data_inicio' => $hoje,
+                'data_fim' => $hoje->addYear(),
                 'status' => 'ativa',
             ],
             1 => [
-                'data_inicio' => $hoje->subDays(7),
-                'data_fim' => $hoje->addDays(30),
+                'data_inicio' => $hoje,
+                'data_fim' => $hoje->addYear(),
                 'status' => 'ativa',
             ],
             2 => [
-                'data_inicio' => $hoje->addDays(7),
-                'data_fim' => $hoje->addDays(40),
+                'data_inicio' => $hoje,
+                'data_fim' => $hoje->addYear(),
                 'status' => 'ativa',
             ],
             3 => [
@@ -307,8 +307,8 @@ class DemoSeeder extends Seeder
                 'status' => 'cancelada',
             ],
             default => [
-                'data_inicio' => $hoje->subDays(2),
-                'data_fim' => $hoje->addDays(60),
+                'data_inicio' => $hoje,
+                'data_fim' => $hoje->addYear(),
                 'status' => 'ativa',
             ],
         };

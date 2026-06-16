@@ -48,8 +48,10 @@
 
             <div class="col-md-6 col-xl-4">
                 <x-dashboard-card
-                    title="Minhas doacoes de sangue"
-                    description="Historico de doacoes e agendamentos ficara disponivel quando o fluxo for criado."
+                    title="Meus agendamentos"
+                    description="Consulte, cancele ou reagende suas proximas doacoes."
+                    :href="route('usuario.agendamentos.index')"
+                    button-label="Gerenciar agendamentos"
                     icon="bi-heart-pulse"
                 />
             </div>

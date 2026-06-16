@@ -15,6 +15,7 @@ class HomeController extends Controller
 
     public function __invoke(Request $request): View
     {
+        $user = $request->user();
         $itensPorPagina = $request->integer('por_pagina', 12);
         $itensPorPagina = in_array($itensPorPagina, self::ITENS_POR_PAGINA, true)
             ? $itensPorPagina
@@ -30,6 +31,12 @@ class HomeController extends Controller
             ->selectRaw('COALESCE(SUM(meta_bolsas), 0) as total_meta_bolsas')
             ->selectRaw('COUNT(DISTINCT local_coleta_id) as total_locais')
             ->firstOrFail();
+
+        if ($user?->isDoador()) {
+            $query->withExists([
+                'agendamentos as usuario_agendado' => fn ($query) => $query->where('user_id', $user->id),
+            ]);
+        }
 
         return view('home', [
             'campanhas' => $query

@@ -6,9 +6,20 @@
         ? implode(', ', $tiposAlvo)
         : 'Todos os tipos';
     $usuario = auth()->user();
+    $usuarioAgendado = $usuario?->isDoador() && (bool) ($campanha->usuario_agendado ?? false);
     $linkAgendamento = $usuario?->isAdmin()
         ? route('dashboard')
-        : route('usuario.agendamentos.create', $campanha);
+        : ($usuarioAgendado
+            ? route('usuario.agendamentos.index')
+            : route('usuario.agendamentos.create', $campanha));
+    $rotuloAcao = $usuario?->isAdmin()
+        ? 'Acessar painel'
+        : ($usuarioAgendado
+            ? 'Ver meu agendamento'
+            : 'Agendar doacao');
+    $iconeAcao = $usuarioAgendado
+        ? 'bi-calendar-check'
+        : 'bi-calendar-plus';
 @endphp
 
 <article class="card h-100 shadow-sm rounded-3">
@@ -20,6 +31,13 @@
                 Ativa
             </span>
         </div>
+
+        @if ($usuarioAgendado)
+            <span class="badge text-bg-primary align-self-start mb-3">
+                <i class="bi bi-calendar-check me-1" aria-hidden="true"></i>
+                Voce ja esta cadastrado nesta campanha
+            </span>
+        @endif
 
         <p class="text-secondary">{{ $campanha->descricao }}</p>
 
@@ -52,8 +70,8 @@
             </div>
 
             <a class="btn btn-outline-primary w-100 d-inline-flex align-items-center justify-content-center gap-2" href="{{ $linkAgendamento }}">
-                <i class="bi bi-calendar-plus" aria-hidden="true"></i>
-                {{ $usuario?->isAdmin() ? 'Acessar painel' : 'Agendar doacao' }}
+                <i class="bi {{ $iconeAcao }}" aria-hidden="true"></i>
+                {{ $rotuloAcao }}
             </a>
         </div>
     </div>

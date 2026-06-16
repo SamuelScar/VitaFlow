@@ -2,6 +2,38 @@
 
 Este documento registra decisões e alterações relevantes realizadas no VitaFlow.
 
+## 16/06/2026 - Acompanhamento administrativo de agendamentos
+
+- Criada a tela administrativa `Agendamentos`.
+- Administradores podem filtrar agendamentos por campanha, local de coleta, status e periodo.
+- A listagem exibe data, horario, doador, campanha, local, status do agendamento e situacao da doacao vinculada.
+- Adicionado resumo por status considerando os filtros aplicados.
+- Adicionado atalho para agendamentos no painel administrativo.
+- A tela passou a usar Livewire para aplicar e limpar filtros sem recarregar a pagina inteira.
+- Adicionada opcao para escolher quantos agendamentos exibir por pagina.
+
+## 16/06/2026 - Gerenciamento de agendamentos pelo doador
+
+- Adicionada a tela "Meus agendamentos" na area do doador.
+- O doador passou a consultar agendamentos ativos separados do historico.
+- Criada tela de detalhe do agendamento para o doador.
+- Agendamentos ativos e futuros podem ser cancelados pelo proprio doador.
+- Agendamentos ativos e futuros podem ser reagendados pelo proprio doador.
+- O reagendamento reaproveita as validacoes de periodo da campanha, janela de atendimento, intervalo de 30 minutos, vagas por horario e intervalo minimo entre doacoes.
+- A verificacao de vagas e intervalo minimo ignora o proprio agendamento durante o reagendamento.
+
+## 16/06/2026 - Campanhas demonstrativas com janela anual
+
+- Campanhas ativas criadas pelo `DemoSeeder` passaram a iniciar na data atual.
+- Campanhas ativas criadas pelo `DemoSeeder` passaram a ficar disponiveis por um ano.
+- Os cenarios de campanhas encerradas e canceladas foram mantidos para preservar dados historicos da demonstracao.
+
+## 16/06/2026 - Indicacao de campanha ja agendada
+
+- Cards da home publica passaram a indicar quando o doador logado ja possui agendamento na campanha.
+- A acao do card direciona o doador ja cadastrado para a tela de seus agendamentos.
+- A verificacao usa uma consulta agregada no carregamento das campanhas para evitar consultas por card.
+
 ## 15/06/2026 - Intervalo minimo entre doacoes no agendamento
 
 - Adicionado `sexo` aos dados de doador armazenados no `User`.
