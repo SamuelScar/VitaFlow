@@ -44,6 +44,9 @@ class AgendamentoList extends Component
     #[Url(as: 'ate', except: '')]
     public string $dataFim = '';
 
+    #[Url(as: 'nome', except: '')]
+    public string $nomeDoador = '';
+
     #[Url(as: 'por_pagina', except: 20)]
     public int $porPagina = 20;
 
@@ -91,6 +94,11 @@ class AgendamentoList extends Component
         $this->resetPage();
     }
 
+    public function updatedNomeDoador(): void
+    {
+        $this->resetPage();
+    }
+
     public function updatedPorPagina(): void
     {
         if (! in_array($this->porPagina, self::ITENS_POR_PAGINA, true)) {
@@ -110,6 +118,7 @@ class AgendamentoList extends Component
         $this->status = '';
         $this->dataInicio = '';
         $this->dataFim = '';
+        $this->nomeDoador = '';
         $this->resetPage();
     }
 
@@ -271,7 +280,12 @@ class AgendamentoList extends Component
             })
             ->when($status !== null, fn (Builder $query) => $query->where('status', $status))
             ->when($this->dataInicio !== '', fn (Builder $query) => $query->whereDate('data_hora', '>=', $this->dataInicio))
-            ->when($this->dataFim !== '', fn (Builder $query) => $query->whereDate('data_hora', '<=', $this->dataFim));
+            ->when($this->dataFim !== '', fn (Builder $query) => $query->whereDate('data_hora', '<=', $this->dataFim))
+            ->when($this->nomeDoador !== '', function (Builder $query): void {
+                // Compatibilidade com SQLite (testes) e Postgres (producao)
+                $operador = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+                $query->whereHas('user', fn (Builder $query) => $query->where('name', $operador, '%' . $this->nomeDoador . '%'));
+            });
     }
 
     private function temFiltrosAtivos(): bool
@@ -280,7 +294,8 @@ class AgendamentoList extends Component
             || $this->localColetaId !== ''
             || $this->status !== ''
             || $this->dataInicio !== ''
-            || $this->dataFim !== '';
+            || $this->dataFim !== ''
+            || $this->nomeDoador !== '';
     }
 
     private function registrarComparecimento(int $agendamentoId, string $status, string $mensagemSucesso): void

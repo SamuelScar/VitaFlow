@@ -16,6 +16,7 @@ use App\Http\Controllers\ContaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Doador\AgendamentoController;
 use App\Http\Controllers\Doador\CarteiraDoacaoController;
+use App\Http\Controllers\Doador\DoacaoController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +69,8 @@ Route::middleware('auth')->group(function (): void {
             ->name('usuario.carteirinha.update');
         Route::get('/usuario/agendamentos', [AgendamentoController::class, 'index'])
             ->name('usuario.agendamentos.index');
+        Route::get('/usuario/doacoes', [DoacaoController::class, 'index'])
+            ->name('usuario.doacoes.index');
         Route::get('/usuario/agendamentos/{agendamento}', [AgendamentoController::class, 'show'])
             ->name('usuario.agendamentos.show');
         Route::get('/usuario/agendamentos/{agendamento}/reagendar', [AgendamentoController::class, 'edit'])
@@ -86,6 +89,8 @@ Route::middleware('auth')->group(function (): void {
         Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
         Route::get('/admin/agendamentos', [AdminAgendamentoController::class, 'index'])
             ->name('admin.agendamentos.index');
+        Route::get('/admin/agendamentos/{agendamento}', [AdminAgendamentoController::class, 'show'])
+            ->name('admin.agendamentos.show');
         Route::get('/admin/locais-coleta', [LocalColetaController::class, 'index'])
             ->name('admin.locais-coleta.index');
         Route::post('/admin/locais-coleta', [LocalColetaController::class, 'store'])

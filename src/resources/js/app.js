@@ -6,6 +6,7 @@ import { initConfirmActions, registerAlertHelpers, registerLivewireAlertListener
 import { initCepLookup } from './cepLookup';
 import { initFormValidation } from './formValidation';
 import { initTheme } from './theme';
+import { initPopovers } from './popovers';
 
 window.Alpine = Alpine;
 
@@ -17,3 +18,4 @@ initAgendamentoPicker();
 Livewire.start();
 registerLivewireAlertListeners(Livewire);
 initFormValidation();
+initPopovers();

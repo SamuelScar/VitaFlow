@@ -94,7 +94,12 @@
                     <input class="form-control" id="data_fim" type="date" wire:model.live="dataFim">
                 </div>
 
-                <div class="col-12 col-lg-6 d-flex flex-column flex-sm-row align-items-stretch align-items-sm-end justify-content-lg-end gap-2">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label fw-semibold" for="nome_doador">Nome do doador</label>
+                    <input class="form-control" id="nome_doador" type="text" placeholder="Buscar por nome" wire:model.live.debounce.500ms="nomeDoador">
+                </div>
+
+                <div class="col-12 col-lg-3 d-flex flex-column flex-sm-row align-items-stretch align-items-sm-end justify-content-lg-end gap-2">
                     <button
                         class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center gap-2"
                         type="button"
@@ -103,7 +108,7 @@
                         @disabled(! $filtrosAtivos)
                     >
                         <i class="bi bi-x-lg" aria-hidden="true"></i>
-                        Limpar filtros
+                        Limpar
                     </button>
                 </div>
             </div>
@@ -151,7 +156,7 @@
                 </div>
             </div>
 
-            <div wire:loading.class="opacity-50" wire:target="campanhaId,localColetaId,status,dataInicio,dataFim,porPagina,limparFiltros,marcarComparecimento,marcarFalta,cancelarOperacionalmente,iniciarRegistroDoacao,cancelarRegistroDoacao,registrarDoacao,previousPage,nextPage,gotoPage">
+            <div wire:loading.class="opacity-50" wire:target="campanhaId,localColetaId,status,dataInicio,dataFim,nomeDoador,porPagina,limparFiltros,marcarComparecimento,marcarFalta,cancelarOperacionalmente,iniciarRegistroDoacao,cancelarRegistroDoacao,registrarDoacao,previousPage,nextPage,gotoPage">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead>
@@ -178,7 +183,11 @@
                                         <span class="d-block text-secondary small">{{ $agendamento->data_hora->format('H:i') }}</span>
                                     </td>
                                     <td>
-                                        <strong>{{ $agendamento->user?->name ?? 'Doador removido' }}</strong>
+                                        <strong>
+                                            <a class="text-decoration-none" href="{{ route('admin.agendamentos.show', $agendamento) }}">
+                                                {{ $agendamento->user?->name ?? 'Doador removido' }}
+                                            </a>
+                                        </strong>
                                         <span class="d-block text-secondary small">{{ $agendamento->user?->email ?? 'E-mail indisponivel' }}</span>
                                     </td>
                                     <td>{{ $agendamento->campanha?->titulo ?? 'Campanha indisponivel' }}</td>

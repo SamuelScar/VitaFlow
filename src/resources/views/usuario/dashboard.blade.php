@@ -36,7 +36,7 @@
 
     <section class="container py-5">
         <div class="row g-4">
-            <div class="col-md-6 col-xl-4">
+            <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
                     title="Campanhas abertas"
                     description="Veja campanhas disponiveis e escolha onde deseja doar sangue."
@@ -46,17 +46,27 @@
                 />
             </div>
 
-            <div class="col-md-6 col-xl-4">
+            <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
                     title="Meus agendamentos"
                     description="Consulte, cancele ou reagende suas proximas doacoes."
                     :href="route('usuario.agendamentos.index')"
                     button-label="Gerenciar agendamentos"
-                    icon="bi-heart-pulse"
+                    icon="bi-calendar-heart"
                 />
             </div>
 
-            <div class="col-md-6 col-xl-4">
+            <div class="col-md-6 col-xl-3">
+                <x-dashboard-card
+                    title="Minhas doacoes"
+                    description="Veja seu impacto, volume doado e resultado das coletas."
+                    :href="route('usuario.doacoes.index')"
+                    button-label="Acessar historico"
+                    icon="bi-droplet-fill"
+                />
+            </div>
+
+            <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
                     title="Carteirinha de doador"
                     :description="$carteira ? 'Consulte seus dados de doador de sangue.' : 'Informe seus dados para emitir sua carteirinha.'"

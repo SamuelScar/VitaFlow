@@ -37,6 +37,18 @@ const alertError = ({
     });
 };
 
+const alertInfo = ({
+    title = 'Informacao',
+    text = '',
+} = {}) => {
+    Swal.fire({
+        icon: 'info',
+        title,
+        text,
+        confirmButtonColor,
+    });
+};
+
 const alertWarning = ({
     title = 'Revise os campos destacados',
     text = 'Ha informacoes invalidas no formulario.',
@@ -117,6 +129,7 @@ const registerAlertHelpers = () => {
     window.alertSuccess = alertSuccess;
     window.alertError = alertError;
     window.alertWarning = alertWarning;
+    window.alertInfo = alertInfo;
     window.confirmAction = confirmAction;
 };
 
