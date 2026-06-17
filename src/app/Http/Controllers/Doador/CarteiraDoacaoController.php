@@ -28,6 +28,12 @@ class CarteiraDoacaoController extends Controller
         assert($user !== null);
         $this->normalizeCpf($request);
 
+        if (!$user->hasVerifiedEmail()) {
+            return back()->withErrors([
+                'email' => 'Verifique seu e-mail antes de emitir a carteirinha.',
+            ]);
+        }
+
         if ($user->carteiraDoacao()->exists()) {
             return back()->withErrors([
                 'carteira' => 'Sua carteirinha de doador ja foi emitida.',

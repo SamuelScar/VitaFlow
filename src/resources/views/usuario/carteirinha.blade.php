@@ -32,6 +32,18 @@
     <section class="container py-5">
         @if ($carteira)
             @include('usuario.partials.carteirinha-card')
+        @elseif (!$usuario->hasVerifiedEmail())
+            <div class="card shadow-sm rounded-3 border-warning">
+                <div class="card-body p-4 p-lg-5 text-center">
+                    <i class="bi bi-envelope-exclamation text-warning" style="font-size: 3rem;"></i>
+                    <h2 class="h4 mt-3 mb-2">Verificação de e-mail necessária</h2>
+                    <p class="text-secondary mb-4">Para emitir sua carteirinha de doador, você precisa verificar seu endereço de e-mail primeiro.</p>
+                    <form method="POST" action="{{ route('verification.send') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-warning">Reenviar e-mail de verificação</button>
+                    </form>
+                </div>
+            </div>
         @else
             <div class="card shadow-sm rounded-3">
                 <div class="card-body p-4 p-lg-5">

@@ -156,13 +156,18 @@ class DemoSeeder extends Seeder
      */
     private function criarCicloBolsas(array $locais): void
     {
+        $hoje = CarbonImmutable::today();
+
         BolsaSangue::with('doacao.agendamento.campanha')
             ->orderBy('id')
             ->get()
-            ->each(function (BolsaSangue $bolsa, int $indice) use ($locais): void {
+            ->each(function (BolsaSangue $bolsa, int $indice) use ($locais, $hoje): void {
                 $localOrigemId = $bolsa->doacao->agendamento->campanha->local_coleta_id;
                 $status = BolsaSangue::STATUS_DISPONIVEL;
                 $localAtualId = $localOrigemId;
+                
+                $dataColeta = $bolsa->data_coleta;
+                $validadeEm = $bolsa->validade_em;
 
                 if ($indice % 11 === 0) {
                     $status = BolsaSangue::STATUS_UTILIZADA;
@@ -171,11 +176,20 @@ class DemoSeeder extends Seeder
                 } elseif ($indice % 17 === 0) {
                     $status = BolsaSangue::STATUS_TRANSFERIDA;
                     $localAtualId = $locais[($indice + 1) % count($locais)]->id;
+                } else {
+                    // Garante que grande parte das disponíveis terá validade de 45 dias a partir de hoje
+                    // para facilitar a visualização e testes
+                    if ($indice % 2 !== 0) {
+                        $dataColeta = $hoje->subDays(rand(1, 5));
+                        $validadeEm = $hoje->addDays(45);
+                    }
                 }
 
                 $bolsa->update([
                     'local_coleta_id' => $localAtualId,
                     'status' => $status,
+                    'data_coleta' => $dataColeta,
+                    'validade_em' => $validadeEm,
                 ]);
             });
     }

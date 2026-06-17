@@ -156,6 +156,20 @@
             </div>
         </nav>
 
+        @auth
+            @if (!auth()->user()->hasVerifiedEmail())
+                <div class="alert alert-warning rounded-0 border-start-0 border-end-0 mb-0 py-2 text-center" role="alert">
+                    Seu e-mail ainda não foi verificado. Algumas funcionalidades podem estar indisponíveis.
+                    <form method="POST" action="{{ route('verification.send') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline text-warning-emphasis fw-semibold">
+                            Clique aqui para reenviar o link.
+                        </button>
+                    </form>
+                </div>
+            @endif
+        @endauth
+
         <main>
             {{ $slot }}
         </main>

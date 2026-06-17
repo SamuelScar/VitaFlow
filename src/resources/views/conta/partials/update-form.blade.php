@@ -55,6 +55,13 @@
                     autocomplete="email"
                     required
                 />
+                <div class="mt-2">
+                    @if ($usuario->hasVerifiedEmail())
+                        <span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i> Verificado</span>
+                    @else
+                        <span class="badge text-bg-warning"><i class="bi bi-exclamation-triangle me-1"></i> Não verificado</span>
+                    @endif
+                </div>
             </div>
 
             <div class="col-12">

@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Doador\AgendamentoController;
@@ -43,7 +44,15 @@ Route::post('/convites-admin/{token}', [AceiteConviteAdminController::class, 'st
     ->middleware('guest')
     ->name('convites-admin.store');
 
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware('signed')
+    ->name('verification.verify');
+
 Route::middleware('auth')->group(function (): void {
+    Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/conta', [ContaController::class, 'edit'])->name('conta.edit');
     Route::put('/conta', [ContaController::class, 'update'])->name('conta.update');

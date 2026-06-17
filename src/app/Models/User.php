@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -28,7 +29,7 @@ use Illuminate\Notifications\Notifiable;
  * Representa um usuário do sistema. O campo `tipo` define o nível de acesso:
  * `admin` gerencia o sistema; `doador` participa das campanhas.
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     public const TIPO_ADMIN = 'admin';
     public const TIPO_DOADOR = 'doador';
