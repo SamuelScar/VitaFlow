@@ -8,16 +8,19 @@ import { initFormValidation } from './formValidation';
 import { initTheme } from './theme';
 import { initPopovers } from './popovers';
 import { initAdminCampanhaCalendar } from './adminCampanhaCalendar';
+import { registerLivewireReportChartListeners, registerReportCharts } from './reportCharts';
 
 window.Alpine = Alpine;
 
 registerAlertHelpers();
+registerReportCharts();
 initConfirmActions();
 initTheme();
 initCepLookup();
 initAgendamentoPicker();
 initAdminCampanhaCalendar();
 Livewire.start();
+registerLivewireReportChartListeners(Livewire);
 registerLivewireAlertListeners(Livewire);
 initFormValidation();
 initPopovers();

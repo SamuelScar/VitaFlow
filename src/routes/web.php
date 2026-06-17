@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BolsaSangueController;
 use App\Http\Controllers\Admin\CampanhaController;
 use App\Http\Controllers\Admin\ConviteAdminController;
 use App\Http\Controllers\Admin\LocalColetaController;
+use App\Http\Controllers\Admin\RelatorioController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AceiteConviteAdminController;
 use App\Http\Controllers\Auth\LoginController;
@@ -111,8 +112,12 @@ Route::middleware('auth')->group(function (): void {
             ->name('admin.campanhas.destroy');
         Route::get('/admin/bolsas-sangue', [BolsaSangueController::class, 'index'])
             ->name('admin.bolsas-sangue.index');
-        Route::get('/admin/relatorios', [\App\Http\Controllers\Admin\RelatorioController::class, 'index'])
+        Route::get('/admin/relatorios', [RelatorioController::class, 'index'])
             ->name('admin.relatorios.index');
+        Route::get('/admin/relatorios/meus-relatorios', \App\Livewire\Admin\MeusRelatorios::class)
+            ->name('admin.relatorios.meus-relatorios');
+        Route::get('/admin/relatorios/exports/{relatorioExport}/download', [RelatorioController::class, 'download'])
+            ->name('admin.relatorios.exports.download');
         Route::get('/admin/usuarios', [UserController::class, 'index'])
             ->name('admin.usuarios.index');
         Route::post('/admin/convites-admin', [ConviteAdminController::class, 'store'])

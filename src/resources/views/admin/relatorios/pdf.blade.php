@@ -66,6 +66,98 @@
             padding: 15px;
             border: 1px dashed #ccc;
         }
+        .section-title {
+            color: #dc3545;
+            font-size: 17px;
+            margin: 25px 0 12px;
+            border-bottom: 1px solid #f1b0b7;
+            padding-bottom: 6px;
+        }
+        .cards {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .card-cell {
+            width: 25%;
+            padding: 5px;
+            vertical-align: top;
+        }
+        .indicator-card {
+            border: 1px solid #ddd;
+            background-color: #fff;
+            padding: 10px;
+            min-height: 56px;
+        }
+        .indicator-title {
+            color: #666;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .indicator-value {
+            color: #222;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        .indicator-detail {
+            color: #777;
+            font-size: 10px;
+        }
+        .chart-block {
+            page-break-inside: avoid;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 14px;
+        }
+        .chart-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .chart-description {
+            color: #666;
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+        .chart-dataset {
+            margin-top: 8px;
+        }
+        .chart-dataset-title {
+            font-weight: bold;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+        .chart-row {
+            clear: both;
+            margin-bottom: 4px;
+            height: 14px;
+        }
+        .chart-label {
+            float: left;
+            width: 18%;
+            font-size: 9px;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .chart-bar-wrap {
+            float: left;
+            width: 70%;
+            height: 10px;
+            background-color: #f1f3f5;
+            margin-top: 1px;
+        }
+        .chart-bar {
+            height: 10px;
+        }
+        .chart-value {
+            float: right;
+            width: 10%;
+            text-align: right;
+            font-size: 9px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -75,6 +167,68 @@
         <p>{{ $titulo }}</p>
         <p style="font-size: 12px; margin-top: 5px;">Gerado em: {{ now()->format('d/m/Y \à\s H:i') }}</p>
     </div>
+
+    @php
+        $cards = $painelAnalitico['cards'] ?? [];
+        $graficosPdf = $graficosPdf ?? [];
+    @endphp
+
+    @if (! empty($cards) || ! empty($graficosPdf))
+        <h2 class="section-title">Painel analítico</h2>
+
+        @if (! empty($cards))
+            <table class="cards">
+                <tbody>
+                    @foreach (array_chunk($cards, 4) as $linhaCards)
+                        <tr>
+                            @foreach ($linhaCards as $card)
+                                <td class="card-cell">
+                                    <div class="indicator-card">
+                                        <div class="indicator-title">{{ $card['titulo'] }}</div>
+                                        <div class="indicator-value">{{ $card['valor'] }}</div>
+                                        <div class="indicator-detail">{{ $card['detalhe'] }}</div>
+                                    </div>
+                                </td>
+                            @endforeach
+                            @for ($i = count($linhaCards); $i < 4; $i++)
+                                <td class="card-cell"></td>
+                            @endfor
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
+        @foreach ($graficosPdf as $grafico)
+            <div class="chart-block">
+                <div class="chart-title">{{ $grafico['titulo'] }}</div>
+                <div class="chart-description">{{ $grafico['descricao'] }}</div>
+
+                @foreach ($grafico['datasets'] as $dataset)
+                    @php
+                        $maiorValor = max(1, (int) collect($dataset['data'] ?? [])->max());
+                        $cor = $dataset['color'] ?? '#dc3545';
+                    @endphp
+                    <div class="chart-dataset">
+                        <div class="chart-dataset-title">{{ $dataset['label'] }}</div>
+                        @foreach ($grafico['labels'] as $index => $label)
+                            @php
+                                $valor = (int) ($dataset['data'][$index] ?? 0);
+                                $largura = min(100, (int) round(($valor / $maiorValor) * 100));
+                            @endphp
+                            <div class="chart-row">
+                                <div class="chart-label">{{ $label }}</div>
+                                <div class="chart-bar-wrap">
+                                    <div class="chart-bar" style="width: {{ $largura }}%; background-color: {{ $cor }};"></div>
+                                </div>
+                                <div class="chart-value">{{ number_format($valor, 0, ',', '.') }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endforeach
+            </div>
+        @endforeach
+    @endif
 
     @forelse ($modulosSelecionados as $modulo)
         @php

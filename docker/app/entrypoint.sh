@@ -13,16 +13,24 @@ if [ -d /var/www/html/storage ] && [ -d /var/www/html/bootstrap/cache ]; then
 fi
 
 if [ -f /var/www/html/composer.json ]; then
-    if [ ! -f /var/www/html/vendor/autoload.php ] \
-        || [ /var/www/html/composer.lock -nt /var/www/html/vendor/autoload.php ]; then
-        log "Instalando dependencias do Composer..."
-        composer install --no-interaction --prefer-dist
+    if [ "$RUN_COMPOSER_INSTALL" = "false" ]; then
+        log "Instalacao automatica do Composer desabilitada."
     else
-        log "Dependencias do Composer ja estao atualizadas."
+        if [ ! -f /var/www/html/vendor/autoload.php ] \
+            || [ /var/www/html/composer.lock -nt /var/www/html/vendor/autoload.php ]; then
+            log "Instalando dependencias do Composer..."
+            composer install --no-interaction --prefer-dist
+        else
+            log "Dependencias do Composer ja estao atualizadas."
+        fi
     fi
 
-    log "Executando migrations..."
-    php artisan migrate --force
+    if [ "$RUN_MIGRATIONS" = "false" ]; then
+        log "Migrations automaticas desabilitadas."
+    else
+        log "Executando migrations..."
+        php artisan migrate --force
+    fi
 fi
 
 if [ "$RUN_VITE_DEV" = "true" ] && [ -f /var/www/html/package.json ]; then
@@ -40,5 +48,5 @@ else
     log "Vite automatico desabilitado."
 fi
 
-log "Iniciando servidor Apache..."
+log "Iniciando processo principal..."
 exec "$@"

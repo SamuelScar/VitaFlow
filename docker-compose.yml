@@ -18,6 +18,28 @@ services:
       db:
         condition: service_healthy
 
+  worker:
+    build:
+      context: ./docker/app
+    container_name: vitaflow_worker
+    restart: unless-stopped
+    working_dir: /var/www/html
+    env_file:
+      - .env
+    environment:
+      RUN_COMPOSER_INSTALL: "false"
+      RUN_MIGRATIONS: "false"
+      RUN_VITE_DEV: "false"
+    volumes:
+      - ./src:/var/www/html
+      - ./.env:/var/www/html/.env:ro
+      - node_modules:/var/www/html/node_modules
+      - vendor:/var/www/html/vendor
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "until [ -f vendor/autoload.php ] && php artisan queue:monitor database:default --max=1000000 >/dev/null 2>&1; do sleep 2; done; php -d memory_limit=1024M artisan queue:work --sleep=3 --tries=3 --timeout=300 --memory=1024"
+
   db:
     image: postgres:16-alpine
     container_name: vitaflow_db

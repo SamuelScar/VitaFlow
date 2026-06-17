@@ -2,6 +2,32 @@
 
 Este documento registra decisões e alterações relevantes realizadas no VitaFlow.
 
+## 17/06/2026 - Exportação assíncrona de PDFs
+
+- A geração de PDF dos relatórios deixou de rodar dentro da requisição do navegador.
+- Criada a tabela `relatorio_exports` para registrar pedidos, status, parâmetros, arquivo gerado e erro.
+- Recriadas as tabelas `jobs` e `failed_jobs` para usar a fila nativa do Laravel com driver `database`.
+- Criado o job `GerarRelatorioPdf`, responsável por montar o relatório e salvar o PDF em `storage/app/private/relatorios`.
+- A tela de relatórios passou a exibir os últimos PDFs solicitados, com status e botão de download quando concluídos.
+- O PDF passou a aceitar indicadores e múltiplos gráficos selecionados pelo administrador.
+- Os gráficos do PDF usam uma versão estática em HTML/CSS, compatível com DomPDF.
+- Corrigida a ordenação dos gráficos agrupados no PostgreSQL para evitar erro de `GROUP BY` ao gerar PDFs com gráficos.
+- Adicionado um serviço `worker` no Docker Compose para executar `php artisan queue:work`.
+- O worker não instala dependências nem executa migrations; ele aguarda o autoload e a tabela da fila ficarem disponíveis antes de iniciar.
+- O `retry_after` da fila database foi ajustado para 360 segundos, acima do timeout de 300 segundos do worker.
+- O worker de PDFs passou a rodar com limite de memória de 1024 MB e reinício automático.
+- Mantido o DomPDF como motor de PDF para evitar nova dependência; Chrome Headless e limite fixo de registros não foram adotados neste momento.
+
+## 17/06/2026 - Painel analítico dos relatórios
+
+- A tela de relatórios passou a exibir um painel analítico antes da visualização tabular.
+- O painel usa os mesmos módulos e filtros selecionados no relatório.
+- Foram adicionados cards de indicadores para agendamentos, comparecimento, conversão em doação, estoque, campanhas e doadores.
+- Adicionado gráfico principal com Chart.js e seletor de métrica para doações, agendamentos, comparecimento, bolsas, estoque e campanhas.
+- Foram adicionados gráficos de barras para status dos agendamentos, evolução recente, desempenho de campanhas, estoque por tipo sanguíneo e doadores por tipo sanguíneo.
+- A tela de relatórios passou a abrir sem módulos marcados por padrão.
+- O filtro de local de coleta também passou a afetar o módulo de bolsas no relatório.
+
 ## 16/06/2026 - Detalhe administrativo de campanha
 
 - Criada a tela de detalhe administrativo de campanha.
