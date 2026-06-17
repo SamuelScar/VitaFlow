@@ -339,6 +339,20 @@ Este documento registra os fluxos existentes no sistema.
 6. Sistema marca o e-mail como verificado e o convite como aceito.
 7. Convidado e redirecionado para o login.
 
+## Geração e Gerenciamento de Relatórios Dinâmicos
+
+1. Admin autenticado acessa `GET /admin/relatorios`.
+2. Admin seleciona os módulos desejados, escolhe as colunas visíveis, define os filtros combinados (período, local, etc) e a ordenação.
+3. Admin clica no botão "Exportar" e envia a solicitação.
+4. O sistema processa o relatório com aumento temporário de memória no servidor usando DomPDF.
+5. O PDF consolidado é gerado na pasta `private/relatorios/` e o sistema salva o registro em `relatorio_exports` com status `concluido`.
+6. A página atualiza reativamente, listando os últimos relatórios gerados na fila "Suas exportações".
+7. Admin clica na ação de arquivar (individual ou em lote na tela `Meus Relatórios`).
+8. O sistema altera o status para `arquivando` e envia o Job assíncrono `ArquivarRelatorioPdf` para a fila.
+9. Um *worker* executa o Job, comprimindo o arquivo em `.zip`, excluindo o PDF original e atualizando o status para `arquivado`.
+10. O resgate (desarquivar) funciona de maneira inversa através do Job `DesarquivarRelatorioPdf`.
+11. Ações de exclusão removem o arquivo físico (PDF ou ZIP) e marcam o registro no banco com Soft Delete, preservando seu rastro para histórico.
+
 ## Health check
 
 1. Usuario ou servico acessa `GET /health`.

@@ -29,6 +29,8 @@ Este documento registra as rotas web do sistema.
 - [Locais de coleta](#tela-de-locais-de-coleta)
 - [Campanhas](#tela-de-campanhas)
 - [Bolsas e estoque](#tela-de-bolsas-e-estoque)
+- [Relatórios dinâmicos](#tela-de-relatórios-dinâmicos)
+- [Histórico de relatórios](#histórico-de-relatórios)
 - [Usuários](#tela-de-usuarios)
 - [Convites administrativos](#enviar-convite-administrativo)
 
@@ -1016,7 +1018,90 @@ Comportamento atual:
 - Convites expirados, cancelados ou aceitos nao podem ser utilizados.
 - O e-mail do convite nao pode pertencer a outro usuario.
 - O aceite exige nome, senha e confirmacao da senha.
-- A conta criada nao recebe dados nem permissoes de doador.
+- Sistema valida o token, a validade, o status do convite e a disponibilidade do e-mail.
+
+## Tela de relatórios dinâmicos
+
+`GET /admin/relatorios`
+
+Exibe a tela administrativa para construção de relatórios consolidados em PDF.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\RelatorioController@index
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/admin/relatorios/index.blade.php
+```
+
+Comportamento atual:
+
+- Apenas usuários `admin` podem acessar.
+- Exibe o componente Livewire `RelatorioBuilder` com seleção de módulos, filtros, ordenação e pré-visualização.
+- Exibe a lista (limitada aos 3 mais recentes) de relatórios disponíveis.
+- Contém ações rápidas para arquivar e excluir.
+
+## Histórico de relatórios
+
+`GET /admin/relatorios/meus-relatorios`
+
+Exibe a tela com a lista completa do histórico de relatórios gerados (Meus Relatórios).
+
+Controller:
+
+```text
+App\Livewire\Admin\MeusRelatorios
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+View:
+
+```text
+resources/views/livewire/admin/meus-relatorios.blade.php
+```
+
+Comportamento atual:
+
+- Carregado como um componente de página inteira (Full Page Livewire Component).
+- Lista todos os relatórios (`concluído`, `processando`, `arquivando`, `desarquivando`, `arquivado (zip)`).
+- Permite ações em lote através de caixas de seleção.
+- Validação visual com bloqueio de ações simultâneas indesejadas (tooltips).
+
+## Download de relatório exportado
+
+`GET /admin/relatorios/exports/{relatorioExport}/download`
+
+Permite o download do arquivo físico (PDF ou ZIP) gerado.
+
+Controller:
+
+```text
+App\Http\Controllers\Admin\RelatorioController@download
+```
+
+Middlewares:
+
+- `auth`
+- `admin`
+
+Comportamento atual:
+
+- Bloqueia via `Gate` o download de relatórios que pertencem a outro usuário.
+- Determina automaticamente o mime type e o nome baseado no status atual do arquivo (arquivado = .zip, disponível = .pdf).
+- Retorna o arquivo em formato streaming de resposta (`Storage::download`).
 
 ## Health check
 

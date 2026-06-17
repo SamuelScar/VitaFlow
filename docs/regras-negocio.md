@@ -208,6 +208,18 @@ Este documento registra regras que afetam comportamento do sistema.
 - Apenas administradores podem consultar e movimentar bolsas de sangue.
 - Movimentacoes bloqueiam a bolsa durante a operacao para impedir alteracoes simultaneas conflitantes.
 
+## Relatórios dinâmicos
+
+- Apenas usuários com tipo `admin` podem gerar e acessar relatórios dinâmicos consolidados.
+- O relatório em PDF combina módulos (doadores, agendamentos, bolsas, campanhas), colunas selecionadas e filtros avançados.
+- Relatórios gerados garantem acesso restrito: cada arquivo só pode ser baixado pelo usuário (admin) que o solicitou.
+- A tela do construtor exibe apenas os 3 relatórios mais recentes que ainda estão disponíveis (não arquivados).
+- Relatórios arquivados passam por compressão (`.zip`) de forma assíncrona (Jobs) para otimizar espaço de disco.
+- A exclusão lógica (Soft Deletes) preserva o registro histórico mesmo que o arquivo seja deletado.
+- O histórico completo da fila de processamento fica na tela "Ver Todos" (`Meus Relatórios`).
+- A tela de histórico suporta ações em massa (arquivar, resgatar, excluir) com base na seleção de múltiplas caixas de marcação (checkboxes).
+- O sistema bloqueia ações em lote conflitantes e fornece feedback visual via tooltips quando o usuário mistura relatórios em status incompatíveis.
+
 ## Validacao e feedback visual
 
 - Formularios com `data-validate-form` fazem uma validacao inicial no navegador antes de enviar para o backend.

@@ -293,6 +293,47 @@ Observacoes:
 - Bolsas transferidas continuam disponiveis no local de destino.
 - O estoque soma somente bolsas disponiveis ou transferidas que ainda nao venceram.
 
+### `relatorio_exports`
+
+Representa o histórico de relatórios gerados pelo administrador.
+
+Campos principais:
+
+- `user_id`
+- `arquivo_caminho`
+- `arquivo_nome`
+- `status`
+- `tamanho_bytes`
+- `is_arquivado`
+- `deleted_at`
+
+Status atuais:
+
+- `processando`
+- `concluido`
+- `falha`
+- `arquivando`
+- `desarquivando`
+
+Relacionamentos:
+
+- Pertence a um usuário administrador (`user_id`).
+
+Observacoes:
+
+- Relatórios são gerados dinamicamente e armazenados fisicamente.
+- Relatórios arquivados sofrem compressão `.zip` no disco.
+- Utiliza Soft Deletes (`deleted_at`) para manter histórico de relatórios excluídos da fila principal.
+
+### Filas em Segundo Plano (`jobs`, `failed_jobs`, `job_batches`)
+
+Tabelas nativas do Laravel para execução assíncrona.
+
+Observacoes:
+
+- Utilizadas para as tarefas de arquivamento (`ArquivarRelatorioPdf`) e desarquivamento (`DesarquivarRelatorioPdf`).
+- O processamento de compressão/extração de arquivos ocorre através de *workers*.
+
 ## Tipos sanguineos
 
 Os tipos sanguineos aceitos ficam centralizados em `App\Support\TipoSanguineo`:
