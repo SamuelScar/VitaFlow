@@ -91,6 +91,16 @@
 
             <div class="col-md-6 col-xl-3">
                 <x-dashboard-card
+                    title="Relatorios"
+                    description="Gere relatorios dinamicos e exporte dados do sistema."
+                    :href="route('admin.relatorios.index')"
+                    button-label="Gerar relatorios"
+                    icon="bi-file-earmark-bar-graph"
+                />
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <x-dashboard-card
                     title="Home publica"
                     description="Visualize a pagina que visitantes acessam."
                     :href="route('home')"

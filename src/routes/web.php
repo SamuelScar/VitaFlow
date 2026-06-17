@@ -111,6 +111,8 @@ Route::middleware('auth')->group(function (): void {
             ->name('admin.campanhas.destroy');
         Route::get('/admin/bolsas-sangue', [BolsaSangueController::class, 'index'])
             ->name('admin.bolsas-sangue.index');
+        Route::get('/admin/relatorios', [\App\Http\Controllers\Admin\RelatorioController::class, 'index'])
+            ->name('admin.relatorios.index');
         Route::get('/admin/usuarios', [UserController::class, 'index'])
             ->name('admin.usuarios.index');
         Route::post('/admin/convites-admin', [ConviteAdminController::class, 'store'])

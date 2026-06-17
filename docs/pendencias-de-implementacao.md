@@ -65,9 +65,9 @@ Este documento resume o status dos casos de uso do VitaFlow a partir da tabela d
         <tr>
             <td>UC8</td>
             <td>Visualizar dados de suas doações</td>
-            <td style="background-color: #fff3cd;">30/06</td>
-            <td style="background-color: #f8d7da;"><strong>Pendente</strong></td>
-            <td>Exibir histórico de doações realizadas e separar de agendamentos pendentes.</td>
+            <td style="background-color: #d1e7dd;">30/06</td>
+            <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
+            <td>Exibir histórico de doações realizadas e impacto do doador.</td>
         </tr>
         <tr>
             <td>UC9</td>
@@ -100,30 +100,30 @@ Este documento resume o status dos casos de uso do VitaFlow a partir da tabela d
         <tr>
             <td>UC13</td>
             <td>Gerenciar horários e vagas</td>
-            <td style="background-color: #fff3cd;">30/06</td>
-            <td style="background-color: #fff3cd;"><strong>Parcial</strong></td>
-            <td>Limite por horario configurado na campanha; ainda falta gestao completa de janelas.</td>
+            <td style="background-color: #d1e7dd;">30/06</td>
+            <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
+            <td>Ocupação de horários com FullCalendar no detalhe da campanha implementada.</td>
         </tr>
         <tr>
             <td>UC14</td>
             <td>Acompanhar agendamentos</td>
             <td style="background-color: #fff3cd;">30/06</td>
             <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
-            <td>Visao administrativa com filtros por campanha, local, data e status implementada.</td>
+            <td>Visão administrativa implementada.</td>
         </tr>
         <tr>
             <td>UC15</td>
             <td>Registrar comparecimento</td>
             <td style="background-color: #fff3cd;">30/06</td>
             <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
-            <td>Admin pode marcar e corrigir comparecimento, falta ou cancelamento operacional dentro da janela de 24h apos o horario.</td>
+            <td>Admin pode marcar comparecimento.</td>
         </tr>
         <tr>
             <td>UC16</td>
             <td>Registrar doação</td>
             <td style="background-color: #fff3cd;">30/06</td>
             <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
-            <td>Admin registra doacao confirmada ou recusada a partir de agendamento realizado e com horario ja iniciado; doacao confirmada gera bolsa.</td>
+            <td>Admin registra doação confirmada.</td>
         </tr>
         <tr>
             <td>UC17</td>
@@ -135,16 +135,16 @@ Este documento resume o status dos casos de uso do VitaFlow a partir da tabela d
         <tr>
             <td>UC18</td>
             <td>Visualizar agendamento</td>
-            <td style="background-color: #fff3cd;">30/06</td>
-            <td style="background-color: #fff3cd;"><strong>Parcial</strong></td>
-            <td>Tela de detalhe do doador implementada; ainda falta detalhe administrativo.</td>
+            <td style="background-color: #d1e7dd;">30/06</td>
+            <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
+            <td>Telas de detalhe para o doador e para o admin implementadas.</td>
         </tr>
         <tr>
             <td>UC19</td>
             <td>Participar de campanha</td>
             <td style="background-color: #fff3cd;">30/06</td>
             <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
-            <td>A acao da campanha direciona o doador para o fluxo de agendamento.</td>
+            <td>Fluxo de agendamento do doador finalizado.</td>
         </tr>
         <tr>
             <td>UC20</td>
@@ -165,7 +165,7 @@ Este documento resume o status dos casos de uso do VitaFlow a partir da tabela d
             <td>Gerenciar estoque de sangue</td>
             <td style="background-color: #fff3cd;">30/06</td>
             <td style="background-color: #d1e7dd;"><strong>Feito</strong></td>
-            <td>Gestão de bolsas, estoque calculado, filtros, transferência, descarte, utilização e estoque mínimo implementados.</td>
+            <td>Gestão de bolsas implementada.</td>
         </tr>
         <tr>
             <td>UC23</td>
@@ -179,16 +179,18 @@ Este documento resume o status dos casos de uso do VitaFlow a partir da tabela d
 
 ## Resumo
 
-- **Feitos**: UC1, UC2, UC3, UC4, UC5, UC6, UC7, UC9, UC10, UC11, UC12, UC14, UC15, UC16, UC19, UC20, UC21, UC22 e UC23.
-- **Parcial**: UC13 e UC18.
-- **Pendentes**: UC8 e UC17.
+- **Feitos**: UC1 a UC17, UC18 a UC23.
+- **Pendente**: Nenhuma.
 
 ## Pendências avulsas
 
-- Exibir aviso para o usuário quando o e-mail ainda não estiver verificado.
-- Mostrar o status de verificação de e-mail nos dados da conta do usuário.
-- Bloquear a criação da carteirinha de doador enquanto o e-mail do usuário não estiver verificado.
-- Orientar o usuário, no bloqueio da carteirinha, a verificar o e-mail antes de continuar.
+- [x] Exibir aviso para o usuário quando o e-mail ainda não estiver verificado.
+- [x] Mostrar o status de verificação de e-mail nos dados da conta do usuário.
+- [x] Bloquear a criação da carteirinha de doador enquanto o e-mail do usuário não estiver verificado.
+- [x] Orientar o usuário, no bloqueio da carteirinha, a verificar o e-mail antes de continuar.
+- [ ] Corrigir erro global nos filtros do Livewire: ao filtrar por status (ex: "cancelado") nas telas de Campanhas, Agendamentos, etc., o sistema gera uma exceção. Verificar todos os filtros.
+- [ ] Otimização da Geração de PDF (UC17): Substituir `ini_set` por filas assíncronas (background jobs), utilizar motor baseado em Chrome Headless (Browsershot/Snappy) e impor limite de registros.
+- [ ] Painel de Gráficos (Dashboard): Implementar visualização visual com gráficos dinâmicos (Chart.js/ApexCharts) para o módulo de relatórios.
 
 ## Observações
 
