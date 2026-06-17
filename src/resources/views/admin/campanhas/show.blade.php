@@ -148,56 +148,64 @@
         </div>
 
         <article class="card shadow-sm rounded-3 mb-4">
-            <div class="card-body p-4">
-                <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
-                    <div>
-                        <h2 class="h5 fw-bold mb-1">Gerenciar campanha</h2>
-                        <p class="text-secondary mb-0">Altere dados, periodo, vagas e status da campanha.</p>
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-4 d-flex justify-content-between align-items-start gap-3">
+                <div>
+                    <h2 class="h5 fw-bold mb-1">Gerenciar campanha</h2>
+                    <p class="text-secondary mb-0">Altere dados, periodo, vagas e status da campanha.</p>
+                </div>
+                <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGerenciar" aria-expanded="{{ $editando ? 'true' : 'false' }}" aria-controls="collapseGerenciar">
+                    <i class="bi bi-chevron-expand"></i>
+                </button>
+            </div>
+            <div class="collapse {{ $editando ? 'show' : '' }}" id="collapseGerenciar">
+                <div class="card-body p-4 pt-0">
+                    <div class="d-flex flex-column flex-lg-row justify-content-end gap-3 mb-4">
+                        @if ($totalAgendamentos === 0)
+                            <form
+                                class="d-grid m-0 align-self-lg-start"
+                                method="POST"
+                                action="{{ route('admin.campanhas.destroy', $campanha) }}"
+                                data-confirm-title="Excluir campanha?"
+                                data-confirm-text="Esta acao nao podera ser desfeita."
+                                data-confirm-button-text="Excluir"
+                                data-confirm-button-color="#c62828"
+                                data-confirm-delay-ms="3000"
+                            >
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center gap-2" type="submit">
+                                    <i class="bi bi-trash" aria-hidden="true"></i>
+                                    Excluir
+                                </button>
+                            </form>
+                        @else
+                            <span class="badge text-bg-light border align-self-lg-start">
+                                Exclusao bloqueada por agendamentos
+                            </span>
+                        @endif
                     </div>
 
-                    @if ($totalAgendamentos === 0)
-                        <form
-                            class="d-grid m-0 align-self-lg-start"
-                            method="POST"
-                            action="{{ route('admin.campanhas.destroy', $campanha) }}"
-                            data-confirm-title="Excluir campanha?"
-                            data-confirm-text="Esta acao nao podera ser desfeita."
-                            data-confirm-button-text="Excluir"
-                            data-confirm-button-color="#c62828"
-                            data-confirm-delay-ms="3000"
-                        >
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center gap-2" type="submit">
-                                <i class="bi bi-trash" aria-hidden="true"></i>
-                                Excluir
-                            </button>
-                        </form>
-                    @else
-                        <span class="badge text-bg-light border align-self-lg-start">
-                            Exclusao bloqueada por agendamentos
-                        </span>
-                    @endif
+                    @include('admin.campanhas.partials.form', [
+                        'action' => route('admin.campanhas.update', $campanha),
+                        'method' => 'PUT',
+                        'submitLabel' => 'Salvar alteracoes',
+                        'idPrefix' => "detalhe_campanha_{$campanha->id}",
+                        'campanha' => $campanha,
+                        'locaisColeta' => $locaisColeta,
+                        'tiposSanguineos' => $tiposSanguineos,
+                        'errorBag' => 'updateCampanha',
+                        'useOldValues' => $editando,
+                        'confirmTitle' => 'Salvar alteracoes da campanha?',
+                        'confirmText' => 'As novas informacoes serao aplicadas nesta campanha.',
+                        'confirmButtonText' => 'Salvar alteracoes',
+                        'confirmButtonColor' => '#0d6efd',
+                        'confirmDelayMs' => 3000,
+                    ])
                 </div>
-
-                @include('admin.campanhas.partials.form', [
-                    'action' => route('admin.campanhas.update', $campanha),
-                    'method' => 'PUT',
-                    'submitLabel' => 'Salvar alteracoes',
-                    'idPrefix' => "detalhe_campanha_{$campanha->id}",
-                    'campanha' => $campanha,
-                    'locaisColeta' => $locaisColeta,
-                    'tiposSanguineos' => $tiposSanguineos,
-                    'errorBag' => 'updateCampanha',
-                    'useOldValues' => $editando,
-                    'confirmTitle' => 'Salvar alteracoes da campanha?',
-                    'confirmText' => 'As novas informacoes serao aplicadas nesta campanha.',
-                    'confirmButtonText' => 'Salvar alteracoes',
-                    'confirmButtonColor' => '#0d6efd',
-                    'confirmDelayMs' => 3000,
-                ])
             </div>
         </article>
+
+        <livewire:admin.campanha-janelas :campanha="$campanha" />
 
         <livewire:admin.agendamento-list :campanha-id="(string) $campanha->id" :campanha-travada="true" />
     </section>

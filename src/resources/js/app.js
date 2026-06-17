@@ -7,6 +7,7 @@ import { initCepLookup } from './cepLookup';
 import { initFormValidation } from './formValidation';
 import { initTheme } from './theme';
 import { initPopovers } from './popovers';
+import { initAdminCampanhaCalendar } from './adminCampanhaCalendar';
 
 window.Alpine = Alpine;
 
@@ -15,6 +16,7 @@ initConfirmActions();
 initTheme();
 initCepLookup();
 initAgendamentoPicker();
+initAdminCampanhaCalendar();
 Livewire.start();
 registerLivewireAlertListeners(Livewire);
 initFormValidation();
