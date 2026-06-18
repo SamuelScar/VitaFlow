@@ -1046,7 +1046,7 @@ resources/views/admin/relatorios/index.blade.php
 Comportamento atual:
 
 - Apenas usuários `admin` podem acessar.
-- Exibe o componente Livewire `RelatorioBuilder` com seleção de módulos, filtros, ordenação e pré-visualização.
+- Exibe o componente Livewire `RelatorioBuilder` com seleção de módulos, colunas, filtros e pré-visualização.
 - Exibe a lista (limitada aos 3 mais recentes) de relatórios disponíveis.
 - Contém ações rápidas para arquivar e excluir.
 

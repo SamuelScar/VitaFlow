@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RelatorioController extends Controller
 {
-    /**
-     * Display the dynamic report builder page.
-     */
     public function index(): View
     {
         return view('admin.relatorios.index');
@@ -24,9 +21,11 @@ class RelatorioController extends Controller
         abort_unless($relatorioExport->concluido(), 404);
         abort_unless(Storage::disk('local')->exists($relatorioExport->arquivo_path), 404);
 
+        $extensao = $relatorioExport->is_arquivado ? 'zip' : 'pdf';
+
         return Storage::disk('local')->download(
             $relatorioExport->arquivo_path,
-            "relatorio-{$relatorioExport->id}.pdf"
+            "relatorio-{$relatorioExport->id}.{$extensao}"
         );
     }
 }

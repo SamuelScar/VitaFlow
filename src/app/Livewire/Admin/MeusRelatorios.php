@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Jobs\ArquivarRelatorioPdf;
 use App\Jobs\DesarquivarRelatorioPdf;
 use App\Models\RelatorioExport;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -15,16 +16,24 @@ class MeusRelatorios extends Component
 {
     use WithPagination;
 
+    private const ITENS_POR_PAGINA = 15;
+
     public array $selecionados = [];
     public bool $selecionarTodos = false;
 
-    public function updatedSelecionarTodos($value): void
+    public function updatedSelecionarTodos(mixed $value): void
     {
-        if ($value) {
-            $this->selecionados = $this->getRelatoriosQuery()->pluck('id')->map(fn($id) => (string) $id)->toArray();
-        } else {
-            $this->selecionados = [];
+        if ((bool) $value) {
+            $this->selecionados = $this->getRelatoriosQuery()
+                ->forPage($this->getPage(), self::ITENS_POR_PAGINA)
+                ->pluck('id')
+                ->map(fn (mixed $id): string => (string) $id)
+                ->toArray();
+
+            return;
         }
+
+        $this->selecionados = [];
     }
 
     public function updatedSelecionados(): void
@@ -36,6 +45,7 @@ class MeusRelatorios extends Component
     {
         if (empty($this->selecionados)) {
             $this->dispatch('alert-error', message: 'Nenhum relatório selecionado.');
+
             return;
         }
 
@@ -60,6 +70,7 @@ class MeusRelatorios extends Component
     {
         if (empty($this->selecionados)) {
             $this->dispatch('alert-error', message: 'Nenhum relatório selecionado.');
+
             return;
         }
 
@@ -82,6 +93,7 @@ class MeusRelatorios extends Component
     {
         if (empty($this->selecionados)) {
             $this->dispatch('alert-error', message: 'Nenhum relatório selecionado.');
+
             return;
         }
 
@@ -94,7 +106,7 @@ class MeusRelatorios extends Component
             if ($export->arquivo_path && Storage::disk('local')->exists($export->arquivo_path)) {
                 Storage::disk('local')->delete($export->arquivo_path);
             }
-            if (!$export->trashed()) {
+            if (! $export->trashed()) {
                 $export->delete();
             }
         }
@@ -104,7 +116,7 @@ class MeusRelatorios extends Component
         $this->dispatch('alert-success', message: 'Relatórios excluídos com sucesso.');
     }
 
-    private function getRelatoriosQuery()
+    private function getRelatoriosQuery(): Builder
     {
         return RelatorioExport::withTrashed()
             ->where('user_id', auth()->id())
@@ -120,6 +132,7 @@ class MeusRelatorios extends Component
         }
 
         $invalidos = RelatorioExport::withTrashed()
+            ->where('user_id', auth()->id())
             ->whereIn('id', $this->selecionados)
             ->where(function ($query) {
                 $query->where('is_arquivado', true)
@@ -139,6 +152,7 @@ class MeusRelatorios extends Component
         }
 
         $invalidos = RelatorioExport::withTrashed()
+            ->where('user_id', auth()->id())
             ->whereIn('id', $this->selecionados)
             ->where(function ($query) {
                 $query->where('is_arquivado', false)
@@ -158,11 +172,12 @@ class MeusRelatorios extends Component
         }
 
         $invalidos = RelatorioExport::withTrashed()
+            ->where('user_id', auth()->id())
             ->whereIn('id', $this->selecionados)
             ->whereIn('status', [
-                RelatorioExport::STATUS_PROCESSANDO, 
-                RelatorioExport::STATUS_ARQUIVANDO, 
-                RelatorioExport::STATUS_DESARQUIVANDO
+                RelatorioExport::STATUS_PROCESSANDO,
+                RelatorioExport::STATUS_ARQUIVANDO,
+                RelatorioExport::STATUS_DESARQUIVANDO,
             ])
             ->count();
 
@@ -172,7 +187,7 @@ class MeusRelatorios extends Component
     public function render(): View
     {
         return view('livewire.admin.meus-relatorios', [
-            'relatorios' => $this->getRelatoriosQuery()->paginate(15),
+            'relatorios' => $this->getRelatoriosQuery()->paginate(self::ITENS_POR_PAGINA),
         ])->layout('components.layouts.public', ['title' => 'Meus Relatórios']);
     }
 }

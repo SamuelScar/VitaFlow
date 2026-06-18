@@ -342,16 +342,17 @@ Este documento registra os fluxos existentes no sistema.
 ## Geração e Gerenciamento de Relatórios Dinâmicos
 
 1. Admin autenticado acessa `GET /admin/relatorios`.
-2. Admin seleciona os módulos desejados, escolhe as colunas visíveis, define os filtros combinados (período, local, etc) e a ordenação.
-3. Admin clica no botão "Exportar" e envia a solicitação.
-4. O sistema processa o relatório com aumento temporário de memória no servidor usando DomPDF.
-5. O PDF consolidado é gerado na pasta `private/relatorios/` e o sistema salva o registro em `relatorio_exports` com status `concluido`.
-6. A página atualiza reativamente, listando os últimos relatórios gerados na fila "Suas exportações".
-7. Admin clica na ação de arquivar (individual ou em lote na tela `Meus Relatórios`).
-8. O sistema altera o status para `arquivando` e envia o Job assíncrono `ArquivarRelatorioPdf` para a fila.
-9. Um *worker* executa o Job, comprimindo o arquivo em `.zip`, excluindo o PDF original e atualizando o status para `arquivado`.
-10. O resgate (desarquivar) funciona de maneira inversa através do Job `DesarquivarRelatorioPdf`.
-11. Ações de exclusão removem o arquivo físico (PDF ou ZIP) e marcam o registro no banco com Soft Delete, preservando seu rastro para histórico.
+2. Admin seleciona os módulos desejados, escolhe as colunas visíveis e define os filtros combinados (período, local, etc).
+3. Admin clica em "Gerar PDF" e envia a solicitação.
+4. O sistema cria um registro em `relatorio_exports` com status `pendente` e dispara o Job assíncrono `GerarRelatorioPdf`.
+5. Um *worker* processa a fila, monta os dados do relatório, gera o PDF com DomPDF e salva o arquivo em `storage/app/private/relatorios`.
+6. Ao concluir, o Job atualiza `relatorio_exports` para `concluido`, grava `arquivo_path` e limpa mensagens de erro.
+7. A página atualiza reativamente, listando os últimos relatórios gerados na fila "Exportações de PDF".
+8. Admin clica na ação de arquivar (individual ou em lote na tela `Meus Relatórios`).
+9. O sistema altera o status para `arquivando` e envia o Job assíncrono `ArquivarRelatorioPdf` para a fila.
+10. Um *worker* executa o Job, comprimindo o arquivo em `.zip`, excluindo o PDF original e mantendo o registro como `concluido` com `is_arquivado = true`.
+11. O resgate (desarquivar) funciona de maneira inversa através do Job `DesarquivarRelatorioPdf`.
+12. Ações de exclusão removem o arquivo físico (PDF ou ZIP) e marcam o registro no banco com Soft Delete, preservando seu rastro para histórico.
 
 ## Health check
 

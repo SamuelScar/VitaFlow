@@ -32,12 +32,12 @@ class ArquivarRelatorioPdf implements ShouldQueue
         try {
             $pdfPath = Storage::disk('local')->path($exportacao->arquivo_path);
 
-            if (!file_exists($pdfPath)) {
+            if (! file_exists($pdfPath)) {
                 throw new RuntimeException('Arquivo PDF não encontrado para arquivamento.');
             }
 
             $zipDir = Storage::disk('local')->path('relatorios/arquivados');
-            if (!is_dir($zipDir)) {
+            if (! is_dir($zipDir)) {
                 mkdir($zipDir, 0755, true);
             }
 
@@ -46,7 +46,6 @@ class ArquivarRelatorioPdf implements ShouldQueue
 
             $zip = new ZipArchive();
             if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
-                // Compress with max level
                 $zip->addFile($pdfPath, basename($pdfPath));
                 $zip->setCompressionIndex(0, ZipArchive::CM_DEFLATE, 9);
                 $zip->close();
@@ -54,7 +53,6 @@ class ArquivarRelatorioPdf implements ShouldQueue
                 throw new RuntimeException('Não foi possível criar o arquivo ZIP.');
             }
 
-            // Verify if zip was created and delete original
             if (file_exists($zipPath)) {
                 Storage::disk('local')->delete($exportacao->arquivo_path);
             }
@@ -65,7 +63,6 @@ class ArquivarRelatorioPdf implements ShouldQueue
                 'arquivo_path' => "relatorios/arquivados/{$zipFileName}",
                 'erro' => null,
             ])->save();
-
         } catch (Throwable $exception) {
             $exportacao->forceFill([
                 'status' => RelatorioExport::STATUS_FALHOU,

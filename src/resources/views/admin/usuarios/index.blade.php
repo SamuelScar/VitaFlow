@@ -1,25 +1,11 @@
 <x-layouts.public title="Usuarios">
-    <section class="bg-white border-bottom">
-        <div class="container py-5">
-            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-                <div>
-                    <span class="badge text-bg-light border mb-3">
-                        <i class="bi bi-shield-check me-1" aria-hidden="true"></i>
-                        Administracao
-                    </span>
-                    <h1 class="h2 fw-bold mb-2">Usuarios</h1>
-                    <p class="text-secondary mb-0">
-                        Consulte usuarios e convide novos administradores.
-                    </p>
-                </div>
-
-                <a class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" href="{{ route('admin.dashboard') }}">
-                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
-                    Voltar
-                </a>
-            </div>
-        </div>
-    </section>
+    <x-page-header
+        label="Administracao"
+        title="Usuarios"
+        description="Consulte usuarios e convide novos administradores."
+        icon="bi-shield-check"
+        :back-href="route('admin.dashboard')"
+    />
 
     <section class="container py-5">
         <article class="card shadow-sm rounded-3 mb-4">

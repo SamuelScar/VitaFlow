@@ -300,18 +300,22 @@ Representa o histórico de relatórios gerados pelo administrador.
 Campos principais:
 
 - `user_id`
-- `arquivo_caminho`
-- `arquivo_nome`
+- `tipo`
 - `status`
-- `tamanho_bytes`
 - `is_arquivado`
+- `parametros`
+- `arquivo_path`
+- `erro`
+- `started_at`
+- `finished_at`
 - `deleted_at`
 
 Status atuais:
 
+- `pendente`
 - `processando`
 - `concluido`
-- `falha`
+- `falhou`
 - `arquivando`
 - `desarquivando`
 
@@ -321,8 +325,10 @@ Relacionamentos:
 
 Observacoes:
 
-- Relatórios são gerados dinamicamente e armazenados fisicamente.
-- Relatórios arquivados sofrem compressão `.zip` no disco.
+- Relatórios são solicitados pelo administrador e processados por fila.
+- O campo `parametros` guarda módulos, colunas, filtros e opções analíticas usadas na geração.
+- O campo `arquivo_path` aponta para o PDF ou ZIP armazenado no disco local privado.
+- Relatórios arquivados sofrem compressão `.zip` no disco e ficam marcados com `is_arquivado`.
 - Utiliza Soft Deletes (`deleted_at`) para manter histórico de relatórios excluídos da fila principal.
 
 ### Filas em Segundo Plano (`jobs`, `failed_jobs`, `job_batches`)
@@ -331,8 +337,8 @@ Tabelas nativas do Laravel para execução assíncrona.
 
 Observacoes:
 
-- Utilizadas para as tarefas de arquivamento (`ArquivarRelatorioPdf`) e desarquivamento (`DesarquivarRelatorioPdf`).
-- O processamento de compressão/extração de arquivos ocorre através de *workers*.
+- Utilizadas para geração (`GerarRelatorioPdf`), arquivamento (`ArquivarRelatorioPdf`) e desarquivamento (`DesarquivarRelatorioPdf`) de relatórios.
+- O processamento de PDF, compressão e extração de arquivos ocorre através de *workers*.
 
 ## Tipos sanguineos
 

@@ -32,7 +32,7 @@
                 </span>
                 
                 <span class="d-inline-block" @if(!$this->podeExcluir && !empty($selecionados)) data-bs-toggle="tooltip" data-bs-title="Alguns relatórios selecionados estão em processamento e não podem ser excluídos." @endif>
-                    <button wire:click="excluirEmMassa" wire:confirm="Tem certeza que deseja excluir permanentemente os relatórios selecionados?" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-2" style="{{ !$this->podeExcluir ? 'pointer-events: none;' : '' }}" @if(!$this->podeExcluir) disabled @endif>
+                    <button wire:click="excluirEmMassa" wire:confirm="Excluir os relatórios selecionados da lista e apagar os arquivos do servidor?" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-2" style="{{ !$this->podeExcluir ? 'pointer-events: none;' : '' }}" @if(!$this->podeExcluir) disabled @endif>
                         <i class="bi bi-trash"></i> Excluir
                     </button>
                 </span>
@@ -101,7 +101,7 @@
             <div class="card-footer bg-white py-3 border-top">
                 {{ $relatorios->links() }}
             </div>
-            @endif
+        @endif
         </div>
     </section>
 </div>

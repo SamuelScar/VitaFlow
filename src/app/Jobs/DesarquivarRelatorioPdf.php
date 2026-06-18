@@ -25,45 +25,41 @@ class DesarquivarRelatorioPdf implements ShouldQueue
     {
         $exportacao = RelatorioExport::findOrFail($this->relatorioExportId);
 
-        if (!$exportacao->is_arquivado || $exportacao->status !== RelatorioExport::STATUS_DESARQUIVANDO) {
+        if (! $exportacao->is_arquivado || $exportacao->status !== RelatorioExport::STATUS_DESARQUIVANDO) {
             return;
         }
 
         try {
             $zipPath = Storage::disk('local')->path($exportacao->arquivo_path);
 
-            if (!file_exists($zipPath)) {
+            if (! file_exists($zipPath)) {
                 throw new RuntimeException('Arquivo ZIP não encontrado para desarquivamento.');
             }
 
             $extractDir = Storage::disk('local')->path('relatorios');
-            if (!is_dir($extractDir)) {
+            if (! is_dir($extractDir)) {
                 mkdir($extractDir, 0755, true);
             }
 
             $pdfFileName = "relatorio-{$exportacao->id}.pdf";
-            
+
             $zip = new ZipArchive();
             if ($zip->open($zipPath) === true) {
-                // Determine the name of the file inside the zip
                 $zipFileEntry = $zip->getNameIndex(0);
-                if (!$zipFileEntry) {
-                    $zipFileEntry = $pdfFileName; // fallback
+                if (! $zipFileEntry) {
+                    $zipFileEntry = $pdfFileName;
                 }
-                
+
                 $zip->extractTo($extractDir, $zipFileEntry);
                 $zip->close();
-                
-                // If the extracted file has a different name somehow, rename it
+
                 if ($zipFileEntry !== $pdfFileName && file_exists($extractDir . '/' . $zipFileEntry)) {
                     rename($extractDir . '/' . $zipFileEntry, $extractDir . '/' . $pdfFileName);
                 }
-
             } else {
                 throw new RuntimeException('Não foi possível extrair o arquivo ZIP.');
             }
 
-            // Verify if pdf was extracted and delete zip
             $pdfPathRel = "relatorios/{$pdfFileName}";
             if (Storage::disk('local')->exists($pdfPathRel)) {
                 Storage::disk('local')->delete($exportacao->arquivo_path);
@@ -75,7 +71,6 @@ class DesarquivarRelatorioPdf implements ShouldQueue
                 'arquivo_path' => $pdfPathRel,
                 'erro' => null,
             ])->save();
-
         } catch (Throwable $exception) {
             $exportacao->forceFill([
                 'status' => RelatorioExport::STATUS_FALHOU,

@@ -184,7 +184,7 @@ class RelatorioDadosBuilder
             return match ($coluna) {
                 'id' => (string) $modelo->id,
                 'tipo_sanguineo' => $modelo->tipo_sanguineo ?? '-',
-                'local' => $modelo->doacao?->agendamento?->campanha?->localColeta?->nome ?? 'Desconhecido',
+                'local' => $modelo->localColeta?->nome ?? 'Desconhecido',
                 'quantidade' => (string) $modelo->quantidade_ml,
                 'data_coleta' => $modelo->data_coleta ? $modelo->data_coleta->format('d/m/Y') : '-',
                 'validade' => $modelo->validade_em ? $modelo->validade_em->format('d/m/Y') : '-',
@@ -558,6 +558,7 @@ class RelatorioDadosBuilder
                 ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('data_inicio', '>=', $this->filtroDataInicio))
                 ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('data_fim', '<=', $this->filtroDataFim))
                 ->when(! empty($this->filtroStatusCampanha), fn (Builder $query) => $query->whereIn('campanhas.status', $this->filtroStatusCampanha))
+                ->when(! empty($this->filtroLocalColetaIds()), fn (Builder $query) => $query->whereIn('local_coleta_id', $this->filtroLocalColetaIds()))
                 ->orderByDesc('data_inicio');
         }
 

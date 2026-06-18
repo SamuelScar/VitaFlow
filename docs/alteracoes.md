@@ -2,6 +2,17 @@
 
 Este documento registra decisões e alterações relevantes realizadas no VitaFlow.
 
+## 18/06/2026 - Refatoração conservadora e alinhamento documental
+
+- Extraídos partials compartilhados para inicialização de tema e alertas dos layouts Blade.
+- Criado componente simples de cabeçalho para páginas internas com título, descrição e botão de retorno.
+- Extraída a montagem de gráficos e indicadores do `RelatorioBuilder` para `RelatorioAnaliticoBuilder`.
+- Corrigido o relatório de bolsas para exibir o local atual da bolsa, inclusive após transferência.
+- O filtro de local de coleta passou a afetar também o módulo de campanhas no construtor de relatórios.
+- O download de relatórios arquivados passou a usar extensão `.zip` no nome do arquivo.
+- Ajustada a seleção em massa de "Meus Relatórios" para selecionar somente a página atual.
+- Corrigidas referências antigas nos docs sobre arquivo único de documentação, fluxo assíncrono de PDF e campos de `relatorio_exports`.
+
 ## 17/06/2026 - Exportação assíncrona de PDFs
 
 - A geração de PDF dos relatórios deixou de rodar dentro da requisição do navegador.

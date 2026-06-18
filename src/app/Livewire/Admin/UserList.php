@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -80,9 +81,11 @@ class UserList extends Component
             'usuarios' => User::query()
                 ->with('carteiraDoacao')
                 ->when($busca !== '', function (Builder $query) use ($busca): void {
-                    $query->where(function (Builder $query) use ($busca): void {
-                        $query->where('name', 'ilike', "%{$busca}%")
-                            ->orWhere('email', 'ilike', "%{$busca}%");
+                    $operador = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+
+                    $query->where(function (Builder $query) use ($busca, $operador): void {
+                        $query->where('name', $operador, "%{$busca}%")
+                            ->orWhere('email', $operador, "%{$busca}%");
                     });
                 })
                 ->when($tipo !== '', fn (Builder $query) => $query->where('tipo', $tipo))

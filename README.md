@@ -7,21 +7,28 @@ Ambiente Docker para desenvolvimento de um monolito Laravel com PostgreSQL, Live
 ```text
 docker/              # Imagem local da aplicacao
 docs/                # Documentacao funcional e tecnica do sistema
-docker-compose.yml   # Servicos app + db
+docker-compose.yml   # Servicos app + worker + db
 src/                 # Aplicacao Laravel
 ```
 
 ## Documentacao
 
-A documentacao do sistema fica em [`docs/sistema.md`](docs/sistema.md).
+A documentacao do sistema fica separada por assunto em `docs/`:
 
-Ela registra telas, rotas web, fluxos, regras de negocio e decisoes visuais do monolito.
+- [`docs/visao-geral.md`](docs/visao-geral.md): resumo funcional e tecnico do monolito.
+- [`docs/rotas-web.md`](docs/rotas-web.md): telas, rotas e middlewares.
+- [`docs/fluxos.md`](docs/fluxos.md): fluxos principais do sistema.
+- [`docs/regras-negocio.md`](docs/regras-negocio.md): regras aplicadas pelo dominio.
+- [`docs/banco-dados.md`](docs/banco-dados.md): entidades, campos e relacionamentos.
+- [`docs/pendencias-de-implementacao.md`](docs/pendencias-de-implementacao.md): status dos casos de uso e pendencias.
+- [`docs/alteracoes.md`](docs/alteracoes.md): historico de mudancas relevantes.
 
 ## Servicos
 
 - Aplicacao Laravel: http://localhost:8080
 - Vite dev server: http://localhost:5173
 - PostgreSQL: `localhost:5432`
+- Worker de filas: servico `worker` do Docker Compose
 - Banco: `vitaflow`
 - Usuario: `vitaflow`
 - Senha: `vitaflow`
