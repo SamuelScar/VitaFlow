@@ -1,24 +1,23 @@
 // Modelo relacional do banco de dados
-// Todas as tabelas presentes no banco Docker
-// Fonte de verdade: schema atual do PostgreSQL e migrations da aplicacao
+// Fonte de verdade: schema atual do PostgreSQL no container Docker e migrations da aplicacao
 
 Table users {
   id bigserial [primary key, not null]
   name varchar(255) [not null]
   email varchar(255) [not null, unique]
   tipo varchar(255) [not null, default: 'doador', note: 'CHECK: admin ou doador']
-  cpf varchar(11) [unique]
-  telefone varchar(20)
-  data_nascimento date
-  sexo varchar(255) [note: 'CHECK: masculino ou feminino']
-  tipo_sanguineo varchar(255) [note: 'CHECK: A+, A-, B+, B-, AB+, AB-, O+, O-']
-  peso numeric(5,2)
-  cidade varchar(255)
   email_verified_at timestamp(0)
   password varchar(255) [not null]
   remember_token varchar(100)
   created_at timestamp(0)
   updated_at timestamp(0)
+  cpf varchar(11) [unique]
+  telefone varchar(20)
+  data_nascimento date
+  tipo_sanguineo varchar(255) [note: 'CHECK: A+, A-, B+, B-, AB+, AB-, O+, O-']
+  peso numeric(5,2)
+  cidade varchar(255)
+  sexo varchar(255) [note: 'CHECK: masculino ou feminino']
 }
 
 Table password_reset_tokens {
@@ -47,50 +46,26 @@ Table migrations {
   batch int4 [not null]
 }
 
-Table convites_admin {
-  id bigserial [primary key, not null]
-  email varchar(255) [not null, unique]
-  token_hash varchar(64) [not null, unique]
-  convidado_por_id int8
-  expira_em timestamp(0) [not null]
-  aceito_em timestamp(0)
-  cancelado_em timestamp(0)
-  created_at timestamp(0)
-  updated_at timestamp(0)
-}
-
-Table relatorio_exports {
-  id bigserial [primary key, not null]
-  user_id int8 [not null]
-  tipo varchar(20) [not null, default: 'pdf']
-  status varchar(20) [not null, default: 'pendente']
-  parametros json [not null]
-  arquivo_path varchar(255)
-  erro text
-  started_at timestamp(0)
-  finished_at timestamp(0)
-  created_at timestamp(0)
-  updated_at timestamp(0)
-  is_arquivado boolean [not null, default: false]
-  deleted_at timestamp(0)
-
-  indexes {
-    (user_id, created_at) [name: 'relatorio_exports_user_id_created_at_index']
-    status [name: 'relatorio_exports_status_index']
-  }
-}
-
 Table locais_coleta {
   id bigserial [primary key, not null]
   nome varchar(255) [not null]
-  cep varchar(9) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
-  logradouro varchar(255) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
-  numero varchar(30) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
-  bairro varchar(255) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
   cidade varchar(255) [not null]
-  uf varchar(2) [note: 'Obrigatorio pela aplicacao, mas nullable no banco']
-  complemento varchar(255)
   capacidade_diaria int4 [not null]
+  created_at timestamp(0)
+  updated_at timestamp(0)
+  cep varchar(9)
+  logradouro varchar(255)
+  numero varchar(30)
+  bairro varchar(255)
+  uf varchar(2)
+  complemento varchar(255)
+}
+
+Table carteiras_doacao {
+  id bigserial [primary key, not null]
+  user_id int8 [not null, unique]
+  status varchar(255) [not null, default: 'ativa', note: 'CHECK: ativa, bloqueada ou inativa']
+  emitida_em date [not null]
   created_at timestamp(0)
   updated_at timestamp(0)
 }
@@ -101,25 +76,16 @@ Table campanhas {
   local_coleta_id int8 [not null]
   titulo varchar(255) [not null]
   descricao text [not null]
-  tipos_sanguineos_alvo json [note: 'Null significa todos os tipos; valores validos sao verificados pela aplicacao']
   meta_bolsas int4 [not null]
   agendamentos_por_horario int2 [not null, default: 4]
-  horario_inicio time [not null, default: '08:00']
-  horario_fim time [not null, default: '17:00']
+  horario_inicio time [not null, default: '08:00:00']
+  horario_fim time [not null, default: '17:00:00']
   data_inicio date [not null]
   data_fim date [not null]
   status varchar(255) [not null, default: 'ativa', note: 'CHECK: ativa, encerrada ou cancelada']
   created_at timestamp(0)
   updated_at timestamp(0)
-}
-
-Table carteiras_doacao {
-  id bigserial [primary key, not null]
-  user_id int8 [not null, unique]
-  status varchar(255) [not null, default: 'ativa', note: 'CHECK: ativa, bloqueada ou inativa']
-  emitida_em date [not null]
-  created_at timestamp(0)
-  updated_at timestamp(0)
+  tipos_sanguineos_alvo json [note: 'Null significa todos os tipos; valores validos sao verificados pela aplicacao']
 }
 
 Table estoques_sangue {
@@ -137,12 +103,12 @@ Table estoques_sangue {
 
 Table agendamentos {
   id bigserial [primary key, not null]
-  user_id int8 [not null]
   campanha_id int8 [not null]
   data_hora timestamp(0) [not null]
   status varchar(255) [not null, default: 'agendado', note: 'CHECK: agendado, cancelado, realizado ou faltou']
   created_at timestamp(0)
   updated_at timestamp(0)
+  user_id int8 [not null]
 
   indexes {
     (user_id, campanha_id) [unique, name: 'agendamentos_user_id_campanha_id_unique']
@@ -156,6 +122,18 @@ Table doacoes {
   quantidade_ml int2
   status varchar(255) [not null, default: 'confirmada', note: 'CHECK: confirmada ou recusada']
   motivo_recusa text
+  created_at timestamp(0)
+  updated_at timestamp(0)
+}
+
+Table convites_admin {
+  id bigserial [primary key, not null]
+  email varchar(255) [not null, unique]
+  token_hash varchar(64) [not null, unique]
+  convidado_por_id int8
+  expira_em timestamp(0) [not null]
+  aceito_em timestamp(0)
+  cancelado_em timestamp(0)
   created_at timestamp(0)
   updated_at timestamp(0)
 }
@@ -202,13 +180,30 @@ Table failed_jobs {
   failed_at timestamp(0) [not null, default: `CURRENT_TIMESTAMP`]
 }
 
+Table relatorio_exports {
+  id bigserial [primary key, not null]
+  user_id int8 [not null]
+  tipo varchar(20) [not null, default: 'pdf']
+  status varchar(20) [not null, default: 'pendente']
+  parametros json [not null]
+  arquivo_path varchar(255)
+  erro text
+  started_at timestamp(0)
+  finished_at timestamp(0)
+  created_at timestamp(0)
+  updated_at timestamp(0)
+  is_arquivado boolean [not null, default: false]
+  deleted_at timestamp(0)
+
+  indexes {
+    (user_id, created_at) [name: 'relatorio_exports_user_id_created_at_index']
+    status [name: 'relatorio_exports_status_index']
+  }
+}
+
 // Relacionamentos
 
 Ref: campanhas.criada_por_id > users.id [delete: restrict]
-
-Ref: convites_admin.convidado_por_id > users.id [delete: set null]
-
-Ref: relatorio_exports.user_id > users.id [delete: cascade]
 
 Ref: campanhas.local_coleta_id > locais_coleta.id [delete: restrict]
 
@@ -216,12 +211,16 @@ Ref: carteiras_doacao.user_id - users.id [delete: cascade]
 
 Ref: estoques_sangue.local_coleta_id > locais_coleta.id [delete: cascade]
 
-Ref: bolsas_sangue.local_coleta_id > locais_coleta.id [delete: restrict]
-
 Ref: agendamentos.campanha_id > campanhas.id [delete: restrict]
 
 Ref: agendamentos.user_id > users.id [delete: restrict]
 
 Ref: doacoes.agendamento_id - agendamentos.id [delete: restrict]
 
+Ref: convites_admin.convidado_por_id > users.id [delete: set null]
+
 Ref: bolsas_sangue.doacao_id - doacoes.id [delete: restrict]
+
+Ref: bolsas_sangue.local_coleta_id > locais_coleta.id [delete: restrict]
+
+Ref: relatorio_exports.user_id > users.id [delete: cascade]

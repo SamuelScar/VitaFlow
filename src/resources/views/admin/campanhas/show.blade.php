@@ -52,13 +52,7 @@
                         <i class="bi bi-arrow-left" aria-hidden="true"></i>
                         Campanhas
                     </a>
-                    <a
-                        class="btn btn-outline-primary d-inline-flex align-items-center justify-content-center gap-2"
-                        href="{{ route('admin.agendamentos.index', ['campanha' => $campanha->id]) }}"
-                    >
-                        <i class="bi bi-calendar-check" aria-hidden="true"></i>
-                        Ver agendamentos
-                    </a>
+
                 </div>
             </div>
         </div>
