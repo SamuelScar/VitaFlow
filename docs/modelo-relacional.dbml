@@ -1,6 +1,6 @@
 // Modelo relacional do banco de dados
-// Apenas tabelas de negocio do sistema
-// Fonte de verdade: migrations atuais da aplicacao
+// Todas as tabelas presentes no banco Docker
+// Fonte de verdade: schema atual do PostgreSQL e migrations da aplicacao
 
 Table users {
   id bigserial [primary key, not null]
@@ -21,6 +21,32 @@ Table users {
   updated_at timestamp(0)
 }
 
+Table password_reset_tokens {
+  email varchar(255) [primary key, not null]
+  token varchar(255) [not null]
+  created_at timestamp(0)
+}
+
+Table sessions {
+  id varchar(255) [primary key, not null]
+  user_id int8
+  ip_address varchar(45)
+  user_agent text
+  payload text [not null]
+  last_activity int4 [not null]
+
+  indexes {
+    user_id [name: 'sessions_user_id_index']
+    last_activity [name: 'sessions_last_activity_index']
+  }
+}
+
+Table migrations {
+  id int4 [primary key, not null]
+  migration varchar(255) [not null]
+  batch int4 [not null]
+}
+
 Table convites_admin {
   id bigserial [primary key, not null]
   email varchar(255) [not null, unique]
@@ -31,6 +57,27 @@ Table convites_admin {
   cancelado_em timestamp(0)
   created_at timestamp(0)
   updated_at timestamp(0)
+}
+
+Table relatorio_exports {
+  id bigserial [primary key, not null]
+  user_id int8 [not null]
+  tipo varchar(20) [not null, default: 'pdf']
+  status varchar(20) [not null, default: 'pendente']
+  parametros json [not null]
+  arquivo_path varchar(255)
+  erro text
+  started_at timestamp(0)
+  finished_at timestamp(0)
+  created_at timestamp(0)
+  updated_at timestamp(0)
+  is_arquivado boolean [not null, default: false]
+  deleted_at timestamp(0)
+
+  indexes {
+    (user_id, created_at) [name: 'relatorio_exports_user_id_created_at_index']
+    status [name: 'relatorio_exports_status_index']
+  }
 }
 
 Table locais_coleta {
@@ -124,6 +171,35 @@ Table bolsas_sangue {
   status varchar(255) [not null, default: 'disponivel', note: 'CHECK: disponivel, utilizada, vencida, descartada ou transferida']
   created_at timestamp(0)
   updated_at timestamp(0)
+
+  indexes {
+    (local_coleta_id, tipo_sanguineo, status) [name: 'bolsas_sangue_local_coleta_id_tipo_sanguineo_status_index']
+    validade_em [name: 'bolsas_sangue_validade_em_index']
+  }
+}
+
+Table jobs {
+  id bigserial [primary key, not null]
+  queue varchar(255) [not null]
+  payload text [not null]
+  attempts int2 [not null]
+  reserved_at int4
+  available_at int4 [not null]
+  created_at int4 [not null]
+
+  indexes {
+    queue [name: 'jobs_queue_index']
+  }
+}
+
+Table failed_jobs {
+  id bigserial [primary key, not null]
+  uuid varchar(255) [not null, unique]
+  connection text [not null]
+  queue text [not null]
+  payload text [not null]
+  exception text [not null]
+  failed_at timestamp(0) [not null, default: `CURRENT_TIMESTAMP`]
 }
 
 // Relacionamentos
@@ -131,6 +207,8 @@ Table bolsas_sangue {
 Ref: campanhas.criada_por_id > users.id [delete: restrict]
 
 Ref: convites_admin.convidado_por_id > users.id [delete: set null]
+
+Ref: relatorio_exports.user_id > users.id [delete: cascade]
 
 Ref: campanhas.local_coleta_id > locais_coleta.id [delete: restrict]
 
