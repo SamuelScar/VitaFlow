@@ -4,13 +4,21 @@ FROM php:8.3-apache-bookworm
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        build-essential \
         ca-certificates \
         curl \
         git \
+        libcairo2-dev \
         libcurl4-openssl-dev \
+        libgif-dev \
+        libjpeg-dev \
         libonig-dev \
+        libpango1.0-dev \
         libpq-dev \
+        librsvg2-dev \
         libzip-dev \
+        pkg-config \
+        python3 \
         unzip \
     && docker-php-ext-install -j"$(nproc)" \
         curl \

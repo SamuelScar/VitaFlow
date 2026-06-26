@@ -63,6 +63,8 @@ class RelatorioAnaliticoBuilder
             'bolsas_tipo' => $this->graficoBolsasPorTipo(),
             'estoque_tipo' => $this->graficoEstoquePorTipo(),
             'campanhas_desempenho' => $this->graficoCampanhasPorDesempenho(),
+            'ranking_doadores_volume' => $this->graficoRankingDoadoresPorVolume(),
+            'eficiencia_campanhas_locais' => $this->graficoEficienciaCampanhasPorLocal(),
             default => $this->graficoDoacoesPorPeriodo(),
         };
     }
@@ -323,7 +325,98 @@ class RelatorioAnaliticoBuilder
         );
     }
 
-    private function montarGrafico(string $titulo, string $descricao, string $tipo, array $labels, array $datasets, array $escalasExtras = []): array
+    private function graficoRankingDoadoresPorVolume(): array
+    {
+        $doadores = $this->doacoesQuery()
+            ->get()
+            ->groupBy(fn (Doacao $doacao) => $doacao->agendamento?->user?->id)
+            ->map(function (Collection $grupo): array {
+                $doador = $grupo->first()?->agendamento?->user;
+                $tipoSanguineo = $doador?->tipo_sanguineo ?: 'Não informado';
+
+                return [
+                    'label' => $this->rotuloDoador($doador?->name, $tipoSanguineo),
+                    'doacoes' => $grupo->count(),
+                    'volume' => (int) $grupo->sum('quantidade_ml'),
+                ];
+            })
+            ->sortByDesc('volume')
+            ->take(8)
+            ->values();
+
+        return $this->montarGrafico(
+            'Ranking de doadores por volume',
+            'Doadores com maior volume total em doações confirmadas.',
+            'bar',
+            $doadores->pluck('label')->all(),
+            [
+                [
+                    'label' => 'Volume (ml)',
+                    'data' => $doadores->pluck('volume')->all(),
+                    'backgroundColor' => '#dc3545',
+                    'borderRadius' => 6,
+                ],
+            ],
+            [
+                'x' => [
+                    'beginAtZero' => true,
+                ],
+            ],
+            ['indexAxis' => 'y'],
+        );
+    }
+
+    private function graficoEficienciaCampanhasPorLocal(): array
+    {
+        $campanhas = $this->campanhasAnaliticasQuery()
+            ->get()
+            ->map(function (Campanha $campanha): array {
+                $agendamentos = $campanha->agendamentos;
+
+                if (! empty($this->filtroStatusAgendamento)) {
+                    $agendamentos = $agendamentos->whereIn('status', $this->filtroStatusAgendamento);
+                }
+
+                $totalAgendamentos = $agendamentos->count();
+                $doacoesConfirmadas = $agendamentos
+                    ->filter(fn (Agendamento $agendamento) => $agendamento->doacao?->status === 'confirmada')
+                    ->count();
+
+                return [
+                    'label' => $this->rotuloCampanhaLocal($campanha),
+                    'agendamentos' => $totalAgendamentos,
+                    'doacoes' => $doacoesConfirmadas,
+                    'conversao' => $this->percentual($doacoesConfirmadas, $totalAgendamentos),
+                ];
+            })
+            ->sortByDesc('conversao')
+            ->take(6)
+            ->values();
+
+        return $this->montarGrafico(
+            'Eficiência de campanhas por local',
+            'Taxa de conversão de agendamentos em doações confirmadas por campanha e local.',
+            'bar',
+            $campanhas->pluck('label')->all(),
+            [
+                [
+                    'label' => 'Taxa de conversão (%)',
+                    'data' => $campanhas->pluck('conversao')->all(),
+                    'backgroundColor' => '#198754',
+                    'borderRadius' => 6,
+                ],
+            ],
+            [
+                'x' => [
+                    'beginAtZero' => true,
+                    'max' => 100,
+                ],
+            ],
+            ['indexAxis' => 'y'],
+        );
+    }
+
+    private function montarGrafico(string $titulo, string $descricao, string $tipo, array $labels, array $datasets, array $escalasExtras = [], array $opcoesExtras = []): array
     {
         $chart = [
             'type' => $tipo,
@@ -345,6 +438,7 @@ class RelatorioAnaliticoBuilder
                     ],
                     ...$escalasExtras,
                 ],
+                ...$opcoesExtras,
             ],
         ];
 
@@ -374,9 +468,9 @@ class RelatorioAnaliticoBuilder
     {
         return Doacao::query()
             ->with(['agendamento.campanha.localColeta', 'agendamento.user'])
-            ->where('status', 'confirmada')
-            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('data_coleta', '>=', $this->filtroDataInicio))
-            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('data_coleta', '<=', $this->filtroDataFim))
+            ->where('doacoes.status', 'confirmada')
+            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('doacoes.data_coleta', '>=', $this->filtroDataInicio))
+            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('doacoes.data_coleta', '<=', $this->filtroDataFim))
             ->when(! empty($this->filtroLocalColetaIds()), function (Builder $query): void {
                 $query->whereHas('agendamento.campanha', fn (Builder $query) => $query->whereIn('local_coleta_id', $this->filtroLocalColetaIds()));
             })
@@ -386,7 +480,7 @@ class RelatorioAnaliticoBuilder
             ->when(! empty($this->filtroStatusAgendamento), function (Builder $query): void {
                 $query->whereHas('agendamento', fn (Builder $query) => $query->whereIn('status', $this->filtroStatusAgendamento));
             })
-            ->orderBy('data_coleta');
+            ->orderBy('doacoes.data_coleta');
     }
 
     private function bolsasAnaliticasQuery(): Builder
@@ -402,11 +496,11 @@ class RelatorioAnaliticoBuilder
     private function campanhasAnaliticasQuery(): Builder
     {
         return Campanha::query()
-            ->with(['agendamentos.doacao'])
-            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('data_inicio', '>=', $this->filtroDataInicio))
-            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('data_fim', '<=', $this->filtroDataFim))
-            ->when(! empty($this->filtroStatusCampanha), fn (Builder $query) => $query->whereIn('status', $this->filtroStatusCampanha))
-            ->when(! empty($this->filtroLocalColetaIds()), fn (Builder $query) => $query->whereIn('local_coleta_id', $this->filtroLocalColetaIds()));
+            ->with(['agendamentos.doacao', 'localColeta'])
+            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('campanhas.data_inicio', '>=', $this->filtroDataInicio))
+            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('campanhas.data_fim', '<=', $this->filtroDataFim))
+            ->when(! empty($this->filtroStatusCampanha), fn (Builder $query) => $query->whereIn('campanhas.status', $this->filtroStatusCampanha))
+            ->when(! empty($this->filtroLocalColetaIds()), fn (Builder $query) => $query->whereIn('campanhas.local_coleta_id', $this->filtroLocalColetaIds()));
     }
 
     private function getCardsIndicadores(Collection $agendamentos, Collection $bolsas, Collection $campanhas, Collection $doadores): array
@@ -625,6 +719,21 @@ class RelatorioAnaliticoBuilder
                 ];
             })
             ->all();
+    }
+
+    private function rotuloDoador(?string $nome, string $tipoSanguineo): string
+    {
+        return $this->limitarRotulo(($nome ?: 'Doador não identificado') . " ({$tipoSanguineo})", 42);
+    }
+
+    private function rotuloCampanhaLocal(Campanha $campanha): string
+    {
+        return $this->limitarRotulo('Campanha #' . $campanha->id . ' - ' . ($campanha->localColeta?->nome ?? 'Sem local'), 46);
+    }
+
+    private function limitarRotulo(string $rotulo, int $limite): string
+    {
+        return mb_strlen($rotulo) <= $limite ? $rotulo : mb_substr($rotulo, 0, $limite - 3) . '...';
     }
 
     private function contarEstoquesCriticos(): int

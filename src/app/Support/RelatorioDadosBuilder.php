@@ -10,6 +10,8 @@ use App\Models\EstoqueSangue;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Symfony\Component\Process\Process;
+use Throwable;
 
 class RelatorioDadosBuilder
 {
@@ -119,6 +121,8 @@ class RelatorioDadosBuilder
             'bolsas_tipo' => 'Bolsas coletadas por tipo sanguíneo',
             'estoque_tipo' => 'Estoque disponível por tipo sanguíneo',
             'campanhas_desempenho' => 'Campanhas por desempenho',
+            'ranking_doadores_volume' => 'Ranking de doadores por volume',
+            'eficiencia_campanhas_locais' => 'Eficiência de campanhas por local',
         ];
     }
 
@@ -226,6 +230,8 @@ class RelatorioDadosBuilder
             'bolsas_tipo' => $this->graficoBolsasPorTipo(),
             'estoque_tipo' => $this->graficoEstoquePorTipo(),
             'campanhas_desempenho' => $this->graficoCampanhasPorDesempenho(),
+            'ranking_doadores_volume' => $this->graficoRankingDoadoresPorVolume(),
+            'eficiencia_campanhas_locais' => $this->graficoEficienciaCampanhasPorLocal(),
             default => $this->graficoDoacoesPorPeriodo(),
         };
     }
@@ -255,6 +261,7 @@ class RelatorioDadosBuilder
                 ['label' => 'Doações', 'data' => $linhas->pluck('total')->all(), 'color' => '#dc3545'],
                 ['label' => 'Volume (ml)', 'data' => $linhas->pluck('volume')->all(), 'color' => '#0d6efd'],
             ],
+            'line',
         );
     }
 
@@ -281,6 +288,7 @@ class RelatorioDadosBuilder
             [
                 ['label' => 'Agendamentos', 'data' => $linhas->pluck('total')->all(), 'color' => '#dc3545'],
             ],
+            'line',
         );
     }
 
@@ -365,6 +373,7 @@ class RelatorioDadosBuilder
                 ['label' => 'Volume disponível (ml)', 'data' => $tipos->map(fn (string $tipo) => (int) ($totais[$tipo]['volume'] ?? 0))->all(), 'color' => '#dc3545'],
                 ['label' => 'Bolsas disponíveis', 'data' => $tipos->map(fn (string $tipo) => (int) ($totais[$tipo]['bolsas'] ?? 0))->all(), 'color' => '#20c997'],
             ],
+            'donut',
         );
     }
 
@@ -398,15 +407,272 @@ class RelatorioDadosBuilder
         );
     }
 
-    private function montarGraficoPdf(string $titulo, string $descricao, array $labels, array $datasets): array
+    private function graficoRankingDoadoresPorVolume(): array
     {
+        $doadores = $this->doacoesQuery()
+            ->withoutEagerLoads()
+            ->reorder()
+            ->join('agendamentos', 'agendamentos.id', '=', 'doacoes.agendamento_id')
+            ->join('users', 'users.id', '=', 'agendamentos.user_id')
+            ->where('users.tipo', User::TIPO_DOADOR)
+            ->selectRaw(
+                'users.name as nome,
+                users.tipo_sanguineo as tipo_sanguineo,
+                COUNT(doacoes.id) as total_doacoes,
+                COALESCE(SUM(doacoes.quantidade_ml), 0) as volume'
+            )
+            ->groupBy('users.id', 'users.name', 'users.tipo_sanguineo')
+            ->orderByDesc('volume')
+            ->limit(8)
+            ->get()
+            ->map(function (Doacao $doacao): array {
+                $tipoSanguineo = $doacao->tipo_sanguineo ?: 'Não informado';
+
+                return [
+                    'label' => $this->rotuloDoador($doacao->nome, $tipoSanguineo),
+                    'doacoes' => (int) $doacao->total_doacoes,
+                    'volume' => (int) $doacao->volume,
+                ];
+            });
+
+        return $this->montarGraficoPdf(
+            'Ranking de doadores por volume',
+            'Doadores com maior volume total em doações confirmadas.',
+            $doadores->pluck('label')->all(),
+            [
+                ['label' => 'Volume (ml)', 'data' => $doadores->pluck('volume')->all(), 'color' => '#dc3545'],
+            ],
+            'horizontal_bar',
+        );
+    }
+
+    private function graficoEficienciaCampanhasPorLocal(): array
+    {
+        $campanhas = $this->campanhasAnaliticasQuery()
+            ->withoutEagerLoads()
+            ->reorder()
+            ->leftJoin('locais_coleta', 'locais_coleta.id', '=', 'campanhas.local_coleta_id')
+            ->leftJoin('agendamentos', 'agendamentos.campanha_id', '=', 'campanhas.id')
+            ->leftJoin('doacoes', 'doacoes.agendamento_id', '=', 'agendamentos.id')
+            ->when(! empty($this->filtroStatusAgendamento), fn (Builder $query) => $query->whereIn('agendamentos.status', $this->filtroStatusAgendamento))
+            ->selectRaw(
+                "campanhas.id as id,
+                campanhas.titulo as titulo,
+                locais_coleta.nome as local,
+                COUNT(agendamentos.id) as total_agendamentos,
+                SUM(CASE WHEN doacoes.status = ? THEN 1 ELSE 0 END) as doacoes_confirmadas",
+                ['confirmada']
+            )
+            ->groupBy('campanhas.id', 'campanhas.titulo', 'locais_coleta.nome')
+            ->get()
+            ->map(function (Campanha $campanha): array {
+                $agendamentos = (int) $campanha->total_agendamentos;
+                $doacoes = (int) $campanha->doacoes_confirmadas;
+
+                return [
+                    'label' => $this->rotuloCampanhaLocal($campanha),
+                    'agendamentos' => $agendamentos,
+                    'doacoes' => $doacoes,
+                    'conversao' => $this->percentual($doacoes, $agendamentos),
+                ];
+            })
+            ->sortByDesc('conversao')
+            ->take(6)
+            ->values();
+
+        return $this->montarGraficoPdf(
+            'Eficiência de campanhas por local',
+            'Taxa de conversão de agendamentos em doações confirmadas por campanha e local.',
+            $campanhas->pluck('label')->all(),
+            [
+                ['label' => 'Taxa de conversão (%)', 'data' => $campanhas->pluck('conversao')->all(), 'color' => '#198754'],
+            ],
+            'horizontal_bar',
+        );
+    }
+
+    private function rotuloDoador(?string $nome, string $tipoSanguineo): string
+    {
+        return $this->limitarRotulo(($nome ?: 'Doador não identificado') . " ({$tipoSanguineo})", 42);
+    }
+
+    private function rotuloCampanhaLocal(Campanha $campanha): string
+    {
+        $local = $campanha->local ?: ($campanha->localColeta?->nome ?? 'Sem local');
+
+        return $this->limitarRotulo('Campanha #' . $campanha->id . ' - ' . $local, 46);
+    }
+
+    private function limitarRotulo(string $rotulo, int $limite): string
+    {
+        return mb_strlen($rotulo) <= $limite ? $rotulo : mb_substr($rotulo, 0, $limite - 3) . '...';
+    }
+
+    private function montarGraficoPdf(string $titulo, string $descricao, array $labels, array $datasets, string $tipo = 'bar'): array
+    {
+        $vazio = empty($labels) || collect($datasets)->every(fn (array $dataset) => collect($dataset['data'] ?? [])->sum() === 0);
+
         return [
             'titulo' => $titulo,
             'descricao' => $descricao,
             'labels' => $labels,
             'datasets' => $datasets,
-            'vazio' => empty($labels) || collect($datasets)->every(fn (array $dataset) => collect($dataset['data'] ?? [])->sum() === 0),
+            'tipo' => $tipo,
+            'imagem' => $vazio ? null : $this->gerarImagemGrafico($labels, $datasets, $tipo),
+            'vazio' => $vazio,
         ];
+    }
+
+    private function gerarImagemGrafico(array $labels, array $datasets, string $tipo): ?string
+    {
+        try {
+            $payload = [
+                'width' => 1000,
+                'height' => $tipo === 'horizontal_bar' ? 420 : 360,
+                'configuration' => $this->montarConfigChartJs($labels, $datasets, $tipo),
+            ];
+
+            $process = new Process(['node', base_path('scripts/render-report-chart.mjs')], base_path());
+            $process->setInput(json_encode($payload, JSON_THROW_ON_ERROR));
+            $process->setTimeout(60);
+            $process->run();
+
+            if (! $process->isSuccessful()) {
+                return null;
+            }
+
+            return 'data:image/png;base64,' . base64_encode($process->getOutput());
+        } catch (Throwable) {
+            return null;
+        }
+    }
+
+    private function montarConfigChartJs(array $labels, array $datasets, string $tipo): array
+    {
+        return match ($tipo) {
+            'line' => $this->montarConfigLinha($labels, $datasets),
+            'donut' => $this->montarConfigRosca($labels, $datasets),
+            'horizontal_bar' => $this->montarConfigBarras($labels, $datasets, true),
+            default => $this->montarConfigBarras($labels, $datasets),
+        };
+    }
+
+    private function montarConfigLinha(array $labels, array $datasets): array
+    {
+        $chartDatasets = collect($datasets)
+            ->values()
+            ->map(fn (array $dataset, int $index): array => [
+                'label' => $dataset['label'] ?? 'Série',
+                'data' => array_values($dataset['data'] ?? []),
+                'borderColor' => $dataset['color'] ?? '#dc3545',
+                'backgroundColor' => $this->corTransparente($dataset['color'] ?? '#dc3545'),
+                'borderWidth' => 3,
+                'pointRadius' => 3,
+                'pointBackgroundColor' => '#ffffff',
+                'pointBorderWidth' => 2,
+                'fill' => false,
+                'tension' => 0.35,
+                'yAxisID' => $index === 0 ? 'y' : 'y1',
+            ])
+            ->all();
+
+        $scales = [
+            'y' => ['beginAtZero' => true],
+        ];
+
+        if (count($chartDatasets) > 1) {
+            $scales['y1'] = [
+                'beginAtZero' => true,
+                'position' => 'right',
+                'grid' => ['drawOnChartArea' => false],
+            ];
+        }
+
+        return $this->configBase('line', $labels, $chartDatasets, ['scales' => $scales]);
+    }
+
+    private function montarConfigBarras(array $labels, array $datasets, bool $horizontal = false): array
+    {
+        $chartDatasets = collect($datasets)
+            ->map(fn (array $dataset): array => [
+                'label' => $dataset['label'] ?? 'Série',
+                'data' => array_values($dataset['data'] ?? []),
+                'backgroundColor' => $dataset['color'] ?? '#dc3545',
+                'borderRadius' => 6,
+            ])
+            ->all();
+
+        $axis = $horizontal ? 'x' : 'y';
+        $options = [
+            'scales' => [
+                $axis => ['beginAtZero' => true],
+            ],
+        ];
+
+        if ($horizontal) {
+            $options['indexAxis'] = 'y';
+        }
+
+        return $this->configBase('bar', $labels, $chartDatasets, $options);
+    }
+
+    private function montarConfigRosca(array $labels, array $datasets): array
+    {
+        $dataset = $datasets[0] ?? ['label' => 'Total', 'data' => []];
+
+        return $this->configBase('doughnut', $labels, [[
+            'label' => $dataset['label'] ?? 'Total',
+            'data' => array_values($dataset['data'] ?? []),
+            'backgroundColor' => collect($labels)->keys()->map(fn (int $index): string => $this->corGrafico($index))->all(),
+            'borderColor' => '#ffffff',
+            'borderWidth' => 2,
+        ]], [
+            'cutout' => '58%',
+            'plugins' => [
+                'legend' => ['position' => 'right'],
+            ],
+        ]);
+    }
+
+    private function configBase(string $tipo, array $labels, array $datasets, array $options = []): array
+    {
+        return [
+            'type' => $tipo,
+            'data' => [
+                'labels' => array_values($labels),
+                'datasets' => $datasets,
+            ],
+            'options' => array_replace_recursive([
+                'responsive' => false,
+                'animation' => false,
+                'plugins' => [
+                    'legend' => ['position' => 'bottom'],
+                ],
+                'font' => [
+                    'family' => 'Arial',
+                ],
+            ], $options),
+        ];
+    }
+
+    private function corTransparente(string $cor): string
+    {
+        $hex = ltrim($cor, '#');
+
+        if (strlen($hex) !== 6) {
+            return 'rgba(220, 53, 69, 0.14)';
+        }
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        return "rgba({$r}, {$g}, {$b}, 0.14)";
+    }
+
+    private function corGrafico(int $indice): string
+    {
+        return ['#dc3545', '#0d6efd', '#198754', '#ffc107', '#6f42c1', '#fd7e14', '#20c997', '#6c757d'][$indice % 8];
     }
 
     private function agendamentosAnaliticosQuery(): Builder
@@ -426,9 +692,9 @@ class RelatorioDadosBuilder
     {
         return Doacao::query()
             ->with(['agendamento.campanha.localColeta', 'agendamento.user'])
-            ->where('status', 'confirmada')
-            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('data_coleta', '>=', $this->filtroDataInicio))
-            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('data_coleta', '<=', $this->filtroDataFim))
+            ->where('doacoes.status', 'confirmada')
+            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('doacoes.data_coleta', '>=', $this->filtroDataInicio))
+            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('doacoes.data_coleta', '<=', $this->filtroDataFim))
             ->when(! empty($this->filtroLocalColetaIds()), function (Builder $query): void {
                 $query->whereHas('agendamento.campanha', fn (Builder $query) => $query->whereIn('local_coleta_id', $this->filtroLocalColetaIds()));
             })
@@ -438,7 +704,7 @@ class RelatorioDadosBuilder
             ->when(! empty($this->filtroStatusAgendamento), function (Builder $query): void {
                 $query->whereHas('agendamento', fn (Builder $query) => $query->whereIn('status', $this->filtroStatusAgendamento));
             })
-            ->orderBy('data_coleta');
+            ->orderBy('doacoes.data_coleta');
     }
 
     private function bolsasAnaliticasQuery(): Builder
@@ -454,11 +720,11 @@ class RelatorioDadosBuilder
     private function campanhasAnaliticasQuery(): Builder
     {
         return Campanha::query()
-            ->with(['agendamentos.doacao'])
-            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('data_inicio', '>=', $this->filtroDataInicio))
-            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('data_fim', '<=', $this->filtroDataFim))
-            ->when(! empty($this->filtroStatusCampanha), fn (Builder $query) => $query->whereIn('status', $this->filtroStatusCampanha))
-            ->when(! empty($this->filtroLocalColetaIds()), fn (Builder $query) => $query->whereIn('local_coleta_id', $this->filtroLocalColetaIds()));
+            ->with(['agendamentos.doacao', 'localColeta'])
+            ->when($this->filtroDataInicio !== '', fn (Builder $query) => $query->whereDate('campanhas.data_inicio', '>=', $this->filtroDataInicio))
+            ->when($this->filtroDataFim !== '', fn (Builder $query) => $query->whereDate('campanhas.data_fim', '<=', $this->filtroDataFim))
+            ->when(! empty($this->filtroStatusCampanha), fn (Builder $query) => $query->whereIn('campanhas.status', $this->filtroStatusCampanha))
+            ->when(! empty($this->filtroLocalColetaIds()), fn (Builder $query) => $query->whereIn('campanhas.local_coleta_id', $this->filtroLocalColetaIds()));
     }
 
     private function getCardsIndicadores(Collection $agendamentos, Collection $bolsas, Collection $campanhas, Collection $doadores): array

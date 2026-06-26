@@ -120,6 +120,14 @@
             font-size: 10px;
             margin-bottom: 10px;
         }
+        .chart-image {
+            width: 100%;
+        }
+        .chart-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
         .chart-dataset {
             margin-top: 8px;
         }
@@ -135,7 +143,7 @@
         }
         .chart-label {
             float: left;
-            width: 18%;
+            width: 30%;
             font-size: 9px;
             color: #555;
             white-space: nowrap;
@@ -143,7 +151,7 @@
         }
         .chart-bar-wrap {
             float: left;
-            width: 70%;
+            width: 58%;
             height: 10px;
             background-color: #f1f3f5;
             margin-top: 1px;
@@ -204,28 +212,32 @@
                 <div class="chart-title">{{ $grafico['titulo'] }}</div>
                 <div class="chart-description">{{ $grafico['descricao'] }}</div>
 
-                @foreach ($grafico['datasets'] as $dataset)
-                    @php
-                        $maiorValor = max(1, (int) collect($dataset['data'] ?? [])->max());
-                        $cor = $dataset['color'] ?? '#dc3545';
-                    @endphp
-                    <div class="chart-dataset">
-                        <div class="chart-dataset-title">{{ $dataset['label'] }}</div>
-                        @foreach ($grafico['labels'] as $index => $label)
-                            @php
-                                $valor = (int) ($dataset['data'][$index] ?? 0);
-                                $largura = min(100, (int) round(($valor / $maiorValor) * 100));
-                            @endphp
-                            <div class="chart-row">
-                                <div class="chart-label">{{ $label }}</div>
-                                <div class="chart-bar-wrap">
-                                    <div class="chart-bar" style="width: {{ $largura }}%; background-color: {{ $cor }};"></div>
+                @if (! empty($grafico['imagem']))
+                    <div class="chart-image"><img src="{{ $grafico['imagem'] }}" alt="{{ $grafico['titulo'] }}"></div>
+                @else
+                    @foreach ($grafico['datasets'] as $dataset)
+                        @php
+                            $maiorValor = max(1, (int) collect($dataset['data'] ?? [])->max());
+                            $cor = $dataset['color'] ?? '#dc3545';
+                        @endphp
+                        <div class="chart-dataset">
+                            <div class="chart-dataset-title">{{ $dataset['label'] }}</div>
+                            @foreach ($grafico['labels'] as $index => $label)
+                                @php
+                                    $valor = (int) ($dataset['data'][$index] ?? 0);
+                                    $largura = min(100, (int) round(($valor / $maiorValor) * 100));
+                                @endphp
+                                <div class="chart-row">
+                                    <div class="chart-label">{{ $label }}</div>
+                                    <div class="chart-bar-wrap">
+                                        <div class="chart-bar" style="width: {{ $largura }}%; background-color: {{ $cor }};"></div>
+                                    </div>
+                                    <div class="chart-value">{{ number_format($valor, 0, ',', '.') }}</div>
                                 </div>
-                                <div class="chart-value">{{ number_format($valor, 0, ',', '.') }}</div>
-                            </div>
-                        @endforeach
-                    </div>
-                @endforeach
+                            @endforeach
+                        </div>
+                    @endforeach
+                @endif
             </div>
         @endforeach
     @endif
