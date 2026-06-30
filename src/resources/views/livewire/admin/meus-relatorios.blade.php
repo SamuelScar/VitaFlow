@@ -79,7 +79,7 @@
                                 <div class="small text-secondary">{{ $relatorio->created_at->format('H:i') }}</div>
                             </td>
                             <td>
-                                @if (!$relatorio->trashed() && !$relatorio->is_arquivado && $relatorio->concluido())
+                                @if (!$relatorio->trashed() && $relatorio->concluido())
                                     <a href="{{ route('admin.relatorios.exports.download', $relatorio) }}" class="btn btn-sm btn-outline-primary" title="Baixar">
                                         <i class="bi bi-download"></i>
                                     </a>
